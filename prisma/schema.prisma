@@ -27,21 +27,14 @@ enum ListingStatus {
   DELETED
 }
 
-enum ReviewRating {
-  ONE
-  TWO
-  THREE
-  FOUR
-  FIVE
-}
-
 model User {
   id               String     @id @default(cuid())
   email            String     @unique
   name             String?
   phone            String?
-  avatar           String?
+  avatarImg        String?
   location         String?
+  isActive         Boolean    @default(true)
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
   listings         Listing[]
@@ -51,10 +44,10 @@ model User {
   reviewsGiven     Review[]   @relation("Reviewer")
   reviewsReceived  Review[]   @relation("Reviewee")
   emailVerified    Boolean    @default(false)
-  image            String?
   sessions         Session[]
   accounts         Account[]
 
+  @@index([isActive])
   @@map("users")
 }
 
@@ -82,6 +75,7 @@ model Listing {
   status      ListingStatus    @default(ACTIVE)
   views       Int              @default(0)
   sold        Boolean          @default(false)
+  featured    Boolean          @default(false)
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
   category    Category         @relation(fields: [categoryId], references: [id])
@@ -95,8 +89,10 @@ model Listing {
   @@index([userId])
   @@index([status])
   @@index([createdAt])
-  @@index([location])
-  @@index([price])
+  @@index([status, createdAt]) // For active listings sorted by date
+  @@index([categoryId, status, price]) // For category filtering with price sorting
+  @@index([status, location]) // For location-based searches
+  @@index([featured, status, createdAt]) // For featured listings
   @@map("listings")
 }
 
@@ -108,6 +104,7 @@ model ListingImage {
   createdAt DateTime @default(now())
   listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
 
+  @@unique([listingId, order]) // Ensure unique ordering per listing
   @@index([listingId])
   @@map("listing_images")
 }
@@ -130,7 +127,7 @@ model Review {
   reviewerId String
   revieweeId String
   listingId  String?
-  rating     Int // 1-5, validated in application layer
+  rating     Int
   comment    String?  @db.Text
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -159,6 +156,9 @@ model Message {
   receiver   User      @relation("Receiver", fields: [receiverId], references: [id])
   listing    Listing?  @relation(fields: [listingId], references: [id], onDelete: SetNull)
 
+  // Composite index for conversation queries (get messages between two users)
+  @@index([senderId, receiverId, createdAt])
+  @@index([receiverId, senderId, createdAt])
   @@index([senderId])
   @@index([receiverId])
   @@index([createdAt])
