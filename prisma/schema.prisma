@@ -1,0 +1,213 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Enums for better type safety
+
+enum ListingCondition {
+  NEW
+  LIKE_NEW
+  USED
+  FOR_PARTS
+}
+
+enum ListingStatus {
+  ACTIVE
+  SOLD
+  INACTIVE
+  DELETED
+}
+
+enum ReviewRating {
+  ONE
+  TWO
+  THREE
+  FOUR
+  FIVE
+}
+
+model User {
+  id               String     @id @default(cuid())
+  email            String     @unique
+  name             String?
+  phone            String?
+  avatar           String?
+  location         String?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  listings         Listing[]
+  favorites        Favorite[]
+  sentMessages     Message[]  @relation("Sender")
+  receivedMessages Message[]  @relation("Receiver")
+  reviewsGiven     Review[]   @relation("Reviewer")
+  reviewsReceived  Review[]   @relation("Reviewee")
+  emailVerified    Boolean    @default(false)
+  image            String?
+  sessions         Session[]
+  accounts         Account[]
+
+  @@map("users")
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  slug        String    @unique
+  icon        String?
+  description String?
+  createdAt   DateTime  @default(now())
+  listings    Listing[]
+
+  @@map("categories")
+}
+
+model Listing {
+  id          String           @id @default(cuid())
+  title       String
+  description String           @db.Text
+  price       Float?
+  categoryId  String
+  userId      String
+  location    String?
+  condition   ListingCondition @default(USED)
+  status      ListingStatus    @default(ACTIVE)
+  views       Int              @default(0)
+  sold        Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  category    Category         @relation(fields: [categoryId], references: [id])
+  user        User             @relation(fields: [userId], references: [id])
+  images      ListingImage[]
+  favorites   Favorite[]
+  messages    Message[]
+  reviews     Review[]
+
+  @@index([categoryId])
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([location])
+  @@index([price])
+  @@map("listings")
+}
+
+model ListingImage {
+  id        String   @id @default(cuid())
+  listingId String
+  url       String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@index([listingId])
+  @@map("listing_images")
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  listingId String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, listingId])
+  @@index([userId])
+  @@map("favorites")
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  reviewerId String
+  revieweeId String
+  listingId  String?
+  rating     Int // 1-5, validated in application layer
+  comment    String?  @db.Text
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  reviewer   User     @relation("Reviewer", fields: [reviewerId], references: [id])
+  reviewee   User     @relation("Reviewee", fields: [revieweeId], references: [id])
+  listing    Listing? @relation(fields: [listingId], references: [id], onDelete: SetNull)
+  // Prevent duplicate reviews: one review per reviewer-reviewee-listing combination
+  // If listingId is null, it's a general user review
+  @@unique([reviewerId, revieweeId, listingId])
+  @@index([revieweeId])
+  @@index([reviewerId])
+  @@index([listingId])
+  @@map("reviews")
+}
+
+model Message {
+  id         String    @id @default(cuid())
+  senderId   String
+  receiverId String
+  listingId  String?
+  content    String    @db.Text
+  read       Boolean   @default(false)
+  readAt     DateTime?
+  createdAt  DateTime  @default(now())
+  sender     User      @relation("Sender", fields: [senderId], references: [id])
+  receiver   User      @relation("Receiver", fields: [receiverId], references: [id])
+  listing    Listing?  @relation(fields: [listingId], references: [id], onDelete: SetNull)
+
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([createdAt])
+  @@index([listingId])
+  @@index([read])
+  @@map("messages")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@map("verification")
+}
