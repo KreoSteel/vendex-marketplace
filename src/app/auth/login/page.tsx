@@ -11,25 +11,25 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { signUpAction } from "@/app/actions/auth";
+import { signInAction } from "@/app/actions/auth";
 import { useActionState } from "react";
 import Link from "next/link";
 
 export default function RegisterPage() {
-   const [state, formAction, isPending] = useActionState(signUpAction, {
+   const [state, formAction, isPending] = useActionState(signInAction, {
       error: "",
    });
 
    return (
-      <Card className="w-full bg-neutral-50 max-w-md shadow-lg hover:shadow-xl hover:translate-y-[-5px] transition-all duration-300">
+      <Card className="w-full bg-surface max-w-md shadow-lg hover:shadow-xl hover:translate-y-[-5px] transition-all duration-300">
          <CardHeader>
-            <CardTitle>Create an account</CardTitle>
+            <CardTitle>Login to your account</CardTitle>
             <CardDescription>
-               Enter your email below to create an account
+               Enter your credentials to login to your account
             </CardDescription>
             <CardAction>
                <Button variant="link" asChild>
-                  <Link href="/auth/login">Sign In</Link>
+                  <Link href="/auth/register">Sign Up</Link>
                </Button>
             </CardAction>
          </CardHeader>
@@ -39,15 +39,6 @@ export default function RegisterPage() {
                   <p className="text-red-500 text-sm">{state.error}</p>
                )}
                <div className="flex flex-col gap-6">
-                  <div className="grid gap-2">
-                     <Label htmlFor="name">Name</Label>
-                     <Input
-                        name="name"
-                        type="text"
-                        placeholder="John Doe"
-                        required
-                     />
-                  </div>
                   <div className="grid gap-2">
                      <Label htmlFor="email">Email</Label>
                      <Input
@@ -67,7 +58,7 @@ export default function RegisterPage() {
             </CardContent>
             <CardFooter className="flex-col gap-2 mt-4">
                <Button type="submit" className="w-full" disabled={isPending}>
-                  {isPending ? "Creating account..." : "Create Account"}
+                  {isPending ? "Logging in..." : "Login"}
                </Button>
             </CardFooter>
          </form>

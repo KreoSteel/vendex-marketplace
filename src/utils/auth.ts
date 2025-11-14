@@ -14,9 +14,6 @@ export const auth = betterAuth({
       enabled: true,
    },
    plugins: [nextCookies()],
-   baseURL: process.env.BETTER_AUTH_URL || process.env.NEXT_PUBLIC_BETTER_AUTH_URL || "http://localhost:3000",
-   basePath: "/api/auth",
-   trustedOrigins: process.env.BETTER_AUTH_URL ? [process.env.BETTER_AUTH_URL] : undefined,
 });
 
 export async function requireAuth() {
