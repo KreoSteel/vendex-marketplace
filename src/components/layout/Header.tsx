@@ -2,7 +2,6 @@ import { Package, User, Plus } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-
 export default function Header() {
    return (
       <header className="sticky top-0 z-50 w-full border-b border-neutral-200 bg-white">
@@ -35,10 +34,12 @@ export default function Header() {
                   </Link>
                </nav>
                <div className="flex items-center gap-4">
-                <Button>
-                    <Plus className="size-4" />
-                    Create listing
-                </Button>
+                  <Link href="/listings/create">
+                     <Button>
+                        <Plus className="size-4" />
+                        Create listing
+                     </Button>
+                  </Link>
                   <User className="size-6" />
                </div>
             </div>

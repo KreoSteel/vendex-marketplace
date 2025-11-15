@@ -90,6 +90,7 @@ export async function createListing(listing: TCreateListing) {
    return await prisma.listing.create({
       data: {
          ...validatedListing.data,
+         description: validatedListing.data.description ?? "No description provided",
          userId: user.id,
          images: {
             create: validatedListing.data.images.map((image, index) => ({

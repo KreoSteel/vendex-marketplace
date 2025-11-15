@@ -67,7 +67,7 @@ model Listing {
   id          String           @id @default(cuid())
   title       String
   description String           @db.Text
-  price       Float?
+  price       Float?           @default(0)
   categoryId  String
   userId      String
   location    String?
