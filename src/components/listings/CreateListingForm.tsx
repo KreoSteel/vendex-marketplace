@@ -1,10 +1,10 @@
 "use client";
 import { createListingAction } from "@/app/actions/listings";
-import { useActionState } from "react";
+import { useActionState, useState, useTransition } from "react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import { Euro } from "lucide-react";
+import { Euro, X } from "lucide-react";
 import {
    Select,
    SelectContent,
@@ -18,16 +18,46 @@ import { useGetCategoriesNames } from "@/hooks/useCategories";
 import { TCategory } from "@/utils/zod-schemas/categories";
 
 export default function CreateListingForm() {
-   const [state, formAction, isPending] = useActionState(createListingAction, {
+   const [state, formAction] = useActionState(createListingAction, {
       error: "",
    });
-
+   const [isPending, startTransition] = useTransition();
    const { data: categoriesNames } = useGetCategoriesNames();
 
+   const [previewImages, setPreviewImages] = useState<File[]>([]);
+
+   function handleAddImages(e: React.ChangeEvent<HTMLInputElement>) {
+      const files = Array.from(e.target.files || []);
+      setPreviewImages((prev) => [...prev, ...files]);
+      e.target.value = "";
+   }
+
+   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+      e.preventDefault();
+      const formData = new FormData(e.currentTarget);
+      previewImages.forEach((file) => formData.append("images", file));
+      
+      startTransition(() => {
+         formAction(formData);
+      });
+   }
+
+   function handleRemoveImage(index: number) {
+      setPreviewImages((prev) => {
+         const newImages = prev.filter((_, item) => item !== index);
+         URL.revokeObjectURL(URL.createObjectURL(prev[index]));
+         return newImages;
+      });
+   }
+
    return (
-      <form action={formAction} className="flex flex-col gap-4">
-         {"error" in state && state.error && <p className="text-red-500 text-sm">{state.error}</p>}
-         {"success" in state && state.success && <p className="text-green-500 text-sm">{state.success}</p>}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+         {"error" in state && state.error && (
+            <p className="text-red-500 text-sm">{state.error}</p>
+         )}
+         {"success" in state && state.success && (
+            <p className="text-green-500 text-sm">{state.success}</p>
+         )}
          <div className="grid gap-2">
             <Label htmlFor="title">
                Title <span className="text-red-500">*</span>
@@ -52,18 +82,39 @@ export default function CreateListingForm() {
          <div className="grid gap-2">
             <Label>Photos (up to 10)</Label>
             <Input
-               name="images"
                type="file"
                multiple
                accept="image/*"
-               required
+               onChange={handleAddImages}
+               required={previewImages.length === 0}
                className="file:text-foreground file:bg-neutral-200 file:border-none file:px-3 file:py-1 file:rounded-md file:text-sm file:font-medium file:shadow-xs file:transition-[color,box-shadow] file:cursor-pointer disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
             />
          </div>
+         <div className="flex flex-wrap gap-2">
+            {previewImages.map((image, index) => {
+               const url = URL.createObjectURL(image);
+               return (
+                  <div key={index} className="relative">
+                     <img
+                        src={url}
+                        alt={image.name}
+                        width={150}
+                        height={150}
+                        className="rounded-md object-cover"
+                     />
+                     <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-0 top-0 cursor-pointer"
+                        onClick={() => handleRemoveImage(index)}>
+                        <X className="w-4 h-4 text-red-500" />
+                     </Button>
+                  </div>
+               );
+            })}
+         </div>
          <div className="grid gap-2">
-            <Label>
-               Price
-            </Label>
+            <Label>Price</Label>
             <div className="relative">
                <Euro className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-neutral-500 pointer-events-none" />
                <Input
@@ -126,7 +177,7 @@ export default function CreateListingForm() {
                </SelectContent>
             </Select>
          </div>
-         <Button type="submit" disabled={isPending}>
+         <Button type="submit" disabled={isPending} className="w-fit mx-auto">
             {isPending ? "Creating listing..." : "Create listing"}
          </Button>
       </form>

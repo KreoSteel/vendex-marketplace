@@ -3,18 +3,33 @@ import { auth } from "./utils/auth";
 import { headers } from "next/headers";
 
 export async function proxy(req: NextRequest) {
-   const session = await auth.api.getSession({
-      headers: await headers(),
-   });
+   const pathname = req.nextUrl.pathname;
 
-   if (!session?.user) {
-      const loginUrl = new URL("/auth/login", req.url);
-      return NextResponse.redirect(loginUrl);
+   const protectedRoutes = [
+      "/listings/create",
+      "/profile",
+      "/messages",
+      "/favorites",
+   ];
+
+   const isProtectedRoute = protectedRoutes.some((route) =>
+      pathname.startsWith(route)
+   );
+
+   if (isProtectedRoute) {
+      const session = await auth.api.getSession({
+         headers: await headers(),
+      });
+
+      if (!session?.user) {
+         const loginUrl = new URL("/auth/login", req.url);
+         return NextResponse.redirect(loginUrl);
+      }
    }
 
    return NextResponse.next();
 }
 
 export const config = {
-   matcher: ["/((?!api|_next|_vercel|.*\\..*).*)"],
+   matcher: ["/((?!api|_next|_vercel|auth|.*\\..*).*)"],
 };

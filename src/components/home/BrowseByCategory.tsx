@@ -7,9 +7,9 @@ export default async function BrowseByCategory() {
    const categories = await getAllCategories();
 
    return (
-      <section className="py-16 w-full">
+      <section className="w-full">
          <div className="container mx-auto">
-            <h2 className="text-2xl font-bold mb-8">
+            <h2 className="text-2xl font-bold mb-8 text-center">
                Browse by Category
             </h2>
          </div>
@@ -21,9 +21,9 @@ export default async function BrowseByCategory() {
                      key={category.id}
                      href={`/categories/${category.slug}`}
                      className="group">
-                     <Card className="py-6 hover:shadow-md transition-all duration-400 cursor-pointer h-full flex flex-col items-center">
+                     <Card className="py-6 hover:shadow-xl transition-all duration-400 cursor-pointer h-full flex flex-col items-center">
                         <CardHeader className="flex flex-col items-center gap-3 w-full">
-                           <div className="flex items-center justify-center bg-primary-50 rounded-full mb-2 h-14 w-14 group-hover:bg-primary-100 transition-colors">
+                           <div className="flex items-center justify-center bg-primary-100 rounded-full mb-2 h-14 w-14 group-hover:translate-y-[-4px] transition-all duration-400">
                               <Icon className="h-7 w-7 text-neutral-900" />
                            </div>
                            <CardTitle className="text-center text-sm font-medium text-neutral-900">

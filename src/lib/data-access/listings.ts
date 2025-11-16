@@ -21,6 +21,9 @@ export async function getRecentListings() {
          updatedAt: true,
          images: {
             take: 1,
+            orderBy: {
+               order: "asc",
+            },
          },
       },
    });
@@ -44,7 +47,11 @@ export async function getListingById(id: string) {
          featured: true,
          createdAt: true,
          updatedAt: true,
-         images: true,
+         images: {
+            orderBy: {
+               order: "asc",
+            },
+         },
          category: {
             select: {
                id: true,
@@ -90,7 +97,8 @@ export async function createListing(listing: TCreateListing) {
    return await prisma.listing.create({
       data: {
          ...validatedListing.data,
-         description: validatedListing.data.description ?? "No description provided",
+         description:
+            validatedListing.data.description ?? "No description provided",
          userId: user.id,
          images: {
             create: validatedListing.data.images.map((image, index) => ({

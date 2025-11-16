@@ -1,8 +1,26 @@
-import { Package, User, Plus } from "lucide-react";
+import {
+   Package,
+   User,
+   Plus,
+   MessageCircle,
+   Heart,
+   LogOut,
+} from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import {
+   DropdownMenu,
+   DropdownMenuContent,
+   DropdownMenuItem,
+   DropdownMenuSeparator,
+   DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { getUser } from "@/utils/auth";
+import { signOutAction } from "@/app/actions/auth";
 
-export default function Header() {
+export default async function Header() {
+   const user = await getUser();
+
    return (
       <header className="sticky top-0 z-50 w-full border-b border-neutral-200 bg-white">
          <div className="container mx-auto px-4">
@@ -40,7 +58,55 @@ export default function Header() {
                         Create listing
                      </Button>
                   </Link>
-                  <User className="size-6" />
+
+                  {user ? (
+                     <DropdownMenu>
+                        <DropdownMenuTrigger>
+                           <User className="size-6" />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                           <div className="flex items-center gap-2 px-2 py-1">
+                              <User className="size-4" />
+                              <div className="flex flex-col">
+                                 <p className="text-xs">{user.name}</p>
+                                 <span className="text-xs text-neutral-500">
+                                    {user.location || "No location set"}
+                                 </span>
+                              </div>
+                           </div>
+                           <DropdownMenuSeparator />
+                           <DropdownMenuItem asChild className="hover:bg-neutral-100">
+                              <Link href="/profile">
+                                 <User className="size-4" />
+                                 My Profile
+                              </Link>
+                           </DropdownMenuItem>
+                           <DropdownMenuItem asChild className="hover:bg-neutral-100">
+                              <Link href="/profile">
+                                 <MessageCircle className="size-4" />
+                                 Messages
+                              </Link>
+                           </DropdownMenuItem>
+                           <DropdownMenuItem asChild className="hover:bg-neutral-100">
+                              <Link href="/profile">
+                                 <Heart className="size-4" />
+                                 Favorites
+                              </Link>
+                           </DropdownMenuItem>
+                           <DropdownMenuSeparator />
+                           <DropdownMenuItem asChild className="hover:bg-neutral-100">
+                              <Button variant="ghost" onClick={signOutAction} className="w-full justify-start">
+                                 <LogOut className="size-4" />
+                                 Logout
+                              </Button>
+                           </DropdownMenuItem>
+                        </DropdownMenuContent>
+                     </DropdownMenu>
+                  ) : (
+                     <Link href="/auth/login">
+                        <User className="size-6" />
+                     </Link>
+                  )}
                </div>
             </div>
          </div>

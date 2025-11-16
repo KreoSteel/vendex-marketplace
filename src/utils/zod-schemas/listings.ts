@@ -11,4 +11,19 @@ export const createListingSchema = z.object({
     images: z.array(z.string()).min(1, { message: "At least one image is required" }).max(10, { message: "You can only upload up to 10 images" }),
 });
 
+export const listingSchema = z.object({
+    id: z.string(),
+    title: z.string(),
+    price: z.number(),
+    location: z.string(),
+    condition: z.enum(ListingCondition),
+    createdAt: z.date(),
+    updatedAt: z.date(),
+    images: z.array(z.object({
+        url: z.string(),
+    })),
+});
+
+
 export type TCreateListing = z.infer<typeof createListingSchema>;
+export type TListing = z.infer<typeof listingSchema>;

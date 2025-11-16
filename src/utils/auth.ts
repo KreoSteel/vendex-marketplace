@@ -17,7 +17,7 @@ export const auth = betterAuth({
 });
 
 export async function requireAuth() {
-   const user = await getUserFromCookie();
+   const user = await getUser();
 
    if (!user) {
       redirect("/auth/login");
@@ -26,7 +26,7 @@ export async function requireAuth() {
    return user;
 }
 
-export async function getUserFromCookie(req?: NextRequest) {
+export async function getUser(req?: NextRequest) {
    const session = await auth.api.getSession({
       headers: req ? req.headers : await headers(),
    });
@@ -35,5 +35,17 @@ export async function getUserFromCookie(req?: NextRequest) {
       return null;
    }
 
-   return session.user;
+   return await prisma.user.findUnique({
+      where: {
+         id: session.user.id,
+      },
+      select: {
+         id: true,
+         email: true,
+         name: true,
+         avatarImg: true,
+         location: true,
+         isActive: true,
+      },
+   });
 }
