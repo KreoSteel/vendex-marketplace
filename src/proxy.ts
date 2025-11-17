@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "./utils/auth";
-import { headers } from "next/headers";
 
 export async function proxy(req: NextRequest) {
    const pathname = req.nextUrl.pathname;
@@ -18,7 +17,7 @@ export async function proxy(req: NextRequest) {
 
    if (isProtectedRoute) {
       const session = await auth.api.getSession({
-         headers: await headers(),
+         headers: req.headers,
       });
 
       if (!session?.user) {
@@ -33,3 +32,4 @@ export async function proxy(req: NextRequest) {
 export const config = {
    matcher: ["/((?!api|_next|_vercel|auth|.*\\..*).*)"],
 };
+

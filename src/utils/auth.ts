@@ -16,36 +16,45 @@ export const auth = betterAuth({
    plugins: [nextCookies()],
 });
 
-export async function requireAuth() {
+export async function requireAuth(options?: { redirect?: boolean }) {
    const user = await getUser();
 
    if (!user) {
-      redirect("/auth/login");
+      if (options?.redirect !== false) {
+         redirect("/auth/login");
+      }
+      throw new Error("Unauthorized");
    }
 
    return user;
 }
 
 export async function getUser(req?: NextRequest) {
-   const session = await auth.api.getSession({
-      headers: req ? req.headers : await headers(),
-   });
+   try {
+      const session = await auth.api.getSession({
+         headers: req ? req.headers : await headers(),
+      });
 
-   if (!session?.user) {
+      if (!session?.user) {
+         return null;
+      }
+
+      return await prisma.user.findUnique({
+         where: {
+            id: session.user.id,
+         },
+         select: {
+            id: true,
+            email: true,
+            name: true,
+            avatarImg: true,
+            location: true,
+            isActive: true,
+            createdAt: true,
+         },
+      });
+   } catch (error) {
+      console.error(error);
       return null;
    }
-
-   return await prisma.user.findUnique({
-      where: {
-         id: session.user.id,
-      },
-      select: {
-         id: true,
-         email: true,
-         name: true,
-         avatarImg: true,
-         location: true,
-         isActive: true,
-      },
-   });
 }

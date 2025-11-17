@@ -15,11 +15,11 @@ import {
    DropdownMenuSeparator,
    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { getUser } from "@/utils/auth";
+import { getUserProfile } from "@/lib/data-access/profile";
 import { signOutAction } from "@/app/actions/auth";
 
 export default async function Header() {
-   const user = await getUser();
+   const user = await getUserProfile();
 
    return (
       <header className="sticky top-0 z-50 w-full border-b border-neutral-200 bg-white">
