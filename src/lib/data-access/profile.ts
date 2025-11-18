@@ -1,4 +1,4 @@
-import { getUser, requireAuth } from "@/utils/auth";
+import { getUser } from "@/utils/auth";
 import prisma from "@/utils/prisma";
 import { TUpdateUserProfile } from "@/utils/zod-schemas/profile";
 
@@ -17,17 +17,14 @@ export async function getUserProfile(userId?: string) {
 }
 
 
-export async function updateUserProfile(
-   userId: string,
-   data: TUpdateUserProfile
-) {
-   const currentUser = await requireAuth();
-   if (currentUser.id !== userId) {
-      throw new Error("You are not authorized to update this profile");
-   }
-
+export async function updateUserProfile(userId: string, data: Partial<TUpdateUserProfile>) {
    return await prisma.user.update({
       where: { id: userId },
-      data,
+      data: {
+         name: data.name,
+         location: data.location,
+         phone: data.phone,
+         avatarImg: data.avatarImg,
+      },
    });
 }

@@ -1,10 +1,11 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { CalendarIcon, MapPinIcon, StarIcon, UserIcon } from "lucide-react";
+import { CalendarIcon, MapPinIcon, StarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { Separator } from "@/components/ui/separator";
 import { getUserListingsCount } from "@/lib/data-access/listings";
 import { getUserProfile } from "@/lib/data-access/profile";
 import AvatarUpload from "./AvatarUpload";
+import EditProfileForm from "./EditProfileForm";
 
 export default async function ProfileCard() {
    const user = await getUserProfile();
@@ -19,14 +20,15 @@ export default async function ProfileCard() {
             <div className="flex items-center gap-4">
                <AvatarUpload currentAvatarUrl={user.avatarImg} />
             </div>
-            <div className="flex flex-col gap-2">
-               <div className="flex items-center justify-between gap-2 w-full">
+            <div className="flex flex-col gap-2 w-full">
+               <div className="flex items-center justify-between w-full">
                   <h2>{user.name}</h2>
+                  <EditProfileForm user={user} />
                </div>
                <div className="flex items-center gap-6">
                   <div className="flex items-center gap-2  text-neutral-500">
                      <MapPinIcon className="size-4" />
-                     <p>{user.location || "No location set"}</p>
+                     <p>{user.location ?? "No location set"}</p>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-neutral-500">
                      <CalendarIcon className="size-4" />

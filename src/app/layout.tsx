@@ -41,7 +41,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${montserrat.variable} ${poppins.variable} ${inter.variable} ${spaceGrotesk.variable} antialiased overflow-x-hidden`}
+        className={`font-inter ${inter.variable} ${montserrat.variable} ${poppins.variable} ${spaceGrotesk.variable} antialiased overflow-x-hidden`}
       >
         <QueryProvider>
           {children}

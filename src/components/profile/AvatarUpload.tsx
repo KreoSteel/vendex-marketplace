@@ -1,7 +1,7 @@
 "use client";
-import { useRef, useTransition } from "react";
+import { useRef, useTransition, useState } from "react";
 import { Input } from "../ui/input";
-import { updateUserProfileAction } from "@/app/actions/profile";
+import { updateUserProfileImageAction } from "@/app/actions/profile";
 import { CameraIcon, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -12,46 +12,38 @@ interface AvatarUploadProps {
 
 export default function AvatarUpload({ currentAvatarUrl }: AvatarUploadProps) {
    const [isPending, startTransition] = useTransition();
+   const [error, setError] = useState<string | null>(null);
    const fileInputRef = useRef<HTMLInputElement>(null);
    const router = useRouter();
 
-   function handleClick() {
-      fileInputRef.current?.click();
-   }
-
-   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (!file) return;
 
       startTransition(async () => {
-         try {
-            const formData = new FormData();
-            formData.append("avatarImg", file);
-            const result = await updateUserProfileAction(formData);
-            
-            if ("success" in result) {
-               router.refresh();
-            } else if ("error" in result) {
-               console.error("Upload error:", result.error);
-            }
-         } catch (error) {
-            console.error("Failed to upload avatar:", error);
-         } finally {
-            if (fileInputRef.current) {
-               fileInputRef.current.value = "";
-            }
+         const formData = new FormData();
+         formData.append("avatarImg", file);
+
+         const result = await updateUserProfileImageAction(formData);
+         if ("success" in result) {
+            router.refresh();
+         } else if ("error" in result) {
+            setError(result.error);
+         }
+
+         if (fileInputRef.current) {
+            fileInputRef.current.value = "";
          }
       });
-   }
+   };
 
    return (
       <div className="relative">
          <button
             type="button"
-            onClick={handleClick}
+            onClick={() => fileInputRef.current?.click()}
             disabled={isPending}
-            className="size-20 rounded-full bg-neutral-100 dark:bg-neutral-800 border-2 border-neutral-200 dark:border-neutral-700 flex items-center justify-center hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer overflow-hidden relative"
-         >
+            className="size-20 rounded-full bg-neutral-100 dark:bg-neutral-800 border-2 border-neutral-200 dark:border-neutral-700 flex items-center justify-center hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer overflow-hidden relative">
             {isPending ? (
                <Loader2 className="size-6 text-neutral-500 animate-spin" />
             ) : currentAvatarUrl ? (
@@ -61,6 +53,7 @@ export default function AvatarUpload({ currentAvatarUrl }: AvatarUploadProps) {
                   fill
                   className="object-cover"
                   sizes="100px"
+                  loading="eager"
                />
             ) : (
                <CameraIcon className="size-6 text-neutral-500" />

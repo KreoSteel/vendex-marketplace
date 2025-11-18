@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { getUserProfile } from "@/lib/data-access/profile";
 import { signOutAction } from "@/app/actions/auth";
+import Image from "next/image";
 
 export default async function Header() {
    const user = await getUserProfile();
@@ -62,11 +63,19 @@ export default async function Header() {
                   {user ? (
                      <DropdownMenu>
                         <DropdownMenuTrigger>
-                           <User className="size-6" />
+                           {user.avatarImg ? (
+                              <Image src={user.avatarImg} alt={user.name ?? "User avatar"} width={42} height={42} className="rounded-full" />
+                           ) : (
+                              <User className="size-6" />
+                           )}
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
                            <div className="flex items-center gap-2 px-2 py-1">
-                              <User className="size-4" />
+                              {user.avatarImg ? (
+                                 <Image src={user.avatarImg} alt={user.name ?? "User avatar"} width={42} height={42} className="rounded-full" />
+                              ) : (
+                                 <User className="size-4" />
+                              )}
                               <div className="flex flex-col">
                                  <p className="text-xs">{user.name}</p>
                                  <span className="text-xs text-neutral-500">

@@ -1,9 +1,9 @@
 import ProfileCard from "@/components/profile/ProfileCard";
 
-export default function ProfilePage() {
-    return (
-        <div>
-            <ProfileCard />
-        </div>
-    )
+export default async function ProfilePage() {
+   return (
+      <div>
+         <ProfileCard />
+      </div>
+   );
 }
