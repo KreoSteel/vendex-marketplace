@@ -1,20 +1,28 @@
-import { PrismaClient } from '@prisma/client'
-import { withAccelerate } from '@prisma/extension-accelerate'
+import { PrismaClient } from "./generated/client";
 
 const prismaClientSingleton = () => {
-    return new PrismaClient({
-        log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
-    }).$extends(withAccelerate())
-}
+  const accelerateUrl = process.env.PRISMA_ACCELERATE_URL;
+  
+  if (!accelerateUrl) {
+    throw new Error(
+      "PRISMA_ACCELERATE_URL environment variable is required. " +
+      "Please set it in your .env file with your Prisma Accelerate connection string."
+    );
+  }
+  
+  return new PrismaClient({
+    accelerateUrl,
+  });
+};
 
 const globalForPrisma = globalThis as unknown as {
-    prisma: ReturnType<typeof prismaClientSingleton> | undefined
-}
+  prisma: ReturnType<typeof prismaClientSingleton> | undefined;
+};
 
-const prismaClient = globalForPrisma.prisma ?? prismaClientSingleton()
+const prismaClient = globalForPrisma.prisma ?? prismaClientSingleton();
 
 if (process.env.NODE_ENV !== "production") {
-    globalForPrisma.prisma = prismaClient;
+  globalForPrisma.prisma = prismaClient;
 }
 
 export default prismaClient;

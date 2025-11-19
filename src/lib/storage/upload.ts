@@ -22,7 +22,13 @@ export async function uploadListingImages(files: File[], userId: string) {
 
       const { data: urlData } = supabaseAdmin.storage
          .from("listing_images")
-         .getPublicUrl(fileName);
+         .getPublicUrl(fileName, {
+            transform: {
+               width: 300,
+               height: 200,
+               resize: "cover",
+            }
+         });
 
       urls.push(urlData.publicUrl);
    }
@@ -42,7 +48,13 @@ export async function uploadProfileImage(file: File, userId: string) {
    }
    const { data: urlData } = supabaseAdmin.storage
       .from("users_avatars")
-      .getPublicUrl(fileName);
+      .getPublicUrl(fileName, {
+         transform: {
+            width: 100,
+            height: 100,
+            resize: "cover",
+         }
+      });
 
    return { url: urlData.publicUrl };
 }

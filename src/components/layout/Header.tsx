@@ -64,7 +64,7 @@ export default async function Header() {
                      <DropdownMenu>
                         <DropdownMenuTrigger>
                            {user.avatarImg ? (
-                              <Image src={user.avatarImg} alt={user.name ?? "User avatar"} width={42} height={42} className="rounded-full" />
+                              <Image src={user.avatarImg} alt={user.name ?? "User avatar"} width={42} height={42} className="rounded-full" quality={75} sizes="42px" />
                            ) : (
                               <User className="size-6" />
                            )}
@@ -72,7 +72,7 @@ export default async function Header() {
                         <DropdownMenuContent>
                            <div className="flex items-center gap-2 px-2 py-1">
                               {user.avatarImg ? (
-                                 <Image src={user.avatarImg} alt={user.name ?? "User avatar"} width={42} height={42} className="rounded-full" />
+                                 <Image src={user.avatarImg} alt={user.name ?? "User avatar"} width={42} height={42} className="rounded-full" quality={75} sizes="42px" />
                               ) : (
                                  <User className="size-4" />
                               )}

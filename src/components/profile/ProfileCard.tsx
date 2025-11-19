@@ -2,18 +2,19 @@ import { Card, CardContent } from "@/components/ui/card";
 import { CalendarIcon, MapPinIcon, StarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { Separator } from "@/components/ui/separator";
-import { getUserListingsCount } from "@/lib/data-access/listings";
 import { getUserProfile } from "@/lib/data-access/profile";
 import AvatarUpload from "./AvatarUpload";
 import EditProfileForm from "./EditProfileForm";
+import type { User } from "@prisma/client";
 
-export default async function ProfileCard() {
-   const user = await getUserProfile();
-   if (!user) {
-      return null;
-   }
-   const counts = await getUserListingsCount(user.id);
+interface ProfileCardProps {
+   user: User;
+   activeListingsCount: number;
+   itemsSoldCount: number;
+   totalReviewsCount: number;
+}
 
+export default async function ProfileCard({ user, activeListingsCount, itemsSoldCount, totalReviewsCount }: ProfileCardProps) {
    return (
       <Card className="w-full">
          <CardContent className="flex items-center gap-6 py-4 px-6">
@@ -49,15 +50,15 @@ export default async function ProfileCard() {
          <CardContent className="flex justify-evenly gap-4">
             <div className="flex flex-col items-center gap-2">
                <h3 className="text-sm text-neutral-500 font-medium">Active Listings</h3>
-               <p>{counts.activeListings}</p>
+               <p>{activeListingsCount}</p>
             </div>
             <div className="flex flex-col items-center gap-2">
                <h3 className="text-sm text-neutral-500 font-medium">Items Sold</h3>
-               <p>{counts.itemsSold}</p>
+               <p>{itemsSoldCount}</p>
             </div>
             <div className="flex flex-col items-center gap-2">
                <h3 className="text-sm text-neutral-500 font-medium">Total Reviews</h3>
-               <p>{counts.TotalReviews}</p>
+               <p>{totalReviewsCount}</p>
             </div>
          </CardContent>
       </Card>

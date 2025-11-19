@@ -51,6 +51,9 @@ export async function getUser(req?: NextRequest) {
             location: true,
             isActive: true,
             createdAt: true,
+            updatedAt: true,
+            emailVerified: true,
+            phone: true,
          },
       });
    } catch (error) {

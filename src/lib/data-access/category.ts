@@ -1,3 +1,4 @@
+"use server";
 import { requireAuth } from "@/utils/auth";
 import prisma from "@/utils/prisma";
 import { Category } from "@prisma/client";

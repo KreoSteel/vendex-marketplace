@@ -6,17 +6,22 @@ import { Button } from "@/components/ui/button";
 
 interface ListingCardProps {
    listing: TListing;
+   preload?: boolean;
 }
 
-export default function ListingCard({ listing }: ListingCardProps) {
+export default function ListingCard({ listing, preload = false }: ListingCardProps) {
    return (
       <div className="flex flex-col bg-white hover:bg-neutral-100/50 rounded-lg overflow-hidden shadow-md hover:translate-y-[-4px] transition-all duration-300">
          <div className="relative w-full h-[200px] overflow-hidden">
-            <Image
+            <Image 
                src={listing.images[0].url}
                alt={listing.title}
                fill
-               className=""
+               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+               className="object-cover"
+               loading={preload ? "eager" : "lazy"}
+               fetchPriority={preload ? "high" : "auto"}
+               quality={85}
             />
          </div>
          <div className="flex flex-col gap-2 p-4 min-h-[180px] justify-between">
@@ -26,7 +31,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
                      {listing.title}
                   </h3>
                   <h2 className="text-lg font-bold text-gray-900">
-                     {listing.price.toLocaleString()} €
+                     {listing.price ? `${listing.price.toLocaleString()} €` : "0 €"}
                   </h2>
                </div>
                <div className="flex items-center gap-2">
@@ -36,8 +41,10 @@ export default function ListingCard({ listing }: ListingCardProps) {
                </div>
             </div>
             <div className="text-xs text-gray-500 flex justify-between items-center">
-               <span className="truncate">{listing.location}</span>
-               <span className="shrink-0 ml-2">{format(listing.createdAt, "d MMM yyyy")}</span>
+               <span className="truncate">{listing.location || "Location not specified"}</span>
+               <span className="shrink-0 ml-2">
+                  {listing.createdAt ? format(new Date(listing.createdAt), "d MMM yyyy") : "N/A"}
+               </span>
             </div>
          </div>
       </div>

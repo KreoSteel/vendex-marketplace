@@ -1,7 +1,9 @@
 import "dotenv/config";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@/utils/generated/client";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  accelerateUrl: process.env.PRISMA_ACCELERATE_URL!,
+});
 
 const categories = [
   {

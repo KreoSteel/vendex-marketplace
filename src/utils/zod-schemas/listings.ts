@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ListingCondition } from "@prisma/client";
+import { ListingCondition, ListingStatus } from "@prisma/client";
 
 export const createListingSchema = z.object({
     title: z.string().min(1, { message: "Title is required" }),
@@ -14,11 +14,11 @@ export const createListingSchema = z.object({
 export const listingSchema = z.object({
     id: z.string(),
     title: z.string(),
-    price: z.number(),
-    location: z.string(),
+    price: z.number().nullable(),
+    location: z.string().nullable(),
     condition: z.enum(ListingCondition),
+    status: z.enum(ListingStatus),
     createdAt: z.date(),
-    updatedAt: z.date(),
     images: z.array(z.object({
         url: z.string(),
     })),

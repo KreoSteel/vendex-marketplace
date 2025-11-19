@@ -2,7 +2,7 @@
 import { useRef, useTransition, useState } from "react";
 import { Input } from "../ui/input";
 import { updateUserProfileImageAction } from "@/app/actions/profile";
-import { CameraIcon, Loader2 } from "lucide-react";
+import { CameraIcon, Loader2, UserIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -51,9 +51,10 @@ export default function AvatarUpload({ currentAvatarUrl }: AvatarUploadProps) {
                   src={currentAvatarUrl}
                   alt="Avatar"
                   fill
-                  className="object-cover"
-                  sizes="100px"
-                  loading="eager"
+                  sizes="80px"
+                  className="object-cover rounded-full"
+                  priority
+                  quality={85}
                />
             ) : (
                <CameraIcon className="size-6 text-neutral-500" />

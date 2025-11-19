@@ -1,3 +1,4 @@
+"use server";
 import { getUser } from "@/utils/auth";
 import prisma from "@/utils/prisma";
 import { TUpdateUserProfile } from "@/utils/zod-schemas/profile";

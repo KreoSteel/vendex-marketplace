@@ -10,10 +10,9 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: supabaseHostname,
         pathname: "/storage/v1/object/public/**",
-      }
-    ],
-  },
-  reactCompiler: true,
+      },
+    ]
+  }
 };
 
 export default nextConfig;
