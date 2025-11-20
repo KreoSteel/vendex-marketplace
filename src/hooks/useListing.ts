@@ -6,10 +6,20 @@ import {
    userFavoriteListingsOptions,
    userSoldListingsOptions,
    userListingsCountOptions,
+   allListingsOptions,
 } from "@/lib/queries/listings";
-
+import { AllListingsParams, Filters } from "@/lib/data-access/listings";
+import { getMaxPriceForFiltersOptions } from "@/lib/utils";
 export const useGetRecentListings = () => {
    return useQuery(recentListingsOptions);
+};
+
+export const useGetAllListings = (params: AllListingsParams) => {
+   return useQuery(allListingsOptions(params));
+};
+
+export const useGetMaxPriceForFilters = (params: Filters) => {
+   return useQuery(getMaxPriceForFiltersOptions(params));
 };
 
 export const useGetUserActiveListings = (userId: string) => {

@@ -9,63 +9,117 @@ import {
 import { requireAuth } from "@/utils/auth";
 import { ListingCondition, ListingStatus } from "@/utils/generated/enums";
 
-type AllListingsParams = {
-   currentPage?: number;
-   itemsPerPage?: number;
-   categoryId?: string | null;
+export type AllListingsParams = {
+   currentPage?: string | number;
+   itemsPerPage?: string | number;
+   categorySlugs?: string[] | null;
    condition?: ListingCondition | null;
+   conditions?: ListingCondition[] | null;
+   minPrice?: number | null;
+   maxPrice?: number | null;
    search?: string | null;
    sortBy?: "createdAt" | "price";
    sortOrder?: "asc" | "desc";
 };
 
+export type Filters = {
+   search?: string | null;
+   categorySlugs?: string[] | null;
+   conditions?: ListingCondition[] | null;
+}
+
 export async function getAllListings({
    currentPage = 1,
    itemsPerPage = 20,
-   categoryId,
+   categorySlugs,
    search,
    condition,
+   conditions,
+   minPrice,
+   maxPrice,
    sortBy = "createdAt",
    sortOrder = "desc",
 }: AllListingsParams = {}) {
-   const skip = (currentPage - 1) * itemsPerPage;
+   const page = currentPage === "string" ? parseInt(currentPage, 10) : currentPage;
+   const items = itemsPerPage === "string" ? parseInt(itemsPerPage, 10) : itemsPerPage;
+   const skip = (page as number - 1) * (items as number);
+
 
    const where: Prisma.ListingWhereInput = {
       status: ListingStatus.ACTIVE,
-      ...(categoryId && { categoryId }),
+      ...(categorySlugs && categorySlugs.length > 0 && { category: { slug: { in: categorySlugs }}}),
+      ...(conditions && conditions.length > 0 && { condition: { in: conditions }}),
+      ...(minPrice !== null && minPrice !== undefined && { price: { gte: minPrice }}),
+      ...(maxPrice !== null && maxPrice !== undefined && { price: { lte: maxPrice }}),
       ...(search && {
-         title: { contains: search, mode: "insensitive" as const },
-         description: { contains: search, mode: "insensitive" as const },
+         OR: [
+            { title: { contains: search, mode: "insensitive" as const } },
+            { description: { contains: search, mode: "insensitive" as const } },
+         ],
       }),
       ...(condition && { condition }),
    };
-   
-   return await prisma.listing.findMany({
-      where,
-      orderBy: {
-         [sortBy]: sortOrder,
-      },
-      skip,
-      take: itemsPerPage,
-      select: {
-         id: true,
-         title: true,
-         price: true,
-         location: true,
-         condition: true,
-         createdAt: true,
-         updatedAt: true,
-         images: {
-            select: {
-               url: true,
-            },
-            take: 1,
-            orderBy: {
-               order: "asc",
+
+   const [listings, totalCount] = await Promise.all([
+      prisma.listing.findMany({
+         where,
+         orderBy: {
+            [sortBy]: sortOrder,
+         },
+         skip,
+         take: items as number,
+         select: {
+            id: true,
+            title: true,
+            price: true,
+            location: true,
+            condition: true,
+            createdAt: true,
+            updatedAt: true,
+            images: {
+               select: {
+                  url: true,
+               },
+               take: 1,
+               orderBy: {
+                  order: "asc",
+               },
             },
          },
-      },
+      }),
+      prisma.listing.count({ where }),
+   ]);
+
+   return {
+      listings,
+      totalCount,
+      currentPage: page as number,
+      itemsPerPage: items as number,
+      totalPages: Math.ceil(totalCount / (items as number)),
+   };
+}
+
+export async function getMaxPrice(params: Filters) {
+   const where: Prisma.ListingWhereInput = {
+      status: ListingStatus.ACTIVE,
+      ...(params.categorySlugs && params.categorySlugs.length > 0 && { category: { slug: { in: params.categorySlugs } } }),
+      ...(params.search && {
+         OR: [
+            { title: { contains: params.search, mode: "insensitive" as const } },
+            { description: { contains: params.search, mode: "insensitive" as const } },
+         ]
+      }),
+      ...(params.conditions && params.conditions.length > 0 && { condition: { in: params.conditions } }),
+   }
+
+   const result = await prisma.listing.aggregate({
+      where,
+      _max: {
+         price: true,
+      }
    });
+
+   return result._max?.price ?? 1000;
 }
 
 export async function getRecentListings() {
@@ -73,7 +127,7 @@ export async function getRecentListings() {
       orderBy: {
          createdAt: "desc",
       },
-      take: 6,
+      take: 12,
       select: {
          id: true,
          title: true,

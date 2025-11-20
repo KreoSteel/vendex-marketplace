@@ -1,6 +1,8 @@
-import { queryOptions } from "@tanstack/react-query";
+import { keepPreviousData, queryOptions } from "@tanstack/react-query";
 import { http } from "@/utils/http";
 import {
+   AllListingsParams,
+   getAllListings,
    getUserActiveListings,
    getUserFavoriteListings,
    getUserListingsCount,
@@ -14,6 +16,15 @@ export const recentListingsOptions = queryOptions({
       return response.data;
    },
    staleTime: 60 * 5 * 1000,
+});
+
+export const allListingsOptions = (params: AllListingsParams) => queryOptions({
+   queryKey: ["all-listings", params],
+   queryFn: async () => {
+      return await getAllListings(params);
+   },
+   staleTime: 60 * 5 * 1000,
+   placeholderData: keepPreviousData,
 });
 
 export const userListingsCountOptions = (userId: string) =>

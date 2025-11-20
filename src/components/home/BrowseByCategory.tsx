@@ -1,10 +1,16 @@
+"use client";
 import { Card, CardHeader, CardTitle } from "../ui/card";
-import { getAllCategories } from "@/lib/data-access/category";
 import { getIconForCategory } from "@/lib/utils";
 import Link from "next/link";
+import { useGetCategories } from "@/hooks/useCategories";
 
-export default async function BrowseByCategory() {
-   const categories = await getAllCategories();
+export default function BrowseByCategory() {
+   const { data: categories } = useGetCategories();
+
+   const searchParams = new URLSearchParams();
+   searchParams.set("page", "1");
+   searchParams.set("sortBy", "createdAt");
+   searchParams.set("sortOrder", "desc");
 
    return (
       <section className="w-full">
@@ -14,12 +20,12 @@ export default async function BrowseByCategory() {
             </h2>
          </div>
          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-7 gap-4">
-            {categories.map((category) => {
-               const Icon = getIconForCategory(category.icon);
+            {categories?.map((category) => {
+               const Icon = getIconForCategory(category?.icon || "Package");
                return (
                   <Link
                      key={category.id}
-                     href={`/categories/${category.slug}`}
+                     href={`/listings?${searchParams.toString()}&category=${category.slug}`}
                      className="group">
                      <Card className="py-6 hover:shadow-xl transition-all duration-400 cursor-pointer h-full flex flex-col items-center">
                         <CardHeader className="flex flex-col items-center gap-3 w-full">

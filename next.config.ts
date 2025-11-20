@@ -11,8 +11,23 @@ const nextConfig: NextConfig = {
         hostname: supabaseHostname,
         pathname: "/storage/v1/object/public/**",
       },
-    ]
-  }
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "picsum.photos",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "i.pravatar.cc",
+        pathname: "/**",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

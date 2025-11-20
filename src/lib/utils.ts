@@ -17,7 +17,8 @@ import {
   Gift,
   type LucideIcon,
 } from "lucide-react";
-
+import { Filters, getMaxPrice } from "./data-access/listings";
+import { keepPreviousData, queryOptions } from "@tanstack/react-query";
 
 export const iconMap: Record<string, LucideIcon> = {
   Smartphone,
@@ -47,3 +48,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export function getMaxPriceForFiltersOptions(params: Filters) {
+  return queryOptions({
+    queryKey: ["max-price", params],
+    queryFn: () => getMaxPrice(params),
+    staleTime: 60 * 5 * 1000,
+  });
+}

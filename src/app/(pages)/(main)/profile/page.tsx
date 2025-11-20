@@ -30,7 +30,7 @@ export default async function ProfilePage() {
    );
    
    return (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 max-w-3/4 mx-auto">
          <HydrationBoundary state={dehydrate(queryClient)}>
             <ProfileCard
                user={user}

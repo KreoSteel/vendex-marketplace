@@ -17,7 +17,7 @@ export const listingSchema = z.object({
     price: z.number().nullable(),
     location: z.string().nullable(),
     condition: z.enum(ListingCondition),
-    status: z.enum(ListingStatus),
+    status: z.enum(ListingStatus).optional(),
     createdAt: z.date(),
     images: z.array(z.object({
         url: z.string(),

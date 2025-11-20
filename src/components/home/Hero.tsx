@@ -9,7 +9,7 @@ export default function Hero() {
                     <p className="text-sm text-neutral-700 mb-10">
                         Vendex is a platform for buying and selling products.
                     </p>
-                    <SearchBar />
+                    <SearchBar className="w-full max-w-xl" />
                 </div>
             </div>
         </section>
