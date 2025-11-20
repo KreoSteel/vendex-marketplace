@@ -3,7 +3,7 @@ import { createListing } from "@/lib/data-access/listings";
 import { uploadListingImages } from "@/lib/storage/upload";
 import { requireAuth } from "@/utils/auth";
 import { createListingSchema } from "@/utils/zod-schemas/listings";
-import { ListingCondition } from "@prisma/client";
+import { ListingCondition } from "@/utils/generated/enums";
 
 type ActionState =
    | { error: string; success?: string }

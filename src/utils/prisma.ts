@@ -1,23 +1,28 @@
-import { PrismaClient } from "./generated/client";
+import { PrismaClient } from "@/utils/generated/client";
+import { Pool } from "pg";
+import { PrismaPg } from "@prisma/adapter-pg";
 
 const prismaClientSingleton = () => {
-  const accelerateUrl = process.env.PRISMA_ACCELERATE_URL;
+  const connectionString = process.env.DATABASE_URL;
   
-  if (!accelerateUrl) {
-    throw new Error(
-      "PRISMA_ACCELERATE_URL environment variable is required. " +
-      "Please set it in your .env file with your Prisma Accelerate connection string."
-    );
+  if (!connectionString) {
+    throw new Error("DATABASE_URL environment variable is required");
   }
   
-  return new PrismaClient({
-    accelerateUrl,
-  });
+  const pool = new Pool({ connectionString });
+  const adapter = new PrismaPg(pool);
+  
+  return new PrismaClient({ adapter });
 };
 
 const globalForPrisma = globalThis as unknown as {
   prisma: ReturnType<typeof prismaClientSingleton> | undefined;
 };
+
+// Clear cached singleton in development to ensure fresh instance
+if (process.env.NODE_ENV !== "production" && globalForPrisma.prisma) {
+  delete globalForPrisma.prisma;
+}
 
 const prismaClient = globalForPrisma.prisma ?? prismaClientSingleton();
 

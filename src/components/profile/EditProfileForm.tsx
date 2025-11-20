@@ -14,7 +14,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { useActionState } from "react";
 import { updateUserProfileAction } from "@/app/actions/profile";
-import type { User } from "@prisma/client";
+import type { User } from "@/utils/generated/client";
 
 export default function EditProfileForm({ user }: { user: User | null }) {
 

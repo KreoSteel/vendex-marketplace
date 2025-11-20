@@ -54,7 +54,6 @@ export default function AvatarUpload({ currentAvatarUrl }: AvatarUploadProps) {
                   sizes="80px"
                   className="object-cover rounded-full"
                   priority
-                  quality={85}
                />
             ) : (
                <CameraIcon className="size-6 text-neutral-500" />

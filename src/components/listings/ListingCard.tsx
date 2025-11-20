@@ -21,7 +21,6 @@ export default function ListingCard({ listing, preload = false }: ListingCardPro
                className="object-cover"
                loading={preload ? "eager" : "lazy"}
                fetchPriority={preload ? "high" : "auto"}
-               quality={85}
             />
          </div>
          <div className="flex flex-col gap-2 p-4 min-h-[180px] justify-between">

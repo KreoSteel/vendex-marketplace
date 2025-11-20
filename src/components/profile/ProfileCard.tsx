@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { getUserProfile } from "@/lib/data-access/profile";
 import AvatarUpload from "./AvatarUpload";
 import EditProfileForm from "./EditProfileForm";
-import type { User } from "@prisma/client";
+import type { User } from "@/utils/generated/client";
 
 interface ProfileCardProps {
    user: User;

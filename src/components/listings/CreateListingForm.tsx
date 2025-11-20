@@ -13,7 +13,7 @@ import {
    SelectValue,
 } from "../ui/select";
 import { Button } from "../ui/button";
-import { ListingCondition } from "@prisma/client";
+import { ListingCondition } from "@/utils/generated/enums";
 import { useGetCategoriesNames } from "@/hooks/useCategories";
 import { TCategory } from "@/utils/zod-schemas/categories";
 
