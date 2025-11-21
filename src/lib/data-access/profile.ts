@@ -3,7 +3,7 @@ import { getUser } from "@/utils/auth";
 import prisma from "@/utils/prisma";
 import { TUpdateUserProfile } from "@/utils/zod-schemas/profile";
 
-export async function getUserProfile(userId?: string) {
+export async function getUserProfile(userId: string) {
    const currentUser = await getUser();
    if (!userId && !currentUser) {
       return null;

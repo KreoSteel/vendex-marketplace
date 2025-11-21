@@ -8,15 +8,16 @@ interface ListingTabsProps {
     activeListingsCount: number;
     soldListingsCount: number;
     favoritesListingsCount: number;
+    showFavorites: boolean;
 }
 
-export default function ListingTabs({ userId, activeListingsCount, soldListingsCount, favoritesListingsCount }: ListingTabsProps) {
+export default function ListingTabs({ userId, activeListingsCount, soldListingsCount, favoritesListingsCount, showFavorites }: ListingTabsProps) {
     return (
         <Tabs defaultValue="active">
             <TabsList className="mb-4">
                 <TabsTrigger value="active">Active Listings ({activeListingsCount})</TabsTrigger>
                 <TabsTrigger value="sold">Sold Items ({soldListingsCount})</TabsTrigger>
-                <TabsTrigger value="favorites">Favorites ({favoritesListingsCount})</TabsTrigger>
+                {showFavorites && <TabsTrigger value="favorites">Favorites ({favoritesListingsCount})</TabsTrigger>}
             </TabsList>
             <TabsContent value="active">
                 <ActiveListingsTab userId={userId} />
@@ -24,9 +25,9 @@ export default function ListingTabs({ userId, activeListingsCount, soldListingsC
             <TabsContent value="sold">
                 <SoldItemsTab userId={userId} />
             </TabsContent>
-            <TabsContent value="favorites">
+            {showFavorites && <TabsContent value="favorites">
                 <FavoritesListingsTab userId={userId} />
-            </TabsContent>
+            </TabsContent>}
         </Tabs>
     )
 }

@@ -6,25 +6,40 @@ import { getUserProfile } from "@/lib/data-access/profile";
 import AvatarUpload from "./AvatarUpload";
 import EditProfileForm from "./EditProfileForm";
 import type { User } from "@/utils/generated/client";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 
 interface ProfileCardProps {
    user: User;
    activeListingsCount: number;
    itemsSoldCount: number;
    totalReviewsCount: number;
+   isOwner: boolean;
 }
 
-export default async function ProfileCard({ user, activeListingsCount, itemsSoldCount, totalReviewsCount }: ProfileCardProps) {
+export default async function ProfileCard({
+   user,
+   activeListingsCount,
+   itemsSoldCount,
+   totalReviewsCount,
+   isOwner,
+}: ProfileCardProps) {
    return (
       <Card className="w-full">
          <CardContent className="flex items-center gap-6 py-4 px-6">
             <div className="flex items-center gap-4">
-               <AvatarUpload currentAvatarUrl={user.avatarImg} />
+               {isOwner && <AvatarUpload currentAvatarUrl={user.avatarImg} />}
+
+               {!isOwner && (
+                  <Avatar className="size-20 rounded-full shadow-sm">
+                     <AvatarImage src={user.avatarImg || ""} className="rounded-full" />
+                     <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
+                  </Avatar>
+               )}
             </div>
             <div className="flex flex-col gap-2 w-full">
                <div className="flex items-center justify-between w-full">
                   <h2>{user.name}</h2>
-                  <EditProfileForm user={user} />
+                  {isOwner && <EditProfileForm user={user} />}
                </div>
                <div className="flex items-center gap-6">
                   <div className="flex items-center gap-2  text-neutral-500">
@@ -36,7 +51,7 @@ export default async function ProfileCard({ user, activeListingsCount, itemsSold
                      <p>
                         {" "}
                         Joined{" "}
-                            {format(user.createdAt || new Date(), "d MMM yyyy")}
+                        {format(user.createdAt || new Date(), "d MMM yyyy")}
                      </p>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-neutral-500">
@@ -49,15 +64,21 @@ export default async function ProfileCard({ user, activeListingsCount, itemsSold
          <Separator />
          <CardContent className="flex justify-evenly gap-4">
             <div className="flex flex-col items-center gap-2">
-               <h3 className="text-sm text-neutral-500 font-medium">Active Listings</h3>
+               <h3 className="text-sm text-neutral-500 font-medium">
+                  Active Listings
+               </h3>
                <p>{activeListingsCount}</p>
             </div>
             <div className="flex flex-col items-center gap-2">
-               <h3 className="text-sm text-neutral-500 font-medium">Items Sold</h3>
+               <h3 className="text-sm text-neutral-500 font-medium">
+                  Items Sold
+               </h3>
                <p>{itemsSoldCount}</p>
             </div>
             <div className="flex flex-col items-center gap-2">
-               <h3 className="text-sm text-neutral-500 font-medium">Total Reviews</h3>
+               <h3 className="text-sm text-neutral-500 font-medium">
+                  Total Reviews
+               </h3>
                <p>{totalReviewsCount}</p>
             </div>
          </CardContent>
