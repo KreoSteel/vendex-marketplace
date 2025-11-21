@@ -101,6 +101,12 @@ h1 {
 h2 {
   @apply text-xl font-semibold;
 }
+h3 {
+  @apply font-semibold;
+}
+h4 {
+  @apply text-sm leading-relaxed;
+}
 p {
   @apply text-base;
 }

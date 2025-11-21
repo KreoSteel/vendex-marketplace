@@ -7,6 +7,7 @@ import {
    userSoldListingsOptions,
    userListingsCountOptions,
    allListingsOptions,
+   getListingByIdOptions,
 } from "@/lib/queries/listings";
 import { AllListingsParams, Filters } from "@/lib/data-access/listings";
 import { getMaxPriceForFiltersOptions } from "@/lib/utils";
@@ -16,6 +17,10 @@ export const useGetRecentListings = () => {
 
 export const useGetAllListings = (params: AllListingsParams) => {
    return useQuery(allListingsOptions(params));
+};
+
+export const useGetListingById = (id: string) => {
+   return useQuery(getListingByIdOptions(id));
 };
 
 export const useGetMaxPriceForFilters = (params: Filters) => {

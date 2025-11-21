@@ -194,8 +194,6 @@ export async function getUserListingsCount(userId: string) {
 }
 
 export async function getListingById(id: string) {
-   await requireAuth();
-
    return await prisma.listing.findUnique({
       where: {
          id: id,
@@ -231,6 +229,7 @@ export async function getListingById(id: string) {
                name: true,
                avatarImg: true,
                location: true,
+               createdAt: true,
             },
          },
       },

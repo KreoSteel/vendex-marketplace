@@ -3,6 +3,7 @@ import Image from "next/image";
 import { HeartIcon } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface ListingCardProps {
    listing: TListing;
@@ -11,6 +12,7 @@ interface ListingCardProps {
 
 export default function ListingCard({ listing, preload = false }: ListingCardProps) {
    return (
+      <Link href={`/listings/${listing.id}`}>
       <div className="flex flex-col bg-white hover:bg-neutral-100/50 rounded-lg overflow-hidden shadow-md hover:translate-y-[-4px] transition-all duration-300">
          <div className="relative w-full h-[200px] overflow-hidden">
             <Image 
@@ -45,7 +47,8 @@ export default function ListingCard({ listing, preload = false }: ListingCardPro
                   {listing.createdAt ? format(new Date(listing.createdAt), "d MMM yyyy") : "N/A"}
                </span>
             </div>
+            </div>
          </div>
-      </div>
+      </Link>
    );
 }

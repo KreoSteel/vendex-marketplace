@@ -3,6 +3,7 @@ import { http } from "@/utils/http";
 import {
    AllListingsParams,
    getAllListings,
+   getListingById,
    getUserActiveListings,
    getUserFavoriteListings,
    getUserListingsCount,
@@ -18,14 +19,25 @@ export const recentListingsOptions = queryOptions({
    staleTime: 60 * 5 * 1000,
 });
 
-export const allListingsOptions = (params: AllListingsParams) => queryOptions({
-   queryKey: ["all-listings", params],
-   queryFn: async () => {
-      return await getAllListings(params);
-   },
-   staleTime: 60 * 5 * 1000,
-   placeholderData: keepPreviousData,
-});
+export const allListingsOptions = (params: AllListingsParams) =>
+   queryOptions({
+      queryKey: ["all-listings", params],
+      queryFn: async () => {
+         return await getAllListings(params);
+      },
+      staleTime: 60 * 5 * 1000,
+      placeholderData: keepPreviousData,
+   });
+
+export const getListingByIdOptions = (id: string) =>
+   queryOptions({
+      queryKey: ["listing-by-id", id],
+      queryFn: async () => {
+         return await getListingById(id);
+      },
+      staleTime: 60 * 5 * 1000,
+      enabled: !!id,
+   });
 
 export const userListingsCountOptions = (userId: string) =>
    queryOptions({
