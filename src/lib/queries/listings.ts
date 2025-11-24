@@ -5,7 +5,6 @@ import {
    getAllListings,
    getListingById,
    getUserActiveListings,
-   getUserFavoriteListings,
    getUserListingsCount,
    getUserSoldListings,
 } from "../data-access/listings";
@@ -64,16 +63,6 @@ export const userSoldListingsOptions = (userId: string) =>
       queryKey: ["user-sold-listings", userId],
       queryFn: async () => {
          return await getUserSoldListings(userId);
-      },
-      staleTime: 60 * 5 * 1000,
-      enabled: !!userId,
-   });
-
-export const userFavoriteListingsOptions = (userId: string) =>
-   queryOptions({
-      queryKey: ["user-favorite-listings", userId],
-      queryFn: async () => {
-         return await getUserFavoriteListings(userId);
       },
       staleTime: 60 * 5 * 1000,
       enabled: !!userId,

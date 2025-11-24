@@ -307,43 +307,6 @@ export async function getUserSoldListings(userId: string): Promise<TListing[]> {
    return result as unknown as TListing[];
 }
 
-export async function getUserFavoriteListings(userId: string) {
-   await requireAuth();
-
-   const favorites = await prisma.favorite.findMany({
-      where: {
-         userId,
-      },
-      orderBy: {
-         createdAt: "asc",
-      },
-      select: {
-         listing: {
-            select: {
-               id: true,
-               title: true,
-               price: true,
-               location: true,
-               condition: true,
-               createdAt: true,
-               updatedAt: true,
-               status: true,
-               images: {
-                  select: {
-                     url: true,
-                  },
-                  take: 1,
-                  orderBy: {
-                     order: "asc",
-                  },
-               },
-            },
-         },
-      },
-   });
-
-   return favorites.map((fav) => fav.listing);
-}
 
 export async function createListing(listing: TCreateListing) {
    const user = await requireAuth();

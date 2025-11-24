@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import {
    recentListingsOptions,
    userActiveListingsOptions,
-   userFavoriteListingsOptions,
    userSoldListingsOptions,
    userListingsCountOptions,
    allListingsOptions,
@@ -33,10 +32,6 @@ export const useGetUserActiveListings = (userId: string) => {
 
 export const useGetUserSoldListings = (userId: string) => {
    return useQuery(userSoldListingsOptions(userId));
-};
-
-export const useGetUserFavoriteListings = (userId: string) => {
-   return useQuery(userFavoriteListingsOptions(userId));
 };
 
 export const useGetUserListingsCount = (userId: string) => {

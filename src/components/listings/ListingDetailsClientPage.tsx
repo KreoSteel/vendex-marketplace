@@ -1,5 +1,5 @@
 "use client";
-import Image from "next/image";
+import ToggleFavorite from "@/components/favorites/ToggleFavorite";
 import { useGetListingById } from "@/hooks/useListing";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Separator } from "../ui/separator";
@@ -149,9 +149,12 @@ export default function ListingDetailsClientPage({ id }: { id: string }) {
                         <Separator />
                         <div className="space-y-2 flex gap-2">
                            <Button className="w-6/7 shadow-md cursor-pointer">Contact Seller</Button>
-                           <Button variant="outline" className="w-1/6 shadow-md cursor-pointer group">
-                            <HeartIcon className="w-4 h-4 group-hover:-translate-y-px group-hover:fill-red-500 group-hover:text-red-500 transition-all duration-300" />
-                           </Button>
+                           <ToggleFavorite 
+                              listingId={listing.id} 
+                              variant="outline" 
+                              size="default"
+                              className="w-1/6 shadow-md" 
+                           />
                         </div>
                      </CardHeader>
                   </Card>

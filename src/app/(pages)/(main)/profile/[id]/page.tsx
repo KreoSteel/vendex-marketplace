@@ -6,9 +6,9 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import {
    userActiveListingsOptions,
    userSoldListingsOptions,
-   userFavoriteListingsOptions,
    userListingsCountOptions,
 } from "@/lib/queries/listings";
+import { userFavoriteListingsOptions } from "@/lib/queries/favorites";
 import { getUserListingsCount } from "@/lib/data-access/listings";
 import { getUserProfile } from "@/lib/data-access/profile";
 import { notFound } from "next/navigation";

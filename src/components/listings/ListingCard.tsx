@@ -1,6 +1,6 @@
 import { TListing } from "@/utils/zod-schemas/listings";
 import Image from "next/image";
-import { HeartIcon } from "lucide-react";
+import ToggleFavorite from "@/components/favorites/ToggleFavorite";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -13,7 +13,7 @@ interface ListingCardProps {
 export default function ListingCard({ listing, preload = false }: ListingCardProps) {
    return (
       <Link href={`/listings/${listing.id}`}>
-      <div className="flex flex-col bg-white hover:bg-neutral-100/50 rounded-lg overflow-hidden shadow-md hover:translate-y-[-4px] transition-all duration-300">
+      <div className="flex flex-col bg-white hover:bg-neutral-100/50 rounded-lg overflow-hidden shadow-md hover:translate-y-[-4px] transition-all duration-300 group/card">
          <div className="relative w-full h-[200px] overflow-hidden">
             <Image 
                src={listing.images[0].url}
@@ -35,10 +35,8 @@ export default function ListingCard({ listing, preload = false }: ListingCardPro
                      {listing.price ? `${listing.price.toLocaleString()} €` : "0 €"}
                   </h2>
                </div>
-               <div className="flex items-center gap-2">
-                  <Button variant="ghost" size="icon" className="cursor-pointer">
-                     <HeartIcon className="w-5 h-5 text-gray-400 shrink-0 mt-1" />
-                  </Button>
+               <div className="flex items-center gap-2 relative z-10" onClick={(e) => e.preventDefault()}>
+                  <ToggleFavorite listingId={listing.id} className="hover:bg-transparent" />
                </div>
             </div>
             <div className="text-xs text-gray-500 flex justify-between items-center">
