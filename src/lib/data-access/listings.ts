@@ -127,7 +127,7 @@ export async function getRecentListings() {
       orderBy: {
          createdAt: "desc",
       },
-      take: 12,
+      take: 16,
       select: {
          id: true,
          title: true,
@@ -152,7 +152,7 @@ export async function getRecentListings() {
 export async function getUserListingsCount(userId: string) {
    await requireAuth();
 
-   const [activeListings, itemsSold, TotalReviews, favoritesListings] =
+   const [activeListings, itemsSold, favoritesListings] =
       await Promise.all([
          // Active listings count
          prisma.listing.count({
@@ -170,13 +170,6 @@ export async function getUserListingsCount(userId: string) {
             },
          }),
 
-         // Total reviews count
-         prisma.review.count({
-            where: {
-               revieweeId: userId,
-            },
-         }),
-
          // Favorites listings count
          prisma.favorite.count({
             where: {
@@ -188,7 +181,6 @@ export async function getUserListingsCount(userId: string) {
    return {
       activeListings,
       itemsSold,
-      TotalReviews,
       favoritesListings,
    };
 }

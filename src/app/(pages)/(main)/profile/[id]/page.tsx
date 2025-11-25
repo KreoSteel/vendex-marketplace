@@ -9,11 +9,10 @@ import {
    userListingsCountOptions,
 } from "@/lib/queries/listings";
 import { userFavoriteListingsOptions } from "@/lib/queries/favorites";
-import { getUserListingsCount } from "@/lib/data-access/listings";
 import { getUserProfile } from "@/lib/data-access/profile";
+import { getUserReviewsStatsOptions, getUserReviewsOptions } from "@/lib/queries/reviews";
 import { notFound } from "next/navigation";
 
-type UserListingsCounts = Awaited<ReturnType<typeof getUserListingsCount>>;
 
 export default async function UserProfilePage({
    params,
@@ -31,34 +30,34 @@ export default async function UserProfilePage({
    const isItOwner = currentUser?.id === userId;
 
    const queryClient = getQueryClient();
-   await Promise.all([
+   const [counts, reviewsStats] = await Promise.all([
+      queryClient.fetchQuery(userListingsCountOptions(userId)),
+      queryClient.fetchQuery(getUserReviewsStatsOptions(userId)),
       queryClient.prefetchQuery(userActiveListingsOptions(userId)),
       queryClient.prefetchQuery(userSoldListingsOptions(userId)),
-      queryClient.prefetchQuery(userListingsCountOptions(userId)),
+      queryClient.prefetchQuery(getUserReviewsOptions(userId)),
       ...(isItOwner
          ? [queryClient.prefetchQuery(userFavoriteListingsOptions(userId))]
          : []),
    ]);
-
-   const counts: UserListingsCounts | undefined = queryClient.getQueryData(
-      userListingsCountOptions(userId).queryKey
-   );
 
    return (
       <div className="flex flex-col gap-4 max-w-3/4 mx-auto">
          <HydrationBoundary state={dehydrate(queryClient)}>
             <ProfileCard
                user={userProfile}
-               activeListingsCount={counts?.activeListings ?? 0}
-               itemsSoldCount={counts?.itemsSold ?? 0}
-               totalReviewsCount={counts?.TotalReviews ?? 0}
+               activeListingsCount={counts.activeListings}
+               itemsSoldCount={counts.itemsSold}
+               totalReviewsCount={reviewsStats.totalReviews}
                isOwner={isItOwner}
+               averageRating={reviewsStats.averageRating}
             />
             <ListingTabs
                userId={userId}
-               activeListingsCount={counts?.activeListings ?? 0}
-               soldListingsCount={counts?.itemsSold ?? 0}
-               favoritesListingsCount={counts?.favoritesListings ?? 0}
+               activeListingsCount={counts.activeListings}
+               soldListingsCount={counts.itemsSold}
+               favoritesListingsCount={counts.favoritesListings}
+               reviewsCount={reviewsStats.totalReviews}
                showFavorites={isItOwner}
             />
          </HydrationBoundary>

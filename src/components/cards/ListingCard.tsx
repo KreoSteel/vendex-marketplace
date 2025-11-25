@@ -2,7 +2,6 @@ import { TListing } from "@/utils/zod-schemas/listings";
 import Image from "next/image";
 import ToggleFavorite from "@/components/favorites/ToggleFavorite";
 import { format } from "date-fns";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 interface ListingCardProps {

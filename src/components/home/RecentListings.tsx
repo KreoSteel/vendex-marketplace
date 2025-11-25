@@ -1,7 +1,7 @@
 "use client";
 import { useGetRecentListings } from "@/hooks/useListing";
 import { TListing } from "@/utils/zod-schemas/listings";
-import ListingCard from "../listings/ListingCard";
+import ListingCard from "../cards/ListingCard";
 
 export default function RecentListings() {
    const { data: listings, isLoading, error } = useGetRecentListings();

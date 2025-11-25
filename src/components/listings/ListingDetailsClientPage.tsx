@@ -4,14 +4,27 @@ import { useGetListingById } from "@/hooks/useListing";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Separator } from "../ui/separator";
 import { ListingCondition } from "@/utils/generated/enums";
-import { ArrowLeftIcon, CalendarIcon, HeartIcon, MapPinIcon, StarIcon } from "lucide-react";
+import {
+   ArrowLeftIcon,
+   CalendarIcon,
+   HeartIcon,
+   MapPinIcon,
+   StarIcon,
+} from "lucide-react";
 import { Button } from "../ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import ImageSlider from "../ui/image-slider";
+import CreateReviewForm from "../forms/CreateReviewForm";
 
-export default function ListingDetailsClientPage({ id }: { id: string }) {
+interface ListingDetailsClientPageProps {
+   id: string;
+   activeListingsCount: number | undefined;
+   averageRating: number | undefined;
+}
+
+export default function ListingDetailsClientPage({ id, activeListingsCount, averageRating }: ListingDetailsClientPageProps) {
    const { data: listing } = useGetListingById(id);
    const router = useRouter();
 
@@ -29,16 +42,29 @@ export default function ListingDetailsClientPage({ id }: { id: string }) {
       [ListingCondition.USED]: "Used",
       [ListingCondition.FOR_PARTS]: "For Parts",
    };
+
+   const sellerCreatedAt = listing?.user?.createdAt
+      ? new Date(listing.user.createdAt)
+      : null;
+   const memberSinceIsToday =
+      sellerCreatedAt !== null &&
+      Date.now() - sellerCreatedAt.getTime() < 24 * 60 * 60 * 1000;
+
    return (
       <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-         <Button variant="outline" className="w-fit shadow-md cursor-pointer mb-4" onClick={() => router.back()}>
+         <Button
+            variant="outline"
+            className="w-fit shadow-md cursor-pointer mb-4"
+            onClick={() => router.back()}>
             <ArrowLeftIcon className="w-4 h-4" />
             Back To Listings
          </Button>
          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
                <div className="relative w-full aspect-3/2 rounded-lg overflow-hidden bg-gray-100 shadow-sm">
-                  <ImageSlider slides={listing?.images.map((image) => image.url) || []} />
+                  <ImageSlider
+                     slides={listing?.images.map((image) => image.url) || []}
+                  />
                </div>
 
                <Card className="shadow-sm">
@@ -131,12 +157,14 @@ export default function ListingDetailsClientPage({ id }: { id: string }) {
                               </h2>
                            </div>
                            <div className="flex flex-col items-center gap-2">
-                            {listing?.featured && (
-                              <div className="flex items-center gap-2 text-gray-600">
-                                 <StarIcon className="w-4 h-4" />
-                                 <span className="text-sm font-medium">Featured</span>
-                              </div>
-                            )}
+                              {listing?.featured && (
+                                 <div className="flex items-center gap-2 text-gray-600">
+                                    <StarIcon className="w-4 h-4" />
+                                    <span className="text-sm font-medium">
+                                       Featured
+                                    </span>
+                                 </div>
+                              )}
                               <div className="flex items-center gap-2 text-gray-600">
                                  <MapPinIcon className="w-4 h-4" />
                                  <span className="text-sm font-medium">
@@ -147,75 +175,101 @@ export default function ListingDetailsClientPage({ id }: { id: string }) {
                         </div>
 
                         <Separator />
-                        <div className="space-y-2 flex gap-2">
-                           <Button className="w-6/7 shadow-md cursor-pointer">Contact Seller</Button>
-                           <ToggleFavorite 
-                              listingId={listing.id} 
-                              variant="outline" 
+
+                        <div className="flex gap-2">
+                           <Button className="flex-1 shadow-md cursor-pointer">
+                              Contact Seller
+                           </Button>
+                           <CreateReviewForm
+                              listingId={listing.id}
+                              revieweeId={listing.user.id}></CreateReviewForm>
+                           <ToggleFavorite
+                              listingId={listing.id}
+                              variant="outline"
                               size="default"
-                              className="w-1/6 shadow-md" 
+                              className="shadow-md"
                            />
                         </div>
                      </CardHeader>
                   </Card>
                   <Card className="shadow-md flex flex-col gap-2">
-                    <CardHeader>
-                      <CardTitle>
-                        <h2 className="text-2xl font-bold">Seller Information</h2>
-                      </CardTitle>
-                    </CardHeader>
-                      <CardContent>
+                     <CardHeader>
+                        <CardTitle>
+                           <h2 className="text-2xl font-bold">
+                              Seller Information
+                           </h2>
+                        </CardTitle>
+                     </CardHeader>
+                     <CardContent>
                         <div className="flex items-center gap-3">
-                            <Avatar className="w-14 h-14">
-                                <AvatarImage src={listing?.user?.avatarImg || ""} />
-                                <AvatarFallback>
-                                    {listing?.user?.name?.charAt(0)}
-                                </AvatarFallback>
-                            </Avatar>
-                            <div className="flex flex-col">
-                                <h3 className="text-lg font-medium text-gray-900">
-                                    {listing?.user?.name}
-                                </h3>
-                                {listing?.user?.createdAt && listing?.user?.createdAt < new Date() ? (
-                                    <p className="text-base text-gray-500">
-                                        Member since: Today
-                                    </p>
-                                ) : (
-                                    <p className="text-base text-gray-500">
-                                        Member since: {format(listing?.user?.createdAt || new Date(), "d MMM yyyy")}
-                                    </p>
-                                )}
-                            </div>
+                           <Avatar className="w-14 h-14">
+                              <AvatarImage
+                                 src={listing?.user?.avatarImg || ""}
+                              />
+                              <AvatarFallback>
+                                 {listing?.user?.name?.charAt(0)}
+                              </AvatarFallback>
+                           </Avatar>
+                           <div className="flex flex-col">
+                              <h3 className="text-lg font-medium text-gray-900">
+                                 {listing?.user?.name}
+                              </h3>
+                              {memberSinceIsToday ? (
+                                 <p className="text-base text-gray-500">
+                                    Member since: Today
+                                 </p>
+                              ) : (
+                                 <p className="text-base text-gray-500">
+                                    Member since:{" "}
+                                    {sellerCreatedAt
+                                       ? format(sellerCreatedAt, "d MMM yyyy")
+                                       : "Unknown"}
+                                 </p>
+                              )}
+                           </div>
                         </div>
 
                         <Separator className="my-4" />
 
                         <div className="space-y-3">
-                            <div className="flex items-center justify-between gap-2">
-                                <p className="font-medium text-gray-600">Active Listings</p>
-                                <p>0</p>
-                            </div>
-                            <div className="flex items-center justify-between gap-2">
-                                <p className="font-medium text-gray-600">Items Sold</p>
-                                <p>0</p>
-                            </div>
-                            <div className="flex items-center justify-between gap-2">
-                                <p className="font-medium text-gray-600">Overall Rating</p>
-                                <div className="flex items-center gap-2">
-                                    <StarIcon className="w-4 h-4 text-yellow-500 fill-current" />
-                                    <span>4.5</span>
-                                </div>
-                            </div>
-                            <div className="flex items-center justify-between gap-2">
-                                <p className="font-medium text-gray-600">Location</p>
-                                <p>{listing?.user?.location}</p>
-                            </div>
+                           <div className="flex items-center justify-between gap-2">
+                              <p className="font-medium text-gray-600">
+                                 Active Listings
+                              </p>
+                              <p>{activeListingsCount}</p>
+                           </div>
+                           <div className="flex items-center justify-between gap-2">
+                              <p className="font-medium text-gray-600">
+                                 Items Sold
+                              </p>
+                              <p>0</p>
+                           </div>
+                           <div className="flex items-center justify-between gap-2">
+                              <p className="font-medium text-gray-600">
+                                 Overall Rating
+                              </p>
+                              <div className="flex items-center gap-2">
+                                 <StarIcon className="w-4 h-4 text-yellow-500 fill-current" />
+                                 <span>{averageRating}</span>
+                              </div>
+                           </div>
+                           <div className="flex items-center justify-between gap-2">
+                              <p className="font-medium text-gray-600">
+                                 Location
+                              </p>
+                              <p>{listing?.user?.location}</p>
+                           </div>
                         </div>
-                        
+
                         <Separator className="mt-4 mb-6" />
 
-                        <Button variant="outline" className="w-full shadow-md cursor-pointer" onClick={handleViewProfile}>View Profile</Button>
-                      </CardContent>
+                        <Button
+                           variant="outline"
+                           className="w-full shadow-md cursor-pointer"
+                           onClick={handleViewProfile}>
+                           View Profile
+                        </Button>
+                     </CardContent>
                   </Card>
                </div>
             </div>

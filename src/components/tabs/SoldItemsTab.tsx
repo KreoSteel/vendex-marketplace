@@ -1,5 +1,5 @@
 "use client";
-import ListingCard from "@/components/listings/ListingCard";
+import ListingCard from "@/components/cards/ListingCard";
 import { useGetUserSoldListings } from "@/hooks/useListing";
 import { TListing } from "@/utils/zod-schemas/listings";
 import { Loader2 } from "lucide-react";

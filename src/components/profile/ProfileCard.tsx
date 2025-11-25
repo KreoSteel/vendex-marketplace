@@ -1,12 +1,14 @@
+"use client";
 import { Card, CardContent } from "@/components/ui/card";
 import { CalendarIcon, MapPinIcon, StarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { Separator } from "@/components/ui/separator";
-import { getUserProfile } from "@/lib/data-access/profile";
 import AvatarUpload from "./AvatarUpload";
-import EditProfileForm from "./EditProfileForm";
+import EditProfileForm from "../forms/EditProfileForm";
 import type { User } from "@/utils/generated/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import CreateReviewForm from "../forms/CreateReviewForm";
+import { Button } from "../ui/button";
 
 interface ProfileCardProps {
    user: User;
@@ -14,14 +16,16 @@ interface ProfileCardProps {
    itemsSoldCount: number;
    totalReviewsCount: number;
    isOwner: boolean;
+   averageRating: number;
 }
 
-export default async function ProfileCard({
+export default function ProfileCard({
    user,
    activeListingsCount,
    itemsSoldCount,
    totalReviewsCount,
    isOwner,
+   averageRating,
 }: ProfileCardProps) {
    return (
       <Card className="w-full">
@@ -31,7 +35,10 @@ export default async function ProfileCard({
 
                {!isOwner && (
                   <Avatar className="size-20 rounded-full shadow-sm">
-                     <AvatarImage src={user.avatarImg || ""} className="rounded-full" />
+                     <AvatarImage
+                        src={user.avatarImg || ""}
+                        className="rounded-full"
+                     />
                      <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
                   </Avatar>
                )}
@@ -39,7 +46,9 @@ export default async function ProfileCard({
             <div className="flex flex-col gap-2 w-full">
                <div className="flex items-center justify-between w-full">
                   <h2>{user.name}</h2>
-                  {isOwner && <EditProfileForm user={user} />}
+                  <div className="flex items-center gap-2">
+                     {isOwner && <EditProfileForm user={user} />}
+                  </div>
                </div>
                <div className="flex items-center gap-6">
                   <div className="flex items-center gap-2  text-neutral-500">
@@ -56,7 +65,12 @@ export default async function ProfileCard({
                   </div>
                   <div className="flex items-center gap-2 text-sm text-neutral-500">
                      <StarIcon className="size-4 text-yellow-500 fill-current" />
-                     <p>Rating: 4.5</p>
+                     <p>
+                        Rating:{" "}
+                        {averageRating
+                           ? averageRating.toFixed(1)
+                           : "No reviews"}
+                     </p>
                   </div>
                </div>
             </div>

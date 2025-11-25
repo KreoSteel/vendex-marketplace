@@ -2,7 +2,7 @@
 import { AllListingsParams } from "@/lib/data-access/listings";
 import { useGetAllListings } from "@/hooks/useListing";
 import SearchBar from "../ui/search";
-import ListingCard from "./ListingCard";
+import ListingCard from "../cards/ListingCard";
 import { TListing } from "@/utils/zod-schemas/listings";
 import ListingsFilters from "./ListingsFilters";
 import { Loader2 } from "lucide-react";

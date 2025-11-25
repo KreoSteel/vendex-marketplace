@@ -14,7 +14,7 @@ import {
 } from "../ui/select";
 import { Button } from "../ui/button";
 import { ListingCondition } from "@/utils/generated/enums";
-import { useGetCategoriesNames } from "@/hooks/useCategories";
+import { useGetCategories } from "@/hooks/useCategories";
 import { TCategory } from "@/utils/zod-schemas/categories";
 
 export default function CreateListingForm() {
@@ -22,7 +22,7 @@ export default function CreateListingForm() {
       error: "",
    });
    const [isPending, startTransition] = useTransition();
-   const { data: categoriesNames } = useGetCategoriesNames();
+   const { data: categories } = useGetCategories();
 
    const [previewImages, setPreviewImages] = useState<File[]>([]);
 
@@ -134,7 +134,7 @@ export default function CreateListingForm() {
                   <SelectValue placeholder="Select a category" />
                </SelectTrigger>
                <SelectContent>
-                  {categoriesNames?.map((cat: TCategory) => (
+                  {categories?.map((cat: TCategory) => (
                      <SelectItem key={cat.id} value={cat.id}>
                         {cat.name}
                      </SelectItem>

@@ -1,4 +1,4 @@
-import CreateListingForm from "@/components/listings/CreateListingForm";
+import CreateListingForm from "@/components/forms/CreateListingForm";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function CreateListingPage() {
