@@ -3,6 +3,7 @@ import { getListingByIdOptions, userListingsCountOptions } from "@/lib/queries/l
 import { getUserReviewsStatsOptions } from "@/lib/queries/reviews";
 import { getQueryClient } from "@/lib/queryClient";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { getUser } from "@/utils/auth";
 
 export default async function ListingPageDetails({
    params,
@@ -11,6 +12,7 @@ export default async function ListingPageDetails({
 }) {
    const { id } = await params;
    const queryClient = getQueryClient();
+   const currentUser = await getUser();
    
    const listing = await queryClient.fetchQuery(getListingByIdOptions(id));
    
@@ -21,7 +23,7 @@ export default async function ListingPageDetails({
 
    return (
       <HydrationBoundary state={dehydrate(queryClient)}>
-         <ListingDetailsClientPage id={id} activeListingsCount={listingsCountData.activeListings} averageRating={reviewsStats.averageRating}/>
+         <ListingDetailsClientPage id={id} currentUser={currentUser?.id || ""} activeListingsCount={listingsCountData.activeListings} averageRating={reviewsStats.averageRating}/>
       </HydrationBoundary>
    );
 }

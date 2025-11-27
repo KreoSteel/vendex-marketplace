@@ -17,14 +17,13 @@ import { updateUserProfileAction } from "@/app/actions/profile";
 import type { User } from "@/utils/generated/client";
 
 export default function EditProfileForm({ user }: { user: User | null }) {
+   const [state, formAction, isPending] = useActionState(updateUserProfileAction, {
+      error: "",
+   });
 
    if (!user) {
       return null;
    }
-
-   const [state, formAction, isPending] = useActionState(updateUserProfileAction, {
-      error: "",
-   });
 
    return (
       <Dialog>

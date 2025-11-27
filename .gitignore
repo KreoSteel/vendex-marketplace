@@ -45,3 +45,5 @@ pnpm-workspace.yaml
 
 VENDEX_IMPLEMENTATION_PLAN.md
 /app/generated/prisma
+
+seed*

@@ -7,9 +7,10 @@ import Link from "next/link";
 interface ListingCardProps {
    listing: TListing;
    preload?: boolean;
+   isFavorite: boolean;
 }
 
-export default function ListingCard({ listing, preload = false }: ListingCardProps) {
+export default function ListingCard({ listing, preload = false, isFavorite }: ListingCardProps) {
    return (
       <Link href={`/listings/${listing.id}`}>
       <div className="flex flex-col bg-white hover:bg-neutral-100/50 rounded-lg overflow-hidden shadow-md hover:translate-y-[-4px] transition-all duration-300 group/card">
@@ -35,7 +36,7 @@ export default function ListingCard({ listing, preload = false }: ListingCardPro
                   </h2>
                </div>
                <div className="flex items-center gap-2 relative z-10" onClick={(e) => e.preventDefault()}>
-                  <ToggleFavorite listingId={listing.id} className="hover:bg-transparent" />
+                  <ToggleFavorite listingId={listing.id} className="hover:bg-transparent" initialFavorite={isFavorite} />
                </div>
             </div>
             <div className="text-xs text-gray-500 flex justify-between items-center">

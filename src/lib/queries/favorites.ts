@@ -8,6 +8,7 @@ export const userFavoriteListingsOptions = (userId: string) =>
           return await getUserFavoriteListings(userId);
        },
        enabled: !!userId,
+       staleTime: 60 * 5 * 1000,
     });
 
 export const isListingFavoriteOptions = (listingId: string) => 
@@ -18,4 +19,7 @@ export const isListingFavoriteOptions = (listingId: string) =>
         },
         enabled: !!listingId,
         retry: false,
+        staleTime: 60 * 5 * 1000,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
     });

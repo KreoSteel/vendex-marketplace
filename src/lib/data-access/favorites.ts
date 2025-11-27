@@ -38,18 +38,8 @@ export async function toggleFavorite(listingId: string) {
 
 
 export async function getUserFavoriteListings(userId: string) {
-    // Allow access if asking for own favorites, or maybe public?
-    // Usually favorites are private.
     const user = await requireAuth();
     if (user.id !== userId) {
-        // Simple check: only allow own favorites for now
-        // Or if we want to allow viewing others' favorites, we'd check privacy settings.
-        // For MVP, let's assume private or strict check.
-        // But wait, the function argument is userId.
-        // If I am logged in as A, can I see B's favorites?
-        // The plan says "Get user's favorites (auth required)". Implicitly OWN favorites.
-        // So I should probably ignore the userId arg and use the session userId, 
-        // OR enforce that userId matches session.
         if (user.id !== userId) {
              throw new Error("Unauthorized access to favorites");
         }

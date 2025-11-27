@@ -1,6 +1,6 @@
 import ProfileCard from "@/components/profile/ProfileCard";
 import ListingTabs from "@/components/profile/ListingTabs";
-import { getUser, requireAuth } from "@/utils/auth";
+import { getUser } from "@/utils/auth";
 import { getQueryClient } from "@/lib/queryClient";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import {
@@ -42,7 +42,7 @@ export default async function UserProfilePage({
    ]);
 
    return (
-      <div className="flex flex-col gap-4 max-w-3/4 mx-auto">
+      <div className="flex flex-col gap-4 max-w-3/4 mx-auto py-12 px-4">
          <HydrationBoundary state={dehydrate(queryClient)}>
             <ProfileCard
                user={userProfile}

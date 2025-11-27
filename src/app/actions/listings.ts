@@ -43,8 +43,11 @@ export async function createListingAction(
    }
 
    try {
-      await createListing(validatedData.data);
-      return { success: "Listing created successfully" };
+      const listing = await createListing(validatedData.data);
+      if ("error" in listing) {
+         return { error: listing.error };
+      }
+      return { success: listing.id };
    } catch (error) {
       console.error("Create listing error:", error);
       return {

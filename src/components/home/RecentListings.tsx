@@ -2,9 +2,20 @@
 import { useGetRecentListings } from "@/hooks/useListing";
 import { TListing } from "@/utils/zod-schemas/listings";
 import ListingCard from "../cards/ListingCard";
+import { useQuery } from "@tanstack/react-query";
+import { userFavoriteListingsOptions } from "@/lib/queries/favorites";
+import { authClient } from "@/utils/auth-client";
 
 export default function RecentListings() {
    const { data: listings, isLoading, error } = useGetRecentListings();
+   const { data: session } = authClient.useSession();
+
+   const { data: favorites } = useQuery({
+      ...userFavoriteListingsOptions(session?.user?.id ?? ""),
+      enabled: !!session?.user?.id,
+   });
+   
+   const favoriteIds = new Set(favorites?.map(f => f.id) ?? []);
 
    if (isLoading) {
       return (
@@ -38,6 +49,7 @@ export default function RecentListings() {
                      key={listing.id} 
                      listing={listing} 
                      preload={index < 4}
+                     isFavorite={favoriteIds.has(listing.id)}
                   />
                ))}
             </div>

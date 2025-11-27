@@ -11,13 +11,26 @@ interface ToggleFavoriteProps {
     className?: string;
     variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
     size?: "default" | "sm" | "lg" | "icon";
+    initialFavorite?: boolean;
 }
 
-export default function ToggleFavorite({ listingId, className, variant = "ghost", size = "icon" }: ToggleFavoriteProps) {
+export default function ToggleFavorite({ 
+    listingId, 
+    className, 
+    variant = "ghost", 
+    size = "icon",
+    initialFavorite 
+}: ToggleFavoriteProps) {
     const { data: session } = authClient.useSession();
     const router = useRouter();
     
-    const { data: isFavorite, isLoading } = useIsListingFavorite(listingId, !!session?.user);
+    const { data: isFavoriteQuery, isLoading } = useIsListingFavorite(
+        listingId, 
+        initialFavorite === undefined && !!session?.user
+    );
+    
+    const isFavorite = initialFavorite ?? isFavoriteQuery;
+    
     const { mutate: toggle, isPending } = useToggleFavorite();
 
     const handleToggle = (e: React.MouseEvent) => {

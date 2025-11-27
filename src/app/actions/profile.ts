@@ -32,6 +32,7 @@ export async function updateUserProfileAction(
       revalidatePath("/profile");
       return { success: "Profile updated successfully" };
    } catch (error) {
+      console.error("Failed to update profile", error);
       return { error: "Failed to update profile" };
    }
 }
@@ -62,6 +63,7 @@ export async function updateUserProfileImageAction(formData: FormData) {
       revalidatePath("/profile");
       return { success: "Profile image updated successfully" };
    } catch (error) {
+      console.error("Failed to update profile image", error);
       return { error: "Failed to update profile image" };
    }
 }

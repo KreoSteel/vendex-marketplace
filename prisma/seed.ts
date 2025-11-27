@@ -562,7 +562,7 @@ main()
       await prisma.$disconnect();
       await pool.end();
       console.log("\n✨ Database connection closed successfully!");
-    } catch (error) {
+    } catch {
       // Ignore connection cleanup errors - data is already saved
       console.log("\n✨ Seeding complete! (Connection cleanup warning ignored)");
     }

@@ -18,7 +18,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Filters, getMaxPrice } from "./data-access/listings";
-import { keepPreviousData, queryOptions } from "@tanstack/react-query";
+import { queryOptions } from "@tanstack/react-query";
 
 export const iconMap: Record<string, LucideIcon> = {
   Smartphone,

@@ -7,7 +7,6 @@ import { ListingCondition } from "@/utils/generated/enums";
 import {
    ArrowLeftIcon,
    CalendarIcon,
-   HeartIcon,
    MapPinIcon,
    StarIcon,
 } from "lucide-react";
@@ -17,14 +16,21 @@ import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import ImageSlider from "../ui/image-slider";
 import CreateReviewForm from "../forms/CreateReviewForm";
+import Link from "next/link";
 
 interface ListingDetailsClientPageProps {
    id: string;
    activeListingsCount: number | undefined;
    averageRating: number | undefined;
+   currentUser: string;
 }
 
-export default function ListingDetailsClientPage({ id, activeListingsCount, averageRating }: ListingDetailsClientPageProps) {
+export default function ListingDetailsClientPage({
+   id,
+   activeListingsCount,
+   averageRating,
+   currentUser,
+}: ListingDetailsClientPageProps) {
    const { data: listing } = useGetListingById(id);
    const router = useRouter();
 
@@ -42,13 +48,6 @@ export default function ListingDetailsClientPage({ id, activeListingsCount, aver
       [ListingCondition.USED]: "Used",
       [ListingCondition.FOR_PARTS]: "For Parts",
    };
-
-   const sellerCreatedAt = listing?.user?.createdAt
-      ? new Date(listing.user.createdAt)
-      : null;
-   const memberSinceIsToday =
-      sellerCreatedAt !== null &&
-      Date.now() - sellerCreatedAt.getTime() < 24 * 60 * 60 * 1000;
 
    return (
       <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
@@ -177,13 +176,20 @@ export default function ListingDetailsClientPage({ id, activeListingsCount, aver
                         <Separator />
 
                         <div className="flex gap-2">
-                           <Button className="flex-1 shadow-md cursor-pointer">
-                              Contact Seller
-                           </Button>
+                           {listing.user.id !== currentUser && (
+                              <Link href={`/messages/${listing.user.id}`}>
+                                 <Button className="flex-1 shadow-md cursor-pointer">
+                                    Contact Seller
+                                 </Button>
+                              </Link>
+                           )}
+                           {listing.user.id !== currentUser && (
                            <CreateReviewForm
                               listingId={listing.id}
-                              revieweeId={listing.user.id}></CreateReviewForm>
-                           <ToggleFavorite
+                              revieweeId={listing.user.id}
+                              />
+                           )}
+                              <ToggleFavorite
                               listingId={listing.id}
                               variant="outline"
                               size="default"
@@ -214,18 +220,15 @@ export default function ListingDetailsClientPage({ id, activeListingsCount, aver
                               <h3 className="text-lg font-medium text-gray-900">
                                  {listing?.user?.name}
                               </h3>
-                              {memberSinceIsToday ? (
-                                 <p className="text-base text-gray-500">
-                                    Member since: Today
-                                 </p>
-                              ) : (
-                                 <p className="text-base text-gray-500">
-                                    Member since:{" "}
-                                    {sellerCreatedAt
-                                       ? format(sellerCreatedAt, "d MMM yyyy")
-                                       : "Unknown"}
-                                 </p>
-                              )}
+                              <p className="text-base text-gray-500">
+                                 Member since:{" "}
+                                 {listing?.user?.createdAt
+                                    ? format(
+                                         new Date(listing.user.createdAt),
+                                         "d MMM yyyy"
+                                      )
+                                    : "Unknown"}
+                              </p>
                            </div>
                         </div>
 

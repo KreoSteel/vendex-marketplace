@@ -107,6 +107,7 @@ export default function ListingsFilters() {
 
    useEffect(() => {
       if (maxPrice !== undefined && maxPrice > 0) {
+         // eslint-disable-next-line react-hooks/set-state-in-effect
          setPriceRange([0, maxPrice]);
       }
    }, [maxPrice]);
@@ -114,17 +115,20 @@ export default function ListingsFilters() {
    useEffect(() => {
       const categories = searchParams.get("category");
       if (categories) {
+         // eslint-disable-next-line react-hooks/set-state-in-effect
          setSelectedCategories(categories.split(","));
       }
 
       const conditions = searchParams.get("condition");
       if (conditions) {
+         // eslint-disable-next-line react-hooks/set-state-in-effect
          setSelectedConditions(conditions.split(",") as ListingCondition[]);
       }
 
       const minPrice = searchParams.get("minPrice");
       const maxPrice = searchParams.get("maxPrice");
       if (minPrice || maxPrice) {
+         // eslint-disable-next-line react-hooks/set-state-in-effect
          setPriceRange([
             minPrice ? parseInt(minPrice, 10) : 0,
             maxPrice ? parseInt(maxPrice, 10) : 1000,

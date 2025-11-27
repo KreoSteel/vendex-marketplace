@@ -7,8 +7,6 @@ import AvatarUpload from "./AvatarUpload";
 import EditProfileForm from "../forms/EditProfileForm";
 import type { User } from "@/utils/generated/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import CreateReviewForm from "../forms/CreateReviewForm";
-import { Button } from "../ui/button";
 
 interface ProfileCardProps {
    user: User;

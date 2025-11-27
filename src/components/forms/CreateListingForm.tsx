@@ -16,6 +16,7 @@ import { Button } from "../ui/button";
 import { ListingCondition } from "@/utils/generated/enums";
 import { useGetCategories } from "@/hooks/useCategories";
 import { TCategory } from "@/utils/zod-schemas/categories";
+import { redirect } from "next/navigation";
 
 export default function CreateListingForm() {
    const [state, formAction] = useActionState(createListingAction, {
@@ -56,7 +57,7 @@ export default function CreateListingForm() {
             <p className="text-red-500 text-sm">{state.error}</p>
          )}
          {"success" in state && state.success && (
-            <p className="text-green-500 text-sm">{state.success}</p>
+            redirect(`/listings/${state.success}`)
          )}
          <div className="grid gap-2">
             <Label htmlFor="title">
@@ -95,6 +96,7 @@ export default function CreateListingForm() {
                const url = URL.createObjectURL(image);
                return (
                   <div key={index} className="relative">
+                     {/* eslint-disable-next-line @next/next/no-img-element */}
                      <img
                         src={url}
                         alt={image.name}
