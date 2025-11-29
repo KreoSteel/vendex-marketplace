@@ -2,8 +2,10 @@ import { getQueryClient } from "@/lib/queryClient";
 import { conversationsWithUserOptions } from "@/lib/queries/messages";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import ChatSidebar from "@/components/chat/ChatSidebar";
+import { requireAuth } from "@/utils/auth";
 
 export default async function ChatLayout({ children }: { children: React.ReactNode }) {
+    await requireAuth();
     const queryClient = getQueryClient();
     await queryClient.prefetchQuery(conversationsWithUserOptions());
 

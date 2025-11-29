@@ -1,7 +1,10 @@
 import CreateListingForm from "@/components/forms/CreateListingForm";
 import { Card, CardContent } from "@/components/ui/card";
+import { requireAuth } from "@/utils/auth";
 
-export default function CreateListingPage() {
+export default async function CreateListingPage() {
+   await requireAuth();
+   
    return (
       <div className="container mx-auto px-4 flex flex-col gap-4 py-12">
          <div>

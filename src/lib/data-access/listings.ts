@@ -150,8 +150,6 @@ export async function getRecentListings() {
 }
 
 export async function getUserListingsCount(userId: string) {
-   await requireAuth();
-
    const [activeListings, itemsSold, favoritesListings] =
       await Promise.all([
          // Active listings count
@@ -229,8 +227,6 @@ export async function getListingById(id: string) {
 }
 
 export async function getUserActiveListings(userId: string) {
-   await requireAuth();
-
    return await prisma.listing.findMany({
       where: {
          userId,
@@ -261,8 +257,6 @@ export async function getUserActiveListings(userId: string) {
 }
 
 export async function getUserSoldListings(userId: string): Promise<TListing[]> {
-   await requireAuth();
-
    const result = await prisma.listing.findMany({
       where: {
          userId,

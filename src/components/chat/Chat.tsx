@@ -13,17 +13,25 @@ interface ChatProps {
 
 export default function Chat({ userId, username, currentUserId }: ChatProps) {
    const { data: chat } = useGetChatWithUser(userId);
-   const { mutate: sendMessage } = useSendMessage();
+   const { mutateAsync: sendMessage } = useSendMessage();
 
    const handleSendMessage = useCallback(
-      (message: string) => {
-         sendMessage({
+      async (message: string) => {
+         const createdMessage = await sendMessage({
             receiverId: userId,
             content: message,
             listingId: null,
          });
+         return {
+            id: createdMessage.id,
+            content: createdMessage.content,
+            user: {
+               name: username ?? "Unknown user",
+            },
+            createdAt: createdMessage.createdAt.toISOString(),
+         };
       },
-      [userId, sendMessage]
+      [userId, sendMessage, username]
    );
 
    const formattedMessages = useMemo<ChatMessage[] | undefined>(() => {

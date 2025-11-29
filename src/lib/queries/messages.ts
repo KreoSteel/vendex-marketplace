@@ -20,6 +20,8 @@ export const chatWithUserOptions = (otherUserId: string) =>
          return await getChatWithUser(otherUserId);
       },
       enabled: !!otherUserId,
+      staleTime: 5 * 1000,
+      refetchInterval: 3 * 1000,
    });
    
 
@@ -39,8 +41,7 @@ export const sendMessageOptions = () =>
       mutationFn: async ({ receiverId, content, listingId }: ISendMessageOptions) => {
          return await createMessage(receiverId, content, listingId);
       },
-      onSuccess: (_, variables: ISendMessageOptions) => {
-         queryClient.invalidateQueries({ queryKey: ["chat-with-user", variables.receiverId] });
+      onSuccess: () => {
          queryClient.invalidateQueries({ queryKey: ["conversations"] });
       },
       onError: (error) => {

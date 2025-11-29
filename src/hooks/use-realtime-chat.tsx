@@ -1,76 +1,88 @@
-"use client"
+"use client";
 
-import { createClient } from "@/lib/supabase/client"
-import { useCallback, useEffect, useRef, useState } from "react"
+import { createClient } from "@/lib/supabase/client";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 interface UseRealtimeChatProps {
-  roomName: string
-  username: string
+   roomName: string;
+   username: string;
 }
 
 export interface ChatMessage {
-  id: string
-  content: string
-  user: {
-    name: string
-  }
-  createdAt: string
+   id: string;
+   content: string;
+   user: {
+      name: string;
+   };
+   createdAt: string;
 }
 
-const EVENT_MESSAGE_TYPE = 'message'
+const EVENT_MESSAGE_TYPE = "message";
 
 export function useRealtimeChat({ roomName, username }: UseRealtimeChatProps) {
-  const supabase = createClient()
-  const [messages, setMessages] = useState<ChatMessage[]>([])
-  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null)
-  const [isConnected, setIsConnected] = useState(false)
+   const supabase = useMemo(() => createClient(), []);
+   const [messages, setMessages] = useState<ChatMessage[]>([]);
+   const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
+   const [isConnected, setIsConnected] = useState(false);
+   const addedMessageIds = useRef<Set<string>>(new Set());
 
-  useEffect(() => {
-    const newChannel = supabase.channel(roomName)
+   useEffect(() => {
+      setMessages([]);
+      addedMessageIds.current.clear();
 
-    newChannel
-      .on('broadcast', { event: EVENT_MESSAGE_TYPE }, (payload) => {
-        setMessages((current) => [...current, payload.payload as ChatMessage])
-      })
-      .subscribe(async (status) => {
-        if (status === 'SUBSCRIBED') {
-          setIsConnected(true)
-        } else {
-          setIsConnected(false)
-        }
-      })
+      const newChannel = supabase.channel(roomName);
 
-    channelRef.current = newChannel
+      newChannel
+         .on("broadcast", { event: EVENT_MESSAGE_TYPE }, (payload) => {
+            const message = payload.payload as ChatMessage;
+            // Only add if we haven't seen this message ID before
+            if (!addedMessageIds.current.has(message.id)) {
+               addedMessageIds.current.add(message.id);
+               setMessages((current) => [...current, message]);
+            }
+         })
+         .subscribe(async (status) => {
+            if (status === "SUBSCRIBED") {
+               setIsConnected(true);
+            } else {
+               setIsConnected(false);
+            }
+         });
 
-    return () => {
-      supabase.removeChannel(newChannel)
-    }
-  }, [roomName, username, supabase])
+      channelRef.current = newChannel;
 
-  const sendMessage = useCallback(
-    async (content: string) => {
-      if (!channelRef.current || !isConnected) return
+      return () => {
+         supabase.removeChannel(newChannel);
+      };
+   }, [roomName, supabase]);
 
-      const message: ChatMessage = {
-        id: crypto.randomUUID(),
-        content,
-        user: {
-          name: username,
-        },
-        createdAt: new Date().toISOString(),
-      }
+   const sendMessage = useCallback(
+      async (content: string, messageId: string, createdAt: string) => {
+         if (!channelRef.current || !isConnected) return;
 
-      // Update local state immediately for the sender
-      setMessages((current) => [...current, message])
+         const message: ChatMessage = {
+            id: messageId,
+            content,
+            user: {
+               name: username,
+            },
+            createdAt: new Date().toISOString(),
+         };
 
-      await channelRef.current.send({
-        type: 'broadcast',
-        event: EVENT_MESSAGE_TYPE,
-        payload: message,
-      })
-    },
-    [isConnected, username]
-  )
+         // Track this message ID to prevent duplicate from broadcast
+         addedMessageIds.current.add(message.id);
 
-  return { messages, sendMessage, isConnected }
+         // Update local state immediately for the sender
+         setMessages((current) => [...current, message]);
+
+         await channelRef.current.send({
+            type: "broadcast",
+            event: EVENT_MESSAGE_TYPE,
+            payload: message,
+         });
+      },
+      [isConnected, username]
+   );
+
+   return { messages, sendMessage, isConnected };
 }

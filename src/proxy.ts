@@ -6,14 +6,17 @@ export async function proxy(req: NextRequest) {
 
    const protectedRoutes = [
       "/listings/create",
-      "/profile",
       "/messages",
       "/favorites",
    ];
 
-   const isProtectedRoute = protectedRoutes.some((route) =>
-      pathname.startsWith(route)
-   );
+   const exactProtectedRoutes = [
+      "/profile",
+   ];
+
+   const isProtectedRoute = 
+      protectedRoutes.some((route) => pathname.startsWith(route)) ||
+      exactProtectedRoutes.includes(pathname);
 
    if (isProtectedRoute) {
       const session = await auth.api.getSession({

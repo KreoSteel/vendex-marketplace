@@ -83,7 +83,8 @@ export async function getReviewsStats(userId: string) {
 
 
 export async function hasUserReviewed(revieweeId: string, listingId?: string) {
-    const currentUser = await requireAuth();
+    const currentUser = await requireAuth({ redirect: false }).catch(() => null);
+    if (!currentUser) return false;
 
     const review = await prisma.review.count({
         where: {

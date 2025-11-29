@@ -81,12 +81,12 @@ export async function getUserFavoriteListings(userId: string) {
  }
 
  export async function isListingFavorite(listingId: string) {
-    const user = await requireAuth();
-    const userId = user.id;
+    const user = await requireAuth({ redirect: false }).catch(() => null);
+    if (!user) return false;
     
     const count = await prisma.favorite.count({
         where: {
-            userId,
+            userId: user.id,
             listingId
         }
     });

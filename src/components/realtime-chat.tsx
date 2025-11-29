@@ -14,7 +14,7 @@ interface RealtimeChatProps {
   roomName: string
   username: string
   onMessage?: (messages: ChatMessage[]) => void
-  onSendMessage?: (message: string) => void
+  onSendMessage?: (message: string) => Promise<ChatMessage | undefined>
   messages?: ChatMessage[]
 }
 
@@ -71,20 +71,21 @@ export const RealtimeChat = ({
   }, [allMessages])
 
   const handleSendMessage = useCallback(
-    (e: React.FormEvent) => {
+    async (e: React.FormEvent) => {
       e.preventDefault()
       if (!newMessage.trim() || !isConnected) return
 
-      sendMessage(newMessage)
-
-      if (onSendMessage) {
-        onSendMessage(newMessage)
-      }
-
+      const messageContent = newMessage
       setNewMessage('')
-    },
-    [newMessage, isConnected, sendMessage, onSendMessage]
-  )
+
+      if(onSendMessage) {
+        const createdMessage = await onSendMessage(messageContent)
+
+        if(createdMessage) {
+          sendMessage(createdMessage.content, createdMessage.id, createdMessage.createdAt)
+        }
+      }
+   }, [newMessage, isConnected, onSendMessage]);
 
   return (
     <div className="flex flex-col h-full w-full bg-background text-foreground antialiased overflow-hidden">
