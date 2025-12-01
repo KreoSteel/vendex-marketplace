@@ -2,9 +2,9 @@
 import prisma from "@/utils/prisma";
 import { Prisma } from "@/utils/generated/client";
 import {
-   createListingSchema,
    TCreateListing,
    TListing,
+   TUpdateListing,
 } from "@/utils/zod-schemas/listings";
 import { requireAuth } from "@/utils/auth";
 import { ListingCondition, ListingStatus } from "@/utils/generated/enums";
@@ -26,7 +26,7 @@ export type Filters = {
    search?: string | null;
    categorySlugs?: string[] | null;
    conditions?: ListingCondition[] | null;
-}
+};
 
 export async function getAllListings({
    currentPage = 1,
@@ -40,17 +40,24 @@ export async function getAllListings({
    sortBy = "createdAt",
    sortOrder = "desc",
 }: AllListingsParams = {}) {
-   const page = currentPage === "string" ? parseInt(currentPage, 10) : currentPage;
-   const items = itemsPerPage === "string" ? parseInt(itemsPerPage, 10) : itemsPerPage;
-   const skip = (page as number - 1) * (items as number);
-
+   const page =
+      currentPage === "string" ? parseInt(currentPage, 10) : currentPage;
+   const items =
+      itemsPerPage === "string" ? parseInt(itemsPerPage, 10) : itemsPerPage;
+   const skip = ((page as number) - 1) * (items as number);
 
    const where: Prisma.ListingWhereInput = {
       status: ListingStatus.ACTIVE,
-      ...(categorySlugs && categorySlugs.length > 0 && { category: { slug: { in: categorySlugs }}}),
-      ...(conditions && conditions.length > 0 && { condition: { in: conditions }}),
-      ...(minPrice !== null && minPrice !== undefined && { price: { gte: minPrice }}),
-      ...(maxPrice !== null && maxPrice !== undefined && { price: { lte: maxPrice }}),
+      ...(categorySlugs &&
+         categorySlugs.length > 0 && {
+            category: { slug: { in: categorySlugs } },
+         }),
+      ...(conditions &&
+         conditions.length > 0 && { condition: { in: conditions } }),
+      ...(minPrice !== null &&
+         minPrice !== undefined && { price: { gte: minPrice } }),
+      ...(maxPrice !== null &&
+         maxPrice !== undefined && { price: { lte: maxPrice } }),
       ...(search && {
          OR: [
             { title: { contains: search, mode: "insensitive" as const } },
@@ -102,21 +109,34 @@ export async function getAllListings({
 export async function getMaxPrice(params: Filters) {
    const where: Prisma.ListingWhereInput = {
       status: ListingStatus.ACTIVE,
-      ...(params.categorySlugs && params.categorySlugs.length > 0 && { category: { slug: { in: params.categorySlugs } } }),
+      ...(params.categorySlugs &&
+         params.categorySlugs.length > 0 && {
+            category: { slug: { in: params.categorySlugs } },
+         }),
       ...(params.search && {
          OR: [
-            { title: { contains: params.search, mode: "insensitive" as const } },
-            { description: { contains: params.search, mode: "insensitive" as const } },
-         ]
+            {
+               title: { contains: params.search, mode: "insensitive" as const },
+            },
+            {
+               description: {
+                  contains: params.search,
+                  mode: "insensitive" as const,
+               },
+            },
+         ],
       }),
-      ...(params.conditions && params.conditions.length > 0 && { condition: { in: params.conditions } }),
-   }
+      ...(params.conditions &&
+         params.conditions.length > 0 && {
+            condition: { in: params.conditions },
+         }),
+   };
 
    const result = await prisma.listing.aggregate({
       where,
       _max: {
          price: true,
-      }
+      },
    });
 
    return result._max?.price ?? 1000;
@@ -150,31 +170,30 @@ export async function getRecentListings() {
 }
 
 export async function getUserListingsCount(userId: string) {
-   const [activeListings, itemsSold, favoritesListings] =
-      await Promise.all([
-         // Active listings count
-         prisma.listing.count({
-            where: {
-               userId,
-               status: "ACTIVE",
-            },
-         }),
+   const [activeListings, itemsSold, favoritesListings] = await Promise.all([
+      // Active listings count
+      prisma.listing.count({
+         where: {
+            userId,
+            status: "ACTIVE",
+         },
+      }),
 
-         // Items sold count
-         prisma.listing.count({
-            where: {
-               userId,
-               sold: true,
-            },
-         }),
+      // Items sold count
+      prisma.listing.count({
+         where: {
+            userId,
+            sold: true,
+         },
+      }),
 
-         // Favorites listings count
-         prisma.favorite.count({
-            where: {
-               userId,
-            },
-         }),
-      ]);
+      // Favorites listings count
+      prisma.favorite.count({
+         where: {
+            userId,
+         },
+      }),
+   ]);
 
    return {
       activeListings,
@@ -293,27 +312,129 @@ export async function getUserSoldListings(userId: string): Promise<TListing[]> {
    return result as unknown as TListing[];
 }
 
+export async function markListingAsSold(id: string) {
+   const currentUser = await requireAuth();
+   
+   const existingListing = await prisma.listing.findUnique({
+      where: {
+         id: id,
+      },
+      select: {
+         userId: true,
+         status: true,
+      },
+   });
+
+   if (!existingListing) {
+      return { error: "Listing not found" };
+   }
+
+   if (existingListing.status === "SOLD") {
+      return { error: "This listing has already been sold" };
+   }
+
+   if (existingListing.userId !== currentUser.id) {
+      return { error: "You are not the owner of this listing" };
+   }
+
+   return await prisma.listing.update({
+      where: {
+         id,
+      },
+      data: {
+         status: "SOLD",
+         sold: true,
+      }
+   })
+
+}
 
 export async function createListing(listing: TCreateListing) {
    const user = await requireAuth();
 
-   const validatedListing = createListingSchema.safeParse(listing);
-   if (!validatedListing.success) {
-      return { error: validatedListing.error.message };
-   }
-
    return await prisma.listing.create({
       data: {
-         ...validatedListing.data,
-         description:
-            validatedListing.data.description ?? "No description provided",
+         ...listing,
+         description: listing.description ?? "No description provided",
          userId: user.id,
          images: {
-            create: validatedListing.data.images.map((image, index) => ({
+            create: listing.images.map((image, index) => ({
                url: image,
                order: index,
             })),
          },
+      },
+   });
+}
+
+export async function deleteListing(id: string) {
+   const currentUser = await requireAuth();
+
+   const existingListing = await prisma.listing.findUnique({
+      where: {
+         id: id,
+      },
+      select: {
+         userId: true,
+      },
+   });
+
+   if (!existingListing) {
+      return { error: "Listing not found" };
+   }
+
+   if (existingListing.userId !== currentUser.id) {
+      return { error: "You are not the owner of this listing" };
+   }
+
+   return await prisma.listing.delete({
+      where: {
+         id: id,
+      },
+   });
+}
+
+export async function updateListing(id: string, listing: TUpdateListing) {
+   const currentUser = await requireAuth();
+
+   const existingListing = await prisma.listing.findUnique({
+      where: {
+         id: id,
+      },
+      select: {
+         userId: true,
+      },
+   });
+
+   if (!existingListing) {
+      return { error: "Listing not found" };
+   }
+
+   if (existingListing.userId !== currentUser.id) {
+      return { error: "You are not the owner of this listing" };
+   }
+
+   const { images, ...listingData } = listing;
+
+   return await prisma.listing.update({
+      where: {
+         id: id,
+      },
+      data: {
+         ...listingData,
+         ...(images &&
+            images.length > 0 && {
+               images: {
+                  deleteMany: {},
+                  create: images.map((image, index) => ({
+                     url: image,
+                     order: index,
+                  })),
+               },
+            }),
+      },
+      include: {
+         images: true,
       },
    });
 }

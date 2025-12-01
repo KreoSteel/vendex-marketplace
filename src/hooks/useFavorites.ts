@@ -1,17 +1,22 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { userFavoriteListingsOptions, isListingFavoriteOptions } from "@/lib/queries/favorites";
+import { userFavoriteListingsOptions, isListingFavoriteOptions } from "@/lib/query-options/favorites";
 import { toggleFavoriteAction } from "@/app/actions/favorites";
+import { authClient } from "@/utils/auth-client";
 
 export const useGetUserFavoriteListings = (userId: string) => {
    return useQuery(userFavoriteListingsOptions(userId));
 };
 
 export const useIsListingFavorite = (listingId: string, enabled: boolean = true) => {
+    const { data: session } = authClient.useSession();
+    const userId = session?.user?.id;
+
     return useQuery({
-        ...isListingFavoriteOptions(listingId),
-        enabled
+        ...isListingFavoriteOptions(listingId, userId),
+        enabled: enabled && !!userId
     });
 }
+
 
 export const useToggleFavorite = () => {
     const queryClient = useQueryClient();

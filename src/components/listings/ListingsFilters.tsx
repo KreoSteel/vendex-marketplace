@@ -107,32 +107,53 @@ export default function ListingsFilters() {
 
    useEffect(() => {
       if (maxPrice !== undefined && maxPrice > 0) {
-         // eslint-disable-next-line react-hooks/set-state-in-effect
-         setPriceRange([0, maxPrice]);
+          
+         setPriceRange((prev) => {
+             if (prev[0] === 0 && prev[1] === maxPrice) return prev;
+             return [0, maxPrice];
+         });
       }
    }, [maxPrice]);
 
    useEffect(() => {
       const categories = searchParams.get("category");
       if (categories) {
-         // eslint-disable-next-line react-hooks/set-state-in-effect
-         setSelectedCategories(categories.split(","));
+         const newCategories = categories.split(",");
+          
+         setSelectedCategories(prev => {
+             if (prev.length === newCategories.length && prev.every(c => newCategories.includes(c))) return prev;
+             return newCategories;
+         });
+      } else {
+           
+          setSelectedCategories(prev => prev.length ? [] : prev);
       }
 
       const conditions = searchParams.get("condition");
       if (conditions) {
-         // eslint-disable-next-line react-hooks/set-state-in-effect
-         setSelectedConditions(conditions.split(",") as ListingCondition[]);
+         const newConditions = conditions.split(",") as ListingCondition[];
+          
+         setSelectedConditions(prev => {
+             if (prev.length === newConditions.length && prev.every(c => newConditions.includes(c))) return prev;
+             return newConditions;
+         });
+      } else {
+           
+          setSelectedConditions(prev => prev.length ? [] : prev);
       }
 
       const minPrice = searchParams.get("minPrice");
-      const maxPrice = searchParams.get("maxPrice");
-      if (minPrice || maxPrice) {
-         // eslint-disable-next-line react-hooks/set-state-in-effect
-         setPriceRange([
+      const maxPriceParam = searchParams.get("maxPrice");
+      if (minPrice || maxPriceParam) {
+         const newRange = [
             minPrice ? parseInt(minPrice, 10) : 0,
-            maxPrice ? parseInt(maxPrice, 10) : 1000,
-         ]);
+            maxPriceParam ? parseInt(maxPriceParam, 10) : 1000,
+         ];
+          
+         setPriceRange(prev => {
+             if (prev[0] === newRange[0] && prev[1] === newRange[1]) return prev;
+             return newRange;
+         });
       }
    }, [searchParams]);
 

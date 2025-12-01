@@ -13,14 +13,21 @@ import {
 import { Button } from "../ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 import { format } from "date-fns";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import ImageSlider from "../ui/image-slider";
 import CreateReviewForm from "../forms/CreateReviewForm";
 import Link from "next/link";
+import DeleteListing from "./DeleteListing";
+import EditListingForm, {
+   conditions,
+   TEditListing,
+} from "../forms/EditListingForm";
+import MarkAsSold from "./mark-as-sold";
 
 interface ListingDetailsClientPageProps {
    id: string;
    activeListingsCount: number | undefined;
+   itemsSoldCount: number | undefined;
    averageRating: number | undefined;
    currentUser: string;
 }
@@ -28,26 +35,26 @@ interface ListingDetailsClientPageProps {
 export default function ListingDetailsClientPage({
    id,
    activeListingsCount,
+   itemsSoldCount,
    averageRating,
    currentUser,
 }: ListingDetailsClientPageProps) {
    const { data: listing } = useGetListingById(id);
+   const userId = listing?.user?.id;
+   const isOwner = userId === currentUser;
    const router = useRouter();
 
    const handleViewProfile = () => {
-      router.push(`/profile/${listing?.user?.id}`);
+      router.push(`/profile/${userId}`);
    };
 
    if (!listing) {
-      return <div>Listing not found</div>;
+      return notFound();
    }
 
-   const conditions = {
-      [ListingCondition.NEW]: "New",
-      [ListingCondition.LIKE_NEW]: "Like New",
-      [ListingCondition.USED]: "Used",
-      [ListingCondition.FOR_PARTS]: "For Parts",
-   };
+   if (!userId) {
+      return notFound();
+   }
 
    return (
       <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
@@ -175,26 +182,41 @@ export default function ListingDetailsClientPage({
 
                         <Separator />
 
-                        <div className="flex gap-2">
-                           {listing.user.id !== currentUser && (
-                              <Link href={`/messages/${listing.user.id}`}>
-                                 <Button className="flex-1 shadow-md cursor-pointer">
-                                    Contact Seller
-                                 </Button>
-                              </Link>
+                        <div className="flex flex-wrap items-center gap-2">
+                           {isOwner ? (
+                              <>
+                                 <EditListingForm
+                                    key={listing.updatedAt.toString()}
+                                    listing={listing as unknown as TEditListing}
+                                 />
+                                 <DeleteListing listingId={listing.id} />
+                                 {listing.status !== "SOLD" && (
+                                    <MarkAsSold listingId={listing.id} />
+                                 )}
+                              </>
+                           ) : (
+                              listing.status !== "SOLD" && (
+                                 <>
+                                    <Link href={`/messages/${userId}`}>
+                                       <Button className="flex-1 shadow-md cursor-pointer">
+                                          Contact Seller
+                                       </Button>
+                                    </Link>
+                                    <CreateReviewForm
+                                       listingId={listing.id}
+                                       revieweeId={userId}
+                                    />
+                                 </>
+                              )
                            )}
-                           {listing.user.id !== currentUser && (
-                           <CreateReviewForm
-                              listingId={listing.id}
-                              revieweeId={listing.user.id}
+                           {listing.status !== "SOLD" && (
+                              <ToggleFavorite
+                                 listingId={listing.id}
+                                 variant="outline"
+                                 size="default"
+                                 className="shadow-md"
                               />
                            )}
-                              <ToggleFavorite
-                              listingId={listing.id}
-                              variant="outline"
-                              size="default"
-                              className="shadow-md"
-                           />
                         </div>
                      </CardHeader>
                   </Card>
@@ -210,19 +232,19 @@ export default function ListingDetailsClientPage({
                         <div className="flex items-center gap-3">
                            <Avatar className="w-14 h-14">
                               <AvatarImage
-                                 src={listing?.user?.avatarImg || ""}
+                                 src={listing?.user.avatarImg || ""}
                               />
                               <AvatarFallback>
-                                 {listing?.user?.name?.charAt(0)}
+                                 {listing?.user.name?.charAt(0)}
                               </AvatarFallback>
                            </Avatar>
                            <div className="flex flex-col">
                               <h3 className="text-lg font-medium text-gray-900">
-                                 {listing?.user?.name}
+                                 {listing?.user.name}
                               </h3>
                               <p className="text-base text-gray-500">
                                  Member since:{" "}
-                                 {listing?.user?.createdAt
+                                 {listing?.user.createdAt
                                     ? format(
                                          new Date(listing.user.createdAt),
                                          "d MMM yyyy"
@@ -245,7 +267,7 @@ export default function ListingDetailsClientPage({
                               <p className="font-medium text-gray-600">
                                  Items Sold
                               </p>
-                              <p>0</p>
+                              <p>{itemsSoldCount}</p>
                            </div>
                            <div className="flex items-center justify-between gap-2">
                               <p className="font-medium text-gray-600">
@@ -253,14 +275,14 @@ export default function ListingDetailsClientPage({
                               </p>
                               <div className="flex items-center gap-2">
                                  <StarIcon className="w-4 h-4 text-yellow-500 fill-current" />
-                                 <span>{averageRating}</span>
+                                 <span>{averageRating || "No rating"}</span>
                               </div>
                            </div>
                            <div className="flex items-center justify-between gap-2">
                               <p className="font-medium text-gray-600">
                                  Location
                               </p>
-                              <p>{listing?.user?.location}</p>
+                              <p>{listing?.user.location}</p>
                            </div>
                         </div>
 

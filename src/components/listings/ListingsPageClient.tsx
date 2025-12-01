@@ -15,12 +15,22 @@ import {
    PaginationPrevious,
 } from "../ui/pagination";
 import { useRouter } from "next/navigation";
+import { authClient } from "@/utils/auth-client";
+import { userFavoriteListingsOptions } from "@/lib/query-options/favorites";
+import { useQuery } from "@tanstack/react-query";
 
 export default function ListingsPageClient({
    searchParams,
 }: {
    searchParams: AllListingsParams;
 }) {
+   const { data: session } = authClient.useSession();
+   const { data: favorites } = useQuery({
+      ...userFavoriteListingsOptions(session?.user?.id ?? ""),
+      enabled: !!session?.user?.id,
+   });
+   const favoriteIds = new Set(favorites?.map(f => f.id) ?? []);
+
    const { data, isLoading, error } = useGetAllListings(searchParams);
    const router = useRouter();
 
@@ -38,8 +48,8 @@ export default function ListingsPageClient({
             </div>
 
             <main className="flex-1 min-w-0 space-y-10 pb-10">
-               <div className="mb-6">
-                  <SearchBar className="w-full mb-4" />
+               <div className="mb-6 flex flex-col gap-3">
+                  <SearchBar className="w-full" />
                   <div className="text-sm text-gray-500">
                      {isLoading
                         ? "Loading..."
@@ -67,6 +77,7 @@ export default function ListingsPageClient({
                            key={listing.id}
                            listing={listing}
                            preload={index < 4}
+                           isFavorite={favoriteIds.has(listing.id)}
                         />
                      ))}
                   </div>
@@ -76,7 +87,7 @@ export default function ListingsPageClient({
                      <PaginationItem>
                         <PaginationPrevious
                            onClick={() =>
-                              handlePageChange(data?.currentPage ?? 0 - 1)
+                              handlePageChange((data?.currentPage ?? 1) - 1)
                            }
                            className={
                               data?.currentPage === 1
@@ -101,7 +112,7 @@ export default function ListingsPageClient({
                      <PaginationItem>
                         <PaginationNext
                            onClick={() =>
-                              handlePageChange(data?.currentPage ?? 0 + 1)
+                              handlePageChange((data?.currentPage ?? 1) + 1)
                            }
                            className={
                               data?.currentPage === data?.totalPages

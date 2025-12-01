@@ -19,16 +19,9 @@ export async function uploadListingImages(files: File[], userId: string) {
       if (error) {
          return { error: error.message };
       }
-
       const { data: urlData } = supabaseAdmin.storage
          .from("listing_images")
-         .getPublicUrl(fileName, {
-            transform: {
-               width: 300,
-               height: 200,
-               resize: "cover",
-            }
-         });
+         .getPublicUrl(fileName);
 
       urls.push(urlData.publicUrl);
    }

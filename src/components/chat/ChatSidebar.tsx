@@ -1,5 +1,5 @@
 "use client";
-import { conversationsWithUserOptions } from "@/lib/queries/messages";
+import { conversationsWithUserOptions } from "@/lib/query-options/messages";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";

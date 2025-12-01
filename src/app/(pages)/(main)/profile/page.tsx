@@ -7,12 +7,12 @@ import {
    userActiveListingsOptions,
    userSoldListingsOptions,
    userListingsCountOptions,
-} from "@/lib/queries/listings";
+} from "@/lib/query-options/listings";
 import { 
     getUserReviewsStatsOptions, 
     getUserReviewsOptions 
-} from "@/lib/queries/reviews";
-import { userFavoriteListingsOptions } from "@/lib/queries/favorites";
+} from "@/lib/query-options/reviews";
+import { userFavoriteListingsOptions } from "@/lib/query-options/favorites";
 
 export default async function ProfilePage() {
    const user = await requireAuth();

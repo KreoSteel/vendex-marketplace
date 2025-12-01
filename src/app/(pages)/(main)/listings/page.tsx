@@ -2,7 +2,7 @@ import ListingsPageClient from "@/components/listings/ListingsPageClient";
 import { getQueryClient } from "@/lib/queryClient";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { AllListingsParams } from "@/lib/data-access/listings";
-import { allListingsOptions } from "@/lib/queries/listings";
+import { allListingsOptions } from "@/lib/query-options/listings";
 import { ListingCondition } from "@/utils/generated/enums";
 
 interface ListingsPageProps {

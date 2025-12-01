@@ -70,7 +70,7 @@ export const RealtimeChat = ({
     }
   }, [allMessages])
 
-  const handleSendMessage = useCallback(
+   const handleSendMessage = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault()
       if (!newMessage.trim() || !isConnected) return
@@ -82,10 +82,10 @@ export const RealtimeChat = ({
         const createdMessage = await onSendMessage(messageContent)
 
         if(createdMessage) {
-          sendMessage(createdMessage.content, createdMessage.id, createdMessage.createdAt)
+          sendMessage(createdMessage.content, createdMessage.id)
         }
       }
-   }, [newMessage, isConnected, onSendMessage]);
+   }, [newMessage, isConnected, onSendMessage, sendMessage]);
 
   return (
     <div className="flex flex-col h-full w-full bg-background text-foreground antialiased overflow-hidden">

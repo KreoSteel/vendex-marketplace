@@ -7,7 +7,7 @@ import Link from "next/link";
 interface ListingCardProps {
    listing: TListing;
    preload?: boolean;
-   isFavorite: boolean;
+   isFavorite?: boolean;
 }
 
 export default function ListingCard({ listing, preload = false, isFavorite }: ListingCardProps) {

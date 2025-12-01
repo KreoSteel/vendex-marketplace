@@ -7,7 +7,7 @@ import {
    userListingsCountOptions,
    allListingsOptions,
    getListingByIdOptions,
-} from "@/lib/queries/listings";
+} from "@/lib/query-options/listings";
 import { AllListingsParams, Filters } from "@/lib/data-access/listings";
 import { getMaxPriceForFiltersOptions } from "@/lib/utils";
 export const useGetRecentListings = () => {

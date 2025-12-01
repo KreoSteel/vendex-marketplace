@@ -3,10 +3,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Star } from "lucide-react";
 import { format } from "date-fns";
 import Link from "next/link";
-import { TReview } from "@/utils/zod-schemas/reviews";
+import { TPublicReview } from "@/utils/zod-schemas/reviews";
 
 interface ReviewCardProps {
-    review: TReview;
+    review: TPublicReview;
 }
 
 export default function ReviewCard({ review }: ReviewCardProps) {

@@ -1,7 +1,7 @@
 import Hero from "@/components/home/Hero";
 import BrowseByCategory from "@/components/home/BrowseByCategory";
 import RecentListings from "@/components/home/RecentListings";
-import { recentListingsOptions } from "@/lib/queries/listings";
+import { recentListingsOptions } from "@/lib/query-options/listings";
 import { getQueryClient } from "@/lib/queryClient";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { categoriesOptions } from "@/hooks/useCategories";

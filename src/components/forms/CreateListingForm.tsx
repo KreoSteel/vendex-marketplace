@@ -17,6 +17,7 @@ import { ListingCondition } from "@/utils/generated/enums";
 import { useGetCategories } from "@/hooks/useCategories";
 import { TCategory } from "@/utils/zod-schemas/categories";
 import { redirect } from "next/navigation";
+import Image from "next/image";
 
 export default function CreateListingForm() {
    const [state, formAction] = useActionState(createListingAction, {
@@ -96,12 +97,11 @@ export default function CreateListingForm() {
                const url = URL.createObjectURL(image);
                return (
                   <div key={index} className="relative">
-                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                     <img
+                     <Image
                         src={url}
                         alt={image.name}
-                        width={150}
-                        height={150}
+                        fill
+                        sizes="150px"
                         className="rounded-md object-cover"
                      />
                      <Button

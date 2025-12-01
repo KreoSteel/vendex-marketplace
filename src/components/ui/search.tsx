@@ -19,11 +19,9 @@ export default function SearchBar({ className }: { className?: string }) {
         }
     }
     return (
-        <div className={cn("relative shadow-sm rounded-lg border border-neutral-200", className)}>
-            <form onSubmit={handleSearch}>
-                <Input type="text" name="search" placeholder="Search" className="w-full pl-8 relative py-6 font-semibold bg-white" />
+            <form onSubmit={handleSearch} className="relative w-full">
+                <Input type="text" name="search" placeholder="Search" className={cn("w-full pl-8 shadow-sm rounded-lg border border-neutral-200 h-10 font-medium bg-white", className)} />
+                <SearchIcon className="size-4 absolute inset-y-0 left-2 my-auto text-neutral-600" />
             </form>
-            <SearchIcon className="size-4 absolute inset-y-0 left-2 my-auto text-neutral-600" />
-        </div>
     )
 }

@@ -11,9 +11,9 @@ export const userFavoriteListingsOptions = (userId: string) =>
        staleTime: 60 * 5 * 1000,
     });
 
-export const isListingFavoriteOptions = (listingId: string) => 
+export const isListingFavoriteOptions = (listingId: string, userId?: string) => 
     queryOptions({
-        queryKey: ["is-listing-favorite", listingId],
+        queryKey: ["is-listing-favorite", listingId, userId],
         queryFn: async () => {
             return await isListingFavorite(listingId);
         },
@@ -23,3 +23,4 @@ export const isListingFavoriteOptions = (listingId: string) =>
         refetchOnMount: false,
         refetchOnWindowFocus: false,
     });
+

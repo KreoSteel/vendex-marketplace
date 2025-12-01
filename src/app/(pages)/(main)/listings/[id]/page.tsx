@@ -2,11 +2,10 @@ import ListingDetailsClientPage from "@/components/listings/ListingDetailsClient
 import {
    getListingByIdOptions,
    userListingsCountOptions,
-} from "@/lib/queries/listings";
-import { getUserReviewsStatsOptions } from "@/lib/queries/reviews";
+} from "@/lib/query-options/listings";
+import { getUserReviewsStatsOptions } from "@/lib/query-options/reviews";
 import { getQueryClient } from "@/lib/queryClient";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { getUserProfile } from "@/lib/data-access/profile";
 import { requireAuth } from "@/utils/auth";
 
 export default async function ListingPageDetails({
@@ -33,6 +32,7 @@ export default async function ListingPageDetails({
             id={id}
             currentUser={currentUser?.id || ""}
             activeListingsCount={listingsCountData.activeListings}
+            itemsSoldCount={listingsCountData.itemsSold}
             averageRating={reviewsStats.averageRating}
          />
       </HydrationBoundary>

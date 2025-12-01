@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getUserReviewsOptions, getUserReviewsStatsOptions } from "@/lib/queries/reviews";
+import { getUserReviewsOptions, getUserReviewsStatsOptions } from "@/lib/query-options/reviews";
 
 export const useGetUserReviews = (userId: string) => {
     return useQuery(getUserReviewsOptions(userId));

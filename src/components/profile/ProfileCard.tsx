@@ -1,12 +1,14 @@
 "use client";
 import { Card, CardContent } from "@/components/ui/card";
-import { CalendarIcon, MapPinIcon, StarIcon } from "lucide-react";
+import { CalendarIcon, StarIcon, MapPinIcon, MessageCircleIcon } from "lucide-react";
 import { format } from "date-fns";
 import { Separator } from "@/components/ui/separator";
 import AvatarUpload from "./AvatarUpload";
 import EditProfileForm from "../forms/EditProfileForm";
 import type { User } from "@/utils/generated/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { Button } from "../ui/button";
+import Link from "next/link";
 
 interface ProfileCardProps {
    user: User;
@@ -70,6 +72,16 @@ export default function ProfileCard({
                            : "No reviews"}
                      </p>
                   </div>
+                  {!isOwner && (
+                  <div className="ml-auto">
+                     <Link href={`/messages/${user.id}`}>
+                        <Button>
+                           <MessageCircleIcon className="size-4" />
+                           Send Message
+                        </Button>
+                     </Link>
+                     </div>
+                     )}
                </div>
             </div>
          </CardContent>

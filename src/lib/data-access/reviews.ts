@@ -19,6 +19,13 @@ export async function getReviews(userId: string) {
                     avatarImg: true,
                 },
             },
+            reviewee: {
+                select: {
+                    id: true,
+                    name: true,
+                    avatarImg: true,
+                },
+            },
             listing: {
                 select: {
                     id: true,

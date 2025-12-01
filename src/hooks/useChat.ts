@@ -2,9 +2,9 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import {
    chatWithUserOptions,
    conversationsWithUserOptions,
-   sendMessageOptions,
-   changeMessageReadStatusOptions,
-} from "@/lib/queries/messages";
+} from "@/lib/query-options/messages";
+import { sendMessageOptions } from "@/lib/mutations/messages";
+import { changeMessageReadStatusOptions } from "@/lib/mutations/messages";
 export const useGetChatWithUser = (otherUserId: string) => {
    return useQuery(chatWithUserOptions(otherUserId));
 };

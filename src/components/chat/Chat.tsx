@@ -1,7 +1,7 @@
 "use client";
 
 import { useGetChatWithUser, useSendMessage } from "@/hooks/useChat";
-import { RealtimeChat } from "../realtime-chat";
+import { RealtimeChat } from "../../hooks/realtime-chat";
 import { useMemo, useCallback } from "react";
 import { ChatMessage } from "@/hooks/use-realtime-chat";
 

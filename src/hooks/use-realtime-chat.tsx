@@ -27,9 +27,6 @@ export function useRealtimeChat({ roomName, username }: UseRealtimeChatProps) {
    const addedMessageIds = useRef<Set<string>>(new Set());
 
    useEffect(() => {
-      setMessages([]);
-      addedMessageIds.current.clear();
-
       const newChannel = supabase.channel(roomName);
 
       newChannel
@@ -51,13 +48,17 @@ export function useRealtimeChat({ roomName, username }: UseRealtimeChatProps) {
 
       channelRef.current = newChannel;
 
+      const currentAddedMessageIds = addedMessageIds.current;
+
       return () => {
+         setMessages([]);
+         currentAddedMessageIds.clear();
          supabase.removeChannel(newChannel);
       };
    }, [roomName, supabase]);
 
    const sendMessage = useCallback(
-      async (content: string, messageId: string, createdAt: string) => {
+      async (content: string, messageId: string) => {
          if (!channelRef.current || !isConnected) return;
 
          const message: ChatMessage = {

@@ -3,7 +3,7 @@ import { useGetRecentListings } from "@/hooks/useListing";
 import { TListing } from "@/utils/zod-schemas/listings";
 import ListingCard from "../cards/ListingCard";
 import { useQuery } from "@tanstack/react-query";
-import { userFavoriteListingsOptions } from "@/lib/queries/favorites";
+import { userFavoriteListingsOptions } from "@/lib/query-options/favorites";
 import { authClient } from "@/utils/auth-client";
 
 export default function RecentListings() {

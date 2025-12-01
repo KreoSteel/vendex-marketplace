@@ -72,18 +72,8 @@ export default function EditProfileForm({ user }: { user: User | null }) {
                         disabled={isPending}
                      />
                   </div>
-                  <div className="grid gap-2">
-                     <Label>Phone (optional)</Label>
-                     <Input
-                        name="phone"
-                        type="text"
-                        placeholder="e.g. '123-456-7890'"
-                        defaultValue={user.phone ?? ""}
-                        disabled={isPending}
-                     />
-                  </div>
                </div>
-               <DialogFooter>
+               <DialogFooter className="mt-4">
                   <DialogClose asChild>
                      <Button variant="outline" disabled={isPending}>
                         Cancel

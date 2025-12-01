@@ -1,5 +1,5 @@
 "use server";
-import { getUser } from "@/utils/auth";
+import { getUser, requireAuth } from "@/utils/auth";
 import prisma from "@/utils/prisma";
 import { TUpdateUserProfile } from "@/utils/zod-schemas/profile";
 
@@ -21,6 +21,12 @@ export async function updateUserProfile(
    userId: string,
    data: Partial<TUpdateUserProfile>
 ) {
+   const currentUser = await requireAuth();
+   
+   if (currentUser.id !== userId) {
+      return { error: "You can only update your own profile" };
+   }
+
    return await prisma.user.update({
       where: { id: userId },
       data: {

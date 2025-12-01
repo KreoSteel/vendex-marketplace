@@ -11,6 +11,15 @@ export const createListingSchema = z.object({
     images: z.array(z.string()).min(1, { message: "At least one image is required" }).max(10, { message: "You can only upload up to 10 images" }),
 });
 
+export const updateListingSchema = z.object({
+    title: z.string().min(1, { message: "Title is required" }),
+    description: z.string().max(1000, { message: "Description must be less than 1000 characters" }).optional(),
+    price: z.number().max(1000000, { message: "Price must be less than 1000000" }),
+    location: z.string().min(1, { message: "Location is required" }),
+    condition: z.enum(ListingCondition).default("USED"),
+    images: z.array(z.string()).min(1, { message: "At least one image is required" }).max(10, { message: "You can only upload up to 10 images" }),
+}).partial();
+
 export const listingSchema = z.object({
     id: z.string(),
     title: z.string(),
@@ -25,5 +34,6 @@ export const listingSchema = z.object({
 });
 
 
+export type TUpdateListing = z.infer<typeof updateListingSchema>;
 export type TCreateListing = z.infer<typeof createListingSchema>;
 export type TListing = z.infer<typeof listingSchema>;

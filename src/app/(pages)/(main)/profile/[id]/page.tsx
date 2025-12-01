@@ -7,10 +7,10 @@ import {
    userActiveListingsOptions,
    userSoldListingsOptions,
    userListingsCountOptions,
-} from "@/lib/queries/listings";
-import { userFavoriteListingsOptions } from "@/lib/queries/favorites";
+} from "@/lib/query-options/listings";
+import { userFavoriteListingsOptions } from "@/lib/query-options/favorites";
 import { getUserProfile } from "@/lib/data-access/profile";
-import { getUserReviewsStatsOptions, getUserReviewsOptions } from "@/lib/queries/reviews";
+import { getUserReviewsStatsOptions, getUserReviewsOptions } from "@/lib/query-options/reviews";
 import { notFound } from "next/navigation";
 
 
