@@ -3,11 +3,13 @@ import { useState, useTransition } from "react";
 import { Button } from "../ui/button";
 import { CheckIcon } from "lucide-react";
 import { markListingAsSoldAction } from "@/app/actions/listings";
+import { useTranslations } from "next-intl";
 
 export default function MarkAsSold({ listingId }: { listingId: string }) {
    const [isPending, startTransition] = useTransition();
    const [error, setError] = useState<string | null>(null);
    const [success, setSuccess] = useState<string | null>(null);
+   const tButtons = useTranslations("buttons");
 
    function handleMarkAsSold() {
       startTransition(async () => {
@@ -37,7 +39,7 @@ export default function MarkAsSold({ listingId }: { listingId: string }) {
             onClick={handleMarkAsSold}
             disabled={isPending}>
             <CheckIcon className="w-4 h-4 text-green-500" />
-            {isPending ? "Marking as sold..." : "Mark as Sold"}
+            {isPending ? tButtons("markingAsSold") : tButtons("markAsSold")}
          </Button>
       </>
    );

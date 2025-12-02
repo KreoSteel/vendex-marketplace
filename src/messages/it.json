@@ -1,0 +1,329 @@
+{
+   "common": {
+      "loading": "Caricamento...",
+      "error": "Errore",
+      "noListingsFound": "Nessun annuncio trovato",
+      "noResultsFound": "Nessun risultato trovato",
+      "noReviewsFound": "Nessuna recensione trovata",
+      "noLocationSet": "Posizione non impostata",
+      "noActiveListings": "Nessun annuncio attivo",
+      "noSoldItems": "Nessun articolo venduto",
+      "noFavorites": "Nessun preferito",
+      "noReviews": "Nessuna recensione",
+      "noPriceRangeFound": "Nessuna fascia di prezzo trovata",
+      "loadingPriceRange": "Caricamento fascia di prezzo...",
+      "loadingResults": "Caricamento risultati...",
+      "price": "Prezzo",
+      "joined": "Iscritto",
+      "rating": "Valutazione:",
+      "viewProfile": "Vedi profilo",
+      "contactSeller": "Contatta il venditore",
+      "writeReview": "Scrivi una recensione",
+      "locationNotSpecified": "Posizione non specificata"
+   },
+   "LocaleLayout": {
+      "title": "Vendex - Il tuo marketplace affidabile",
+      "description": "Compra e vendi prodotti nel tuo mercato locale"
+   },
+   "header": {
+      "createListing": "Crea annuncio",
+      "signUp": "Registrati",
+      "signIn": "Accedi",
+      "noLocation": "Posizione non impostata",
+      "MyProfile": "Il mio profilo",
+      "messages": "Messaggi",
+      "favorites": "Preferiti",
+      "logout": "Esci"
+   },
+   "auth": {
+      "login": {
+         "title": "Accedi al tuo account",
+         "description": "Inserisci le tue credenziali",
+         "signUp": "Registrati",
+         "labelEmail": "Email",
+         "labelPassword": "Password",
+         "placeholderEmail": "john.doe@example.com",
+         "buttonLogin": "Accedi",
+         "placeholderPassword": "********",
+         "buttonLoginLoading": "Accesso..."
+      },
+      "register": {
+         "title": "Crea un account",
+         "description": "Inserisci i tuoi dati per creare un account",
+         "signIn": "Accedi",
+         "labelName": "Nome",
+         "labelEmail": "Email",
+         "labelPassword": "Password",
+         "placeholderName": "John Doe",
+         "placeholderEmail": "m@example.com",
+         "placeholderPassword": "********",
+         "buttonRegister": "Crea account",
+         "buttonRegisterLoading": "Creazione account..."
+      },
+      "errors": {
+         "failedToCreateAccount": "Impossibile creare l'account",
+         "failedToLogin": "Impossibile accedere",
+         "unauthorized": "Non autorizzato",
+         "nameRequired": "Il nome è obbligatorio",
+         "invalidEmail": "Email non valida",
+         "passwordMinLength": "La password deve contenere almeno 8 caratteri",
+         "emailPasswordRequired": "Email e password sono obbligatori"
+      }
+   },
+   "home": {
+      "hero": {
+         "title": "Trova tutto ciò di cui hai bisogno su Vendex",
+         "description": "Vendex è una piattaforma per comprare e vendere prodotti.",
+         "searchPlaceholder": "Cerca..."
+      },
+      "browseByCategory": {
+         "title": "Categorie"
+      },
+      "recentListings": {
+         "title": "Annunci recenti"
+      }
+   },
+   "profilePage": {
+      "activeListings": "Annunci attivi",
+      "itemsSold": "Articoli venduti",
+      "totalReviews": "Recensioni totali",
+      "editProfile": "Modifica profilo",
+      "sendMessage": "Invia messaggio",
+      "soldItems": "Articoli venduti",
+      "favorites": "Preferiti",
+      "reviews": "Recensioni"
+   },
+   "searchListingsPage": {
+      "filters": {
+         "title": "Filtri",
+         "categories": "Categorie",
+         "conditionTitle": "Condizioni",
+         "conditions": {
+            "new": "Nuovo",
+            "likeNew": "Come nuovo",
+            "used": "Usato",
+            "forParts": "Per pezzi di ricambio"
+         },
+         "priceRange": "Fascia di prezzo",
+         "clear": "Cancella",
+         "apply": "Applica"
+      },
+      "results": "Risultati:",
+      "loadingResults": "Caricamento risultati...",
+      "pagination": {
+         "previous": "Precedente",
+         "next": "Successivo"
+      }
+   },
+   "listingDetailsPage": {
+      "backToListings": "Torna agli annunci",
+      "description": "Descrizione",
+      "details": "Dettagli",
+      "condition": "Condizione",
+      "category": "Categoria",
+      "location": "Posizione",
+      "posted": "Pubblicato",
+      "price": "Prezzo",
+      "featured": "In evidenza",
+      "contactSeller": "Contatta il venditore",
+      "sellerInformation": "Informazioni sul venditore",
+      "memberSince": "Membro dal",
+      "activeListings": "Annunci attivi",
+      "itemsSold": "Articoli venduti",
+      "overallRating": "Valutazione generale",
+      "noRating": "Nessuna valutazione",
+      "viewProfile": "Vedi profilo"
+   },
+   "chatPage": {
+      "viewProfile": "Vedi profilo",
+      "unknownUser": "Utente sconosciuto"
+   },
+   "messagesPage": {
+      "yourMessages": "I tuoi messaggi",
+      "selectConversation": "Seleziona una conversazione dalla barra laterale per iniziare a chattare"
+   },
+   "createListingPage": {
+      "title": "Crea un nuovo annuncio",
+      "description": "Crea un nuovo annuncio per vendere i tuoi prodotti",
+      "requiredFields": "I campi obbligatori sono marcati con *"
+   },
+   "createListingForm": {
+      "description": "Descrizione",
+      "price": "Prezzo",
+      "category": "Categoria",   
+      "location": "Posizione",
+      "condition": "Condizione",
+      "photos": "Foto",
+      "photosPlaceholder": "Carica fino a 10 foto",
+      "photosLimit": "Puoi caricare fino a 10 foto",
+      "photosError": "Errore nel caricamento delle foto",
+      "photosSuccess": "Foto caricate con successo",
+      "photosLoading": "Caricamento foto...",
+      "photosClear": "Cancella foto",
+      "photosApply": "Applica foto"
+   },
+   "createReviewForm": {
+      "title": "Scrivi una recensione",
+      "description": "Descrizione",
+      "rating": "Valutazione",
+      "submit": "Invia recensione"
+   },
+   "buttons": {
+      "cancel": "Annulla",
+      "delete": "Elimina",
+      "deleting": "Eliminazione...",
+      "save": "Salva modifiche",
+      "saveChanges": "Salva modifiche",
+      "saving": "Salvataggio...",
+      "createListing": "Crea annuncio",
+      "creatingListing": "Creazione annuncio...",
+      "editListing": "Modifica annuncio",
+      "deleteListing": "Elimina annuncio",
+      "markAsSold": "Segna come venduto",
+      "markingAsSold": "Segnando come venduto...",
+      "submitReview": "Invia recensione",
+      "submitting": "Invio...",
+      "writeReview": "Scrivi una recensione"
+   },
+   "forms": {
+      "labels": {
+         "title": "Titolo",
+         "name": "Nome",
+         "email": "Email",
+         "password": "Password",
+         "description": "Descrizione",
+         "price": "Prezzo",
+         "category": "Categoria",
+         "location": "Posizione",
+         "condition": "Condizione",
+         "photos": "Foto",
+         "rating": "Valutazione",
+         "comment": "Commento"
+      },
+      "placeholders": {
+         "titleListing": "es. 'iPhone 16 Pro Max, Honda Accord 2025'",
+         "titleListingEdit": "es. MacBook Pro 14'' M2, 16GB RAM",
+         "descriptionDetail": "Descrivi l'articolo in dettaglio...",
+         "descriptionSpecs": "Descrivi brevemente la condizione, le specifiche e ciò che l'acquirente deve sapere.",
+         "priceListing": "es. 1000",
+         "priceListingEdit": "es. 1299.00",
+         "locationCity": "Città, Paese",
+         "locationExample": "es. 'New York, NY'",
+         "nameExample": "es. 'John Doe'",
+         "ratingExample": "es. 5",
+         "commentReview": "Racconta la tua esperienza con questo venditore...",
+         "selectCategory": "Seleziona una categoria",
+         "selectCondition": "Seleziona una condizione",
+         "selectLocale": "Seleziona una lingua"
+      },
+      "optional": "(opzionale)"
+   },
+   "dialogs": {
+      "editProfile": {
+         "title": "Modifica profilo",
+         "description": "Modifica le informazioni del tuo profilo."
+      },
+      "editListing": {
+         "title": "Modifica annuncio",
+         "description": "Aggiorna le informazioni principali del tuo annuncio.",
+         "changesVisible": "I cambiamenti saranno visibili agli acquirenti dopo il salvataggio."
+      },
+      "deleteListing": {
+         "title": "Elimina annuncio",
+         "description": "Sei sicuro di voler eliminare questo annuncio?",
+         "cannotUndo": "Questa azione non può essere annullata."
+      },
+      "createReview": {
+         "title": "Valuta il venditore",
+         "description": "Condividi la tua esperienza"
+      }
+   },
+   "conditions": {
+      "labels": {
+         "NEW": "Nuovo",
+         "LIKE_NEW": "Come nuovo",
+         "USED": "Usato",
+         "FOR_PARTS": "Per pezzi di ricambio"
+      },
+      "descriptions": {
+         "NEW": "Nuovo - Mai utilizzato",
+         "LIKE_NEW": "Come nuovo - Usato pochissimo, condizioni eccellenti",
+         "USED": "Usato - Usato ma in buone condizioni",
+         "FOR_PARTS": "Per pezzi di ricambio - Non funzionante, necessita riparazione"
+      }
+   },
+   "chat": {
+      "messages": "Messaggi",
+      "unknownUser": "Utente sconosciuto",
+      "noMessagesYet": "Ancora nessun messaggio",
+      "startConversation": "Inizia la conversazione!",
+      "typeMessage": "Scrivi un messaggio...",
+      "viewProfile": "Vedi profilo"
+   },
+   "media": {
+      "user": "Utente",
+      "existingImage": "Immagine esistente",
+      "photosLabel": "Foto (fino a 10)",
+      "photosAddOrReplace": "Foto (aggiungi o sostituisci, fino a 10)"
+   },
+   "system": {
+      "noDescriptionProvided": "Nessuna descrizione fornita"
+   },
+   "listings": {
+      "success": {
+         "listingEditedSuccessfully": "Annuncio modificato con successo",
+         "listingDeletedSuccessfully": "Annuncio eliminato con successo",
+         "listingMarkedAsSoldSuccessfully": "Annuncio segnato come venduto"
+      },
+      "errors": {
+         "failedToCreateListing": "Impossibile creare l'annuncio",
+         "failedToUpdateListing": "Impossibile aggiornare l'annuncio",
+         "failedToDeleteListing": "Impossibile eliminare l'annuncio",
+         "failedToMarkAsSold": "Impossibile segnarlo come venduto",
+         "listingNotFound": "Annuncio non trovato",
+         "listingAlreadySold": "Questo annuncio è già stato venduto",
+         "notListingOwner": "Non sei il proprietario di questo annuncio",
+         "listingIdRequired": "ID dell'annuncio richiesto",
+         "titleRequired": "Titolo obbligatorio",
+         "descriptionTooLong": "La descrizione deve essere inferiore a 1000 caratteri",
+         "priceTooHigh": "Il prezzo deve essere inferiore a 1.000.000",
+         "categoryRequired": "Categoria obbligatoria",
+         "locationRequired": "Posizione obbligatoria",
+         "atLeastOneImage": "È richiesta almeno una immagine",
+         "maxTenImages": "Puoi caricare fino a 10 immagini",
+         "updateProfileError": "Puoi modificare solo il tuo profilo"
+      }
+   },
+   "profile": {
+      "success": {
+         "profileUpdatedSuccessfully": "Profilo aggiornato con successo",
+         "profileImageUpdatedSuccessfully": "Immagine del profilo aggiornata con successo"
+      },
+      "errors": {
+         "failedToUpdateProfile": "Impossibile aggiornare il profilo",
+         "failedToUpdateProfileImage": "Impossibile aggiornare l'immagine del profilo",
+         "noFileProvided": "Nessun file fornito",
+         "fileSizeTooLarge": "La dimensione del file deve essere inferiore a 5MB"
+      }
+   },
+   "reviews": {
+      "purchased": "Acquistato",
+      "noWrittenReview": "Nessuna recensione scritta",
+      "success": {
+         "reviewCreatedSuccessfully": "Recensione creata con successo"
+      },
+      "errors": {
+         "failedToCreateReview": "Impossibile creare la recensione",
+         "cannotReviewYourself": "Non puoi recensire te stesso"
+      }
+   },
+   "favorites": {
+      "success": {
+         "addedToFavorites": "Aggiunto ai preferiti",
+         "removedFromFavorites": "Rimosso dai preferiti"
+      },
+      "errors": {
+         "unauthorizedAccess": "Accesso non autorizzato ai preferiti"
+      }
+   }
+}

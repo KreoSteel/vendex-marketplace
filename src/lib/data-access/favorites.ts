@@ -1,8 +1,10 @@
 "use server";
 import { requireAuth } from "@/utils/auth";
 import prisma from "@/utils/prisma";
+import { getTranslations } from "next-intl/server";
 
 export async function toggleFavorite(listingId: string) {
+   const tFavorites = await getTranslations("favorites");
    const user = await requireAuth();
    const userId = user.id;
 
@@ -24,7 +26,7 @@ export async function toggleFavorite(listingId: string) {
             },
          },
       });
-      return { success: true, message: "Removed from favorites", action: "removed" };
+      return { success: true, message: tFavorites("success.removedFromFavorites"), action: "removed" };
    } else {
       await prisma.favorite.create({
          data: {
@@ -32,16 +34,17 @@ export async function toggleFavorite(listingId: string) {
             listingId,
          },
       });
-      return { success: true, message: "Added to favorites", action: "added" };
+      return { success: true, message: tFavorites("success.addedToFavorites"), action: "added" };
    }
 }
 
 
 export async function getUserFavoriteListings(userId: string) {
+    const tFavorites = await getTranslations("favorites");
     const user = await requireAuth();
     if (user.id !== userId) {
         if (user.id !== userId) {
-             throw new Error("Unauthorized access to favorites");
+             throw new Error(tFavorites("errors.unauthorizedAccess"));
         }
     }
  

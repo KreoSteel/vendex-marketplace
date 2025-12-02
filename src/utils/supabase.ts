@@ -1,7 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
+import { clientEnv } from "./zod-schemas/env/client";
 
 export const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    clientEnv.NEXT_PUBLIC_SUPABASE_URL,
+    clientEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
 

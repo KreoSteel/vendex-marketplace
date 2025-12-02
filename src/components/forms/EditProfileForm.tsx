@@ -15,8 +15,12 @@ import { Input } from "../ui/input";
 import { useActionState } from "react";
 import { updateUserProfileAction } from "@/app/actions/profile";
 import type { User } from "@/utils/generated/client";
+import { useTranslations } from "next-intl";
 
 export default function EditProfileForm({ user }: { user: User | null }) {
+   const tDialogs = useTranslations("dialogs.editProfile");
+   const tForms = useTranslations("forms.labels");
+   const tButtons = useTranslations("buttons");
    const [state, formAction, isPending] = useActionState(updateUserProfileAction, {
       error: "",
    });
@@ -30,14 +34,14 @@ export default function EditProfileForm({ user }: { user: User | null }) {
          <DialogTrigger asChild>
             <Button variant="default" size="sm">
                <PencilIcon className="size-4" />
-               Edit Profile
+               {tDialogs("title")}
             </Button>
          </DialogTrigger>
          <DialogContent>
             <DialogHeader>
-               <DialogTitle>Edit Profile</DialogTitle>
+               <DialogTitle>{tDialogs("title")}</DialogTitle>
                <DialogDescription className="text-sm text-neutral-500">
-                  Edit your profile information.
+                  {tDialogs("description")}
                </DialogDescription>
             </DialogHeader>
             <form action={formAction}>
@@ -50,7 +54,7 @@ export default function EditProfileForm({ user }: { user: User | null }) {
                <div className="flex flex-col gap-3 mt-4">
                   <div className="grid gap-2">
                      <Label>
-                        Name<span className="text-red-500">*</span>
+                        {tForms("name")}<span className="text-red-500">*</span>
                      </Label>
                      <Input
                         name="name"
@@ -62,7 +66,7 @@ export default function EditProfileForm({ user }: { user: User | null }) {
                   </div>
                   <div className="grid gap-2">
                      <Label>
-                        Location<span className="text-red-500">*</span>
+                        {tForms("location")}<span className="text-red-500">*</span>
                      </Label>
                      <Input
                         name="location"
@@ -76,11 +80,11 @@ export default function EditProfileForm({ user }: { user: User | null }) {
                <DialogFooter className="mt-4">
                   <DialogClose asChild>
                      <Button variant="outline" disabled={isPending}>
-                        Cancel
+                        {tButtons("cancel")}
                      </Button>
                   </DialogClose>
                   <Button type="submit" disabled={isPending}>
-                     {isPending ? "Saving..." : "Save Changes"}
+                     {isPending ? tButtons("saving") : tButtons("saveChanges")}
                   </Button>
                </DialogFooter>
             </form>

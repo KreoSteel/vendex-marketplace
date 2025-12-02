@@ -1,5 +1,4 @@
 import { keepPreviousData, queryOptions } from "@tanstack/react-query";
-import { http } from "@/utils/http";
 import {
    AllListingsParams,
    getAllListings,
@@ -7,13 +6,13 @@ import {
    getUserActiveListings,
    getUserListingsCount,
    getUserSoldListings,
+   getRecentListings,
 } from "../data-access/listings";
 
 export const recentListingsOptions = queryOptions({
    queryKey: ["recent-listings"],
    queryFn: async () => {
-      const response = await http.get("/listings/recent-listings");
-      return response.data;
+      return await getRecentListings();
    },
    staleTime: 60 * 5 * 1000,
 });

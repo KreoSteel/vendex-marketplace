@@ -1,8 +1,10 @@
 import { createClient } from "@supabase/supabase-js";
+import { serverEnv } from "@/utils/zod-schemas/env/server";
+import { clientEnv } from "@/utils/zod-schemas/env/client";
 
 const supabaseAdmin = createClient(
-   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-   process.env.SUPABASE_SERVICE_ROLE_KEY!
+   clientEnv.NEXT_PUBLIC_SUPABASE_URL,
+   serverEnv.SUPABASE_SERVICE_ROLE_KEY
 );
 
 export async function uploadListingImages(files: File[], userId: string) {
@@ -46,7 +48,7 @@ export async function uploadProfileImage(file: File, userId: string) {
             width: 100,
             height: 100,
             resize: "cover",
-         }
+         },
       });
 
    return { url: urlData.publicUrl };

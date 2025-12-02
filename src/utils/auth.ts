@@ -4,7 +4,7 @@ import prisma from "./prisma";
 import { nextCookies } from "better-auth/next-js";
 import { NextRequest } from "next/server";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+import { redirect } from "@/i18n/navigation";
 
 export const auth = betterAuth({
    database: prismaAdapter(prisma, {
@@ -21,7 +21,7 @@ export async function requireAuth(options?: { redirect?: boolean }) {
 
    if (!user) {
       if (options?.redirect !== false) {
-         redirect("/auth/login");
+         redirect({ href: "/auth/login", locale: "en" });
       }
       throw new Error("Unauthorized");
    }

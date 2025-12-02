@@ -1,0 +1,310 @@
+{
+   "common": {
+      "loading": "Loading...",
+      "error": "Error",
+      "noListingsFound": "No listings found",
+      "noResultsFound": "No results found",
+      "noReviewsFound": "No reviews found",
+      "noLocationSet": "No location set",
+      "noActiveListings": "No active listings",
+      "noSoldItems": "No sold items",
+      "noFavorites": "No favorites",
+      "noReviews": "No reviews",
+      "noPriceRangeFound": "No price range found",
+      "loadingPriceRange": "Loading price range...",
+      "loadingResults": "Loading results...",
+      "price": "Price",
+      "joined": "Joined",
+      "rating": "Rating:",
+      "viewProfile": "View Profile",
+      "contactSeller": "Contact Seller",
+      "writeReview": "Write a Review",
+      "locationNotSpecified": "Location not specified"
+   },
+   "LocaleLayout": {
+      "title": "Vendex - Your Trusted Marketplace",
+      "description": "Buy and sell items in your local marketplace"
+   },
+   "header": {
+      "createListing": "Create listing",
+      "signUp": "Sign Up",
+      "signIn": "Sign In",
+      "noLocation": "No location set",
+      "MyProfile": "My Profile",
+      "messages": "Messages",
+      "favorites": "Favorites",
+      "logout": "Logout"
+   },
+   "auth": {
+      "login": {
+         "title": "Login to your account",
+         "description": "Enter your credentials to login to your account",
+         "signUp": "Sign Up",
+         "labelEmail": "Email",
+         "labelPassword": "Password",
+         "placeholderEmail": "john.doe@example.com",
+         "buttonLogin": "Login",
+         "placeholderPassword": "********",
+         "buttonLoginLoading": "Logging in..."
+      },
+      "register": {
+         "title": "Create an account",
+         "description": "Enter your credentials to create an account",
+         "signIn": "Sign In",
+         "labelName": "Name",
+         "labelEmail": "Email",
+         "labelPassword": "Password",
+         "placeholderName": "John Doe",
+         "placeholderEmail": "m@example.com",
+         "placeholderPassword": "********",
+         "buttonRegister": "Create Account",
+         "buttonRegisterLoading": "Creating account..."
+      },
+      "errors": {
+         "failedToCreateAccount": "Failed to create account",
+         "failedToLogin": "Failed to login",
+         "unauthorized": "Unauthorized",
+         "nameRequired": "Name is required",
+         "invalidEmail": "Invalid email address",
+         "passwordMinLength": "Password must be at least 8 characters long",
+         "emailPasswordRequired": "Email and password are required"
+      }
+   },
+   "home": {
+      "hero": {
+         "title": "Find everything you need at Vendex",
+         "description": "Vendex is a platform for buying and selling products.",
+         "searchPlaceholder": "Search..."
+      },
+      "browseByCategory": { "title": "Browse by Category" },
+      "recentListings": { "title": "Recent Listings" }
+   },
+   "profilePage": {
+      "activeListings": "Active Listings",
+      "itemsSold": "Items Sold",
+      "totalReviews": "Total Reviews",
+      "editProfile": "Edit Profile",
+      "sendMessage": "Send Message",
+      "soldItems": "Sold Items",
+      "favorites": "Favorites",
+      "reviews": "Reviews"
+   },
+   "searchListingsPage": {
+      "filters": {
+         "title": "Filters",
+         "categories": "Categories",
+         "conditionTitle": "Conditions",
+         "conditions": {
+            "new": "New",
+            "likeNew": "Like New",
+            "used": "Used",
+            "forParts": "For Parts"
+         },
+         "priceRange": "Price Range",
+         "clear": "Clear",
+         "apply": "Apply"
+      },
+      "results": "Results:",
+      "loadingResults": "Loading results...",
+      "pagination": { "previous": "Previous", "next": "Next" }
+   },
+   "listingDetailsPage": {
+      "backToListings": "Back To Listings",
+      "description": "Description",
+      "details": "Details",
+      "condition": "Condition",
+      "category": "Category",
+      "location": "Location",
+      "posted": "Posted",
+      "price": "Price",
+      "featured": "Featured",
+      "contactSeller": "Contact Seller",
+      "sellerInformation": "Seller Information",
+      "memberSince": "Member Since",
+      "activeListings": "Active Listings",
+      "itemsSold": "Items Sold",
+      "overallRating": "Overall Rating",
+      "noRating": "No rating",
+      "viewProfile": "View Profile"
+   },
+   "chatPage": { "viewProfile": "View Profile", "unknownUser": "Unknown User" },
+   "messagesPage": { "yourMessages": "Your Messages", "selectConversation": "Select a conversation from the sidebar to start chatting" },
+   "createListingPage": {
+      "title": "Create a new listing",
+      "description": "Create a new listing to sell your products",
+      "requiredFields": "Required fields are marked with *"
+   },
+   "createListingForm": {
+      "description": "Description",
+      "price": "Price",
+      "category": "Category",
+      "location": "Location",
+      "condition": "Condition",
+      "photos": "Photos",
+      "photosPlaceholder": "Upload up to 10 photos",
+      "photosLimit": "You can only upload up to 10 photos",
+      "photosError": "Error uploading photos",
+      "photosSuccess": "Photos uploaded successfully",
+      "photosLoading": "Uploading photos...",
+      "photosClear": "Clear photos",
+      "photosApply": "Apply photos"
+   },
+   "createReviewForm": {
+      "title": "Write a Review",
+      "description": "Description",
+      "rating": "Rating",
+      "submit": "Submit Review"
+   },
+   "buttons": {
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "deleting": "Deleting...",
+      "save": "Save changes",
+      "saveChanges": "Save Changes",
+      "saving": "Saving...",
+      "createListing": "Create listing",
+      "creatingListing": "Creating listing...",
+      "editListing": "Edit Listing",
+      "deleteListing": "Delete Listing",
+      "markAsSold": "Mark as Sold",
+      "markingAsSold": "Marking as sold...",
+      "submitReview": "Submit Review",
+      "submitting": "Submitting...",
+      "writeReview": "Write Review"
+   },
+   "forms": {
+      "labels": {
+         "title": "Title",
+         "name": "Name",
+         "email": "Email",
+         "password": "Password",
+         "description": "Description",
+         "price": "Price",
+         "category": "Category",
+         "location": "Location",
+         "condition": "Condition",
+         "photos": "Photos",
+         "rating": "Rating",
+         "comment": "Comment"
+      },
+      "placeholders": {
+         "titleListing": "e.g. 'iPhone 16 Pro Max, Honda Accord 2025'",
+         "titleListingEdit": "e.g. MacBook Pro 14'' M2, 16GB RAM",
+         "descriptionDetail": "Describe the item in detail...",
+         "descriptionSpecs": "Briefly describe the condition, specs, and anything buyers should know.",
+         "priceListing": "e.g. 1000",
+         "priceListingEdit": "e.g. 1299.00",
+         "locationCity": "City, Country",
+         "locationExample": "e.g. 'New York, NY'",
+         "nameExample": "e.g. 'John Doe'",
+         "ratingExample": "e.g. 5",
+         "commentReview": "Tell others about your experience with this seller...",
+         "selectCategory": "Select a category",
+         "selectCondition": "Select a condition",
+         "selectLocale": "Select a locale"
+      },
+      "optional": "(optional)"
+   },
+   "dialogs": {
+      "editProfile": {
+         "title": "Edit Profile",
+         "description": "Edit your profile information."
+      },
+      "editListing": {
+         "title": "Edit listing",
+         "description": "Update the key information about your listing.",
+         "changesVisible": "Changes will be visible to buyers after you save."
+      },
+      "deleteListing": {
+         "title": "Delete Listing",
+         "description": "Are you sure you want to delete this listing?",
+         "cannotUndo": "This action cannot be undone."
+      },
+      "createReview": {
+         "title": "Rate this seller",
+         "description": "Share your experience with this seller"
+      }
+   },
+   "conditions": {
+      "labels": {
+         "NEW": "New",
+         "LIKE_NEW": "Like New",
+         "USED": "Used",
+         "FOR_PARTS": "For Parts"
+      },
+      "descriptions": {
+         "NEW": "New - Brand new, never used",
+         "LIKE_NEW": "Like new - Barely used, excellent condition",
+         "USED": "Used - Used but in good condition",
+         "FOR_PARTS": "For parts - Not working, needs repair"
+      }
+   },
+   "chat": {
+      "messages": "Messages",
+      "unknownUser": "Unknown user",
+      "noMessagesYet": "No messages yet",
+      "startConversation": "Start the conversation!",
+      "typeMessage": "Type a message...",
+      "viewProfile": "View Profile"
+   },
+   "media": {
+      "user": "User",
+      "existingImage": "Existing image",
+      "photosLabel": "Photos (up to 10)",
+      "photosAddOrReplace": "Photos (add or replace, up to 10)"
+   },
+   "system": { "noDescriptionProvided": "No description provided" },
+   "listings": {
+      "success": {
+         "listingEditedSuccessfully": "Listing edited successfully",
+         "listingDeletedSuccessfully": "Listing deleted successfully",
+         "listingMarkedAsSoldSuccessfully": "Listing marked as sold successfully"
+      },
+      "errors": {
+         "failedToCreateListing": "Failed to create listing",
+         "failedToUpdateListing": "Failed to update listing",
+         "failedToDeleteListing": "Failed to delete listing",
+         "failedToMarkAsSold": "Failed to mark listing as sold",
+         "listingNotFound": "Listing not found",
+         "listingAlreadySold": "This listing has already been sold",
+         "notListingOwner": "You are not the owner of this listing",
+         "listingIdRequired": "Listing ID is required",
+         "titleRequired": "Title is required",
+         "descriptionTooLong": "Description must be less than 1000 characters",
+         "priceTooHigh": "Price must be less than 1000000",
+         "categoryRequired": "Category is required",
+         "locationRequired": "Location is required",
+         "atLeastOneImage": "At least one image is required",
+         "maxTenImages": "You can only upload up to 10 images",
+         "updateProfileError": "You can only update your own profile"
+      }
+   },
+   "profile": {
+      "success": {
+         "profileUpdatedSuccessfully": "Profile updated successfully",
+         "profileImageUpdatedSuccessfully": "Profile image updated successfully"
+      },
+      "errors": {
+         "failedToUpdateProfile": "Failed to update profile",
+         "failedToUpdateProfileImage": "Failed to update profile image",
+         "noFileProvided": "No file provided",
+         "fileSizeTooLarge": "File size must be less than 5MB"
+      }
+   },
+   "reviews": {
+      "purchased": "Purchased",
+      "noWrittenReview": "No written review",
+      "success": { "reviewCreatedSuccessfully": "Review created successfully" },
+      "errors": {
+         "failedToCreateReview": "Failed to create review",
+         "cannotReviewYourself": "You cannot review yourself"
+      }
+   },
+   "favorites": {
+      "success": {
+         "addedToFavorites": "Added to favorites",
+         "removedFromFavorites": "Removed from favorites"
+      },
+      "errors": { "unauthorizedAccess": "Unauthorized access to favorites" }
+   }
+}

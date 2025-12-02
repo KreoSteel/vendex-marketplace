@@ -27,6 +27,7 @@ import { TUpdateListing } from "@/utils/zod-schemas/listings";
 import Image from "next/image";
 import { TCategory } from "@/utils/zod-schemas/categories";
 import { useGetCategories } from "@/hooks/useCategories";
+import { useTranslations } from "next-intl";
 
 export type TEditListing = TUpdateListing & {
    id: string;
@@ -51,6 +52,11 @@ export default function EditListingForm({
 }: {
    listing: TEditListing;
 }) {
+   const tForms = useTranslations("forms");
+   const tDialogs = useTranslations("dialogs.editListing");
+   const tConditions = useTranslations("conditions");
+   const tMedia = useTranslations("media");
+   const tButtons = useTranslations("buttons");
    const [state, formAction] = useActionState(updateListingAction, {
       error: "",
       success: "",
@@ -120,17 +126,17 @@ export default function EditListingForm({
                variant="outline"
                className="flex items-center gap-2 shadow-md">
                <PencilIcon className="w-4 h-4" />
-               Edit Listing
+               {tButtons("editListing")}
             </Button>
          </DialogTrigger>
          <DialogContent className="sm:max-w-2xl">
             <DialogHeader>
                <DialogTitle className="text-2xl font-semibold">
-                  Edit listing
+                  {tDialogs("title")}
                </DialogTitle>
                <DialogDescription className="text-sm text-muted-foreground">
-                  Update the key information about your listing. <br />
-                  Changes will be visible to buyers after you save.
+                  {tDialogs("description")} <br />
+                  {tDialogs("changesVisible")}
                </DialogDescription>
             </DialogHeader>
 
@@ -143,7 +149,7 @@ export default function EditListingForm({
 
                <div className="space-y-2">
                   <Label htmlFor="title" className="text-sm font-medium">
-                     Title <span className="text-red-500">*</span>
+                     {tForms("labels.title")} <span className="text-red-500">*</span>
                   </Label>
                   <Input
                      id="title"
@@ -155,7 +161,7 @@ export default function EditListingForm({
 
                <div className="space-y-2">
                   <Label htmlFor="price" className="text-sm font-medium">
-                     Price <span className="text-red-500">*</span>
+                     {tForms("labels.price")} <span className="text-red-500">*</span>
                   </Label>
                   <div className="relative">
                      <Euro className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-neutral-500 pointer-events-none" />
@@ -166,7 +172,7 @@ export default function EditListingForm({
                         min={0}
                         step="0.01"
                         className="pl-8"
-                        placeholder="e.g. 1299.00"
+                        placeholder={tForms("placeholders.priceListingEdit")}
                         defaultValue={listing.price?.toString() ?? ""}
                      />
                   </div>
@@ -174,7 +180,7 @@ export default function EditListingForm({
 
                <div className="space-y-2">
                   <Label htmlFor="description" className="text-sm font-medium">
-                     Description
+                     {tForms("labels.description")}
                   </Label>
                   <Textarea
                      id="description"
@@ -188,7 +194,7 @@ export default function EditListingForm({
 
                <div className="space-y-2">
                   <Label className="text-sm font-medium">
-                     Photos (add or replace, up to 10)
+                     {tMedia("photosLabel")}
                   </Label>
                   <Input
                      type="file"
@@ -204,7 +210,7 @@ export default function EditListingForm({
                            className="relative w-[120px] h-[120px]">
                            <Image
                               src={imageUrl}
-                              alt={`Existing image ${index + 1}`}
+                              alt={tMedia("existingImage")}
                               fill
                               sizes="120px"
                               className="rounded-md object-cover"
@@ -248,31 +254,31 @@ export default function EditListingForm({
 
                <div className="space-y-2">
                   <Label htmlFor="location" className="text-sm font-medium">
-                     Location
+                     {tForms("labels.location")}
                   </Label>
                   <Input
                      id="location"
                      name="location"
-                     placeholder="City, Country"
+                     placeholder={tForms("placeholders.locationCity")}
                      defaultValue={listing.location ?? ""}
                   />
                </div>
                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                      <Label htmlFor="condition" className="text-sm font-medium">
-                        Condition
+                        {tForms("labels.condition")}
                      </Label>
                      <Select
                         name="condition"
                         required
                         defaultValue={listing.condition}>
                         <SelectTrigger>
-                           <SelectValue placeholder="Select a condition" />
+                           <SelectValue placeholder={tForms("placeholders.selectCondition")} />
                         </SelectTrigger>
                         <SelectContent>
                            {Object.entries(conditions).map(([key, value]) => (
                               <SelectItem key={key} value={key as ListingCondition}>
-                                 {value}
+                                 {tConditions("descriptions." + key)}
                               </SelectItem>
                            ))}
                         </SelectContent>
@@ -280,7 +286,7 @@ export default function EditListingForm({
                   </div>
                   <div className="space-y-2">
                      <Label htmlFor="category" className="text-sm font-medium">
-                        Category
+                        {tForms("labels.category")}
                      </Label>
                      <Select name="category" required defaultValue={listing.category?.id}>
                         <SelectTrigger>
@@ -304,14 +310,14 @@ export default function EditListingForm({
                         variant="outline"
                         disabled={isPending}
                         className="w-full sm:w-auto shadow-md">
-                        Cancel
+                        {tButtons("cancel")}
                      </Button>
                   </DialogClose>
                   <Button
                      type="submit"
                      className="w-full sm:w-auto shadow-md"
                      disabled={isPending}>
-                     {isPending ? "Saving..." : "Save changes"}
+                     {isPending ? tButtons("saving") : tButtons("saveChanges")}
                   </Button>
                </DialogFooter>
             </form>

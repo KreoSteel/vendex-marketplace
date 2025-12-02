@@ -1,9 +1,10 @@
 import { PrismaClient } from "@/utils/generated/client";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { serverEnv } from "./zod-schemas/env/server";
 
 const prismaClientSingleton = () => {
-  const connectionString = process.env.DATABASE_URL;
+  const connectionString = serverEnv.DATABASE_URL;
   
   if (!connectionString) {
     throw new Error("DATABASE_URL environment variable is required");

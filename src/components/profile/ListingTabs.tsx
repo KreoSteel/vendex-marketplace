@@ -3,6 +3,7 @@ import ActiveListingsTab from "../tabs/ActiveListingsTab";
 import SoldItemsTab from "../tabs/SoldItemsTab";
 import FavoritesListingsTab from "../tabs/FavoritesListingsTab";
 import UserReviewsTab from "../tabs/UserReviewsTab";
+import { useTranslations } from "next-intl";
 
 interface ListingTabsProps {
     userId: string;
@@ -14,13 +15,14 @@ interface ListingTabsProps {
 }
 
 export default function ListingTabs({ userId, reviewsCount, activeListingsCount, soldListingsCount, favoritesListingsCount, showFavorites }: ListingTabsProps) {
+    const t = useTranslations("profilePage");
     return (
         <Tabs defaultValue="active">
             <TabsList className="mb-4">
-                <TabsTrigger value="active">Active Listings ({activeListingsCount})</TabsTrigger>
-                <TabsTrigger value="sold">Sold Items ({soldListingsCount})</TabsTrigger>
-                {showFavorites && <TabsTrigger value="favorites">Favorites ({favoritesListingsCount})</TabsTrigger>}
-                <TabsTrigger value="reviews">Reviews ({reviewsCount ?? 0})</TabsTrigger>
+                <TabsTrigger value="active">{t("activeListings")} ({activeListingsCount})</TabsTrigger>
+                <TabsTrigger value="sold">{t("soldItems")} ({soldListingsCount})</TabsTrigger>
+                {showFavorites && <TabsTrigger value="favorites">{t("favorites")} ({favoritesListingsCount})</TabsTrigger>}
+                <TabsTrigger value="reviews">{t("reviews")} ({reviewsCount ?? 0})</TabsTrigger>
             </TabsList>
             <TabsContent value="active">
                 <ActiveListingsTab userId={userId} />

@@ -2,13 +2,15 @@
 import { conversationsWithUserOptions } from "@/lib/query-options/messages";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
+import { usePathname } from "@/i18n/navigation";
 import { useChangeMessageReadStatus } from "@/hooks/useChat";
 import { useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 
 export default function ChatSidebar() {
+   const tChat = useTranslations("chat");
     const { data: conversations } = useQuery(conversationsWithUserOptions());
     const pathname = usePathname();
 
@@ -30,7 +32,7 @@ export default function ChatSidebar() {
    return (
       <div className="flex flex-col h-full w-full md:w-80 lg:w-96 border-r bg-white">
         <div className="p-4 border-b">
-          <h2 className="text-xl font-bold">Messages</h2>
+          <h2 className="text-xl font-bold">{tChat("messages")}</h2>
         </div>
         <div className="flex-1 overflow-y-auto">
            {conversations?.map((conversation) => {
@@ -75,7 +77,7 @@ export default function ChatSidebar() {
                           "text-sm truncate", 
                           !read ? "font-semibold text-black" : "text-gray-500"
                       )}>
-                         {lastMessage?.length > 0 ? lastMessage : "No messages yet"}
+                         {lastMessage?.length > 0 ? lastMessage : tChat("noMessagesYet")}
                       </p>
                    </div>
                    {!read && (

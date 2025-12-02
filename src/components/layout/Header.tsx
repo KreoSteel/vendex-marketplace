@@ -7,7 +7,7 @@ import {
    LogOut,
    LogIn,
 } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import {
    DropdownMenu,
@@ -20,15 +20,20 @@ import { signOutAction } from "@/app/actions/auth";
 import Image from "next/image";
 import { getUser } from "@/utils/auth";
 import SearchBar from "../ui/search";
+import { LocaleSwitcher } from "@/components/locale-switcher";
+import { getTranslations } from "next-intl/server";
 
 export default async function Header() {
    const user = await getUser();
+   const t = await getTranslations("header");
 
    return (
       <header className="sticky top-0 z-50 w-full border-b border-neutral-200 bg-white">
          <div className="container mx-auto px-4">
             <div className="flex h-16 items-center justify-between gap-4">
-               <Link href="/" className="flex items-center gap-2 group shrink-0">
+               <Link
+                  href="/"
+                  className="flex items-center gap-2 group shrink-0">
                   <div className="p-1.5 rounded-lg bg-primary-500 text-white group-hover:bg-primary-600 transition-colors">
                      <Package className="h-5 w-5" />
                   </div>
@@ -36,8 +41,8 @@ export default async function Header() {
                      Vendex
                   </span>
                </Link>
-               
-               <div className="hidden md:block flex-1 max-w-md">
+
+               <div className="hidden md:block flex-1 max-w-md ml-30">
                   <SearchBar />
                </div>
 
@@ -46,7 +51,7 @@ export default async function Header() {
                      <Link href="/listings/create">
                         <Button>
                            <Plus className="size-4" />
-                           Create listing
+                           {t("createListing")}
                         </Button>
                      </Link>
                   ) : (
@@ -54,13 +59,13 @@ export default async function Header() {
                         <Link href="/auth/register">
                            <Button>
                               <User className="size-4" />
-                              Sign Up
+                              {t("signUp")}
                            </Button>
                         </Link>
                         <Link href="/auth/login">
                            <Button variant="outline">
                               <LogIn className="size-4" />
-                              Sign In
+                              {t("signIn")}
                            </Button>
                         </Link>
                      </div>
@@ -101,35 +106,31 @@ export default async function Header() {
                                  </div>
                               )}
                               <div className="flex flex-col">
-                                 <p className="text-sm font-medium">{user.name}</p>
+                                 <p className="text-sm font-medium">
+                                    {user.name}
+                                 </p>
                                  <span className="text-xs text-neutral-500">
-                                    {user.location || "No location set"}
+                                    {user.location || t("noLocation")}
                                  </span>
                               </div>
                            </div>
                            <DropdownMenuSeparator />
-                           <DropdownMenuItem
-                              asChild
-                              className="hover:bg-neutral-100">
-                              <Link href="/profile">
+                           <DropdownMenuItem className="hover:bg-neutral-100">
+                              <Link href="/profile" className="flex items-center gap-2">
                                  <User className="size-4" />
-                                 My Profile
+                                 {t("MyProfile")}
                               </Link>
                            </DropdownMenuItem>
-                           <DropdownMenuItem
-                              asChild
-                              className="hover:bg-neutral-100">
-                              <Link href="/messages">
+                           <DropdownMenuItem className="hover:bg-neutral-100">
+                              <Link href="/messages" className="flex items-center gap-2">
                                  <MessageCircle className="size-4" />
-                                 Messages
+                                 {t("messages")}
                               </Link>
                            </DropdownMenuItem>
-                           <DropdownMenuItem
-                              asChild
-                              className="hover:bg-neutral-100">
-                              <Link href="/profile">
+                           <DropdownMenuItem className="hover:bg-neutral-100">
+                              <Link href="/profile" className="flex items-center gap-2">
                                  <Heart className="size-4" />
-                                 Favorites
+                                 {t("favorites")}
                               </Link>
                            </DropdownMenuItem>
                            <DropdownMenuSeparator />
@@ -141,12 +142,13 @@ export default async function Header() {
                                  onClick={signOutAction}
                                  className="w-full justify-start">
                                  <LogOut className="size-4" />
-                                 Logout
+                                 {t("logout")}
                               </Button>
                            </DropdownMenuItem>
                         </DropdownMenuContent>
                      </DropdownMenu>
                   ) : null}
+                  <LocaleSwitcher />
                </div>
             </div>
          </div>

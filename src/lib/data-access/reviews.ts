@@ -2,8 +2,9 @@
 import { requireAuth } from "@/utils/auth";
 import prisma from "@/utils/prisma";
 import { CreateReview } from "@/utils/zod-schemas/reviews";
-
+import { getTranslations } from "next-intl/server";
 export async function getReviews(userId: string) {
+    const tReviews = await getTranslations("reviews");
     return await prisma.review.findMany({
         where: {
             revieweeId: userId,
@@ -37,10 +38,11 @@ export async function getReviews(userId: string) {
 }
 
 export async function createReview(data: CreateReview) {
+    const tReviews = await getTranslations("reviews");
     const currentUser = await requireAuth();
 
     if (currentUser.id === data.revieweeId) {
-        throw new Error("You cannot review yourself");
+        throw new Error(tReviews("errors.cannotReviewYourself"));
     }
 
     try {
@@ -63,13 +65,14 @@ export async function createReview(data: CreateReview) {
         });
         return { success: true, review };
     } catch (error) {
-        console.error("Create review error:", error);
-        return { error: "Failed to create review" };
+        console.error(tReviews("errors.failedToCreateReview"), error);
+        return { error: tReviews("errors.failedToCreateReview") };
     }
 }
 
 
 export async function getReviewsStats(userId: string) {
+    const tReviews = await getTranslations("reviews");
     const result = await prisma.review.aggregate({
         where: {
             revieweeId: userId,

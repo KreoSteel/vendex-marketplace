@@ -17,7 +17,7 @@ import { revalidatePath } from "next/cache";
 type ActionState =
    | { error: string; success?: string }
    | { success: string; error?: string }
-   | null;
+   | undefined;
 
 export async function createListingAction(
    prevState: ActionState,

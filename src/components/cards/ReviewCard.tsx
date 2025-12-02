@@ -1,15 +1,18 @@
+"use client";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Star } from "lucide-react";
 import { format } from "date-fns";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { TPublicReview } from "@/utils/zod-schemas/reviews";
+import { useTranslations } from "next-intl";
 
 interface ReviewCardProps {
     review: TPublicReview;
 }
 
 export default function ReviewCard({ review }: ReviewCardProps) {
+    const tReviews = useTranslations("reviews");
 
     return (
         <Card className="h-full hover:shadow-md transition-all duration-200 border-neutral-200 flex flex-col py-3">
@@ -42,7 +45,7 @@ export default function ReviewCard({ review }: ReviewCardProps) {
                     
                     {review.listing && (
                         <div className="text-xs text-neutral-500 flex items-center gap-1.5 min-w-0">
-                            <span className="shrink-0">Purchased:</span>
+                            <span className="shrink-0">{tReviews("purchased")}:</span>
                             {review.listing?.id ? (
                                 <Link 
                                     href={`/listings/${review.listing.id}`}
@@ -81,7 +84,7 @@ export default function ReviewCard({ review }: ReviewCardProps) {
                     </p>
                 ) : (
                     <p className="text-sm text-neutral-400 italic">
-                        No written review
+                        {tReviews("noWrittenReview")}
                     </p>
                 )}
             </CardContent>

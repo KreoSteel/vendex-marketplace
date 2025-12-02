@@ -13,16 +13,19 @@ import {
 import { Button } from "../ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 import { format } from "date-fns";
-import { notFound, useRouter } from "next/navigation";
+import { notFound } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import ImageSlider from "../ui/image-slider";
 import CreateReviewForm from "../forms/CreateReviewForm";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import DeleteListing from "./DeleteListing";
 import EditListingForm, {
-   conditions,
    TEditListing,
 } from "../forms/EditListingForm";
 import MarkAsSold from "./mark-as-sold";
+import { useTranslations } from "next-intl";
+import { useMemo } from "react";
+import DateFormatter from "../date-formatter";
 
 interface ListingDetailsClientPageProps {
    id: string;
@@ -39,6 +42,8 @@ export default function ListingDetailsClientPage({
    averageRating,
    currentUser,
 }: ListingDetailsClientPageProps) {
+   const t = useTranslations("listingDetailsPage");
+   const tConditions = useTranslations("conditions");
    const { data: listing } = useGetListingById(id);
    const userId = listing?.user?.id;
    const isOwner = userId === currentUser;
@@ -56,6 +61,7 @@ export default function ListingDetailsClientPage({
       return notFound();
    }
 
+
    return (
       <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
          <Button
@@ -63,7 +69,7 @@ export default function ListingDetailsClientPage({
             className="w-fit shadow-md cursor-pointer mb-4"
             onClick={() => router.back()}>
             <ArrowLeftIcon className="w-4 h-4" />
-            Back To Listings
+            {t("backToListings")}
          </Button>
          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
@@ -85,7 +91,7 @@ export default function ListingDetailsClientPage({
 
                      <div className="space-y-4">
                         <h2 className="text-lg font-semibold text-gray-900">
-                           Description
+                           {t("description")}
                         </h2>
                         <p className="text-base text-gray-700 leading-relaxed whitespace-pre-line">
                            {listing?.description}
@@ -95,24 +101,21 @@ export default function ListingDetailsClientPage({
 
                         <div className="space-y-4">
                            <h2 className="text-lg font-semibold text-gray-900">
-                              Details
+                              {t("details")}
                            </h2>
                            <div className="grid grid-cols-2 gap-x-8 gap-y-6">
                               <div className="space-y-1">
                                  <p className="text-sm font-medium text-gray-500">
-                                    Condition
+                                    {t("condition")}
                                  </p>
                                  <p className="text-base font-medium bg-primary-100 text-primary-700 px-2 py-1 rounded-lg border border-primary-200 inline-block">
-                                    {
-                                       conditions[
-                                          listing?.condition as ListingCondition
-                                       ]
-                                    }
+                                    {tConditions("labels." + listing?.condition)}
                                  </p>
+                                 
                               </div>
                               <div className="space-y-1">
                                  <p className="text-sm font-medium text-gray-500">
-                                    Category
+                                    {t("category")}
                                  </p>
                                  <p className="text-base font-medium text-gray-900">
                                     {listing?.category?.name}
@@ -120,7 +123,7 @@ export default function ListingDetailsClientPage({
                               </div>
                               <div className="space-y-1">
                                  <p className="text-sm font-medium text-gray-500">
-                                    Location
+                                    {t("location")}
                                  </p>
                                  <div className="flex items-center gap-1.5">
                                     <MapPinIcon className="w-4 h-4 text-gray-600" />
@@ -131,7 +134,7 @@ export default function ListingDetailsClientPage({
                               </div>
                               <div className="space-y-1">
                                  <p className="text-sm font-medium text-gray-500">
-                                    Posted
+                                    {t("posted")}
                                  </p>
                                  <div className="flex items-center gap-1.5">
                                     <CalendarIcon className="w-4 h-4 text-gray-600" />
@@ -154,7 +157,7 @@ export default function ListingDetailsClientPage({
                         <div className="flex justify-between items-center gap-4">
                            <div>
                               <p className="text-sm font-medium text-gray-500 mb-2">
-                                 Price
+                                 {t("price")}
                               </p>
                               <h2 className="text-4xl font-bold text-green-600">
                                  {listing?.price
@@ -167,7 +170,7 @@ export default function ListingDetailsClientPage({
                                  <div className="flex items-center gap-2 text-gray-600">
                                     <StarIcon className="w-4 h-4" />
                                     <span className="text-sm font-medium">
-                                       Featured
+                                       {t("featured")}
                                     </span>
                                  </div>
                               )}
@@ -199,7 +202,7 @@ export default function ListingDetailsClientPage({
                                  <>
                                     <Link href={`/messages/${userId}`}>
                                        <Button className="flex-1 shadow-md cursor-pointer">
-                                          Contact Seller
+                                          {t("contactSeller")}
                                        </Button>
                                     </Link>
                                     <CreateReviewForm
@@ -224,7 +227,7 @@ export default function ListingDetailsClientPage({
                      <CardHeader>
                         <CardTitle>
                            <h2 className="text-2xl font-bold">
-                              Seller Information
+                              {t("sellerInformation")}
                            </h2>
                         </CardTitle>
                      </CardHeader>
@@ -235,7 +238,7 @@ export default function ListingDetailsClientPage({
                                  src={listing?.user.avatarImg || ""}
                               />
                               <AvatarFallback>
-                                 {listing?.user.name?.charAt(0)}
+                                 {listing?.user.name?.charAt(0) || t("unknownUser")}
                               </AvatarFallback>
                            </Avatar>
                            <div className="flex flex-col">
@@ -243,13 +246,10 @@ export default function ListingDetailsClientPage({
                                  {listing?.user.name}
                               </h3>
                               <p className="text-base text-gray-500">
-                                 Member since:{" "}
+                                 {t("memberSince")}:{" "}
                                  {listing?.user.createdAt
-                                    ? format(
-                                         new Date(listing.user.createdAt),
-                                         "d MMM yyyy"
-                                      )
-                                    : "Unknown"}
+                                    ? DateFormatter({ date: listing.user.createdAt })
+                                    : t("unknownUser")}
                               </p>
                            </div>
                         </div>
@@ -259,28 +259,28 @@ export default function ListingDetailsClientPage({
                         <div className="space-y-3">
                            <div className="flex items-center justify-between gap-2">
                               <p className="font-medium text-gray-600">
-                                 Active Listings
+                                 {t("activeListings")}
                               </p>
                               <p>{activeListingsCount}</p>
                            </div>
                            <div className="flex items-center justify-between gap-2">
                               <p className="font-medium text-gray-600">
-                                 Items Sold
+                                 {t("itemsSold")}
                               </p>
                               <p>{itemsSoldCount}</p>
                            </div>
                            <div className="flex items-center justify-between gap-2">
                               <p className="font-medium text-gray-600">
-                                 Overall Rating
+                                 {t("overallRating")}
                               </p>
                               <div className="flex items-center gap-2">
                                  <StarIcon className="w-4 h-4 text-yellow-500 fill-current" />
-                                 <span>{averageRating || "No rating"}</span>
+                                 <span>{averageRating || t("noRating")}</span>
                               </div>
                            </div>
                            <div className="flex items-center justify-between gap-2">
                               <p className="font-medium text-gray-600">
-                                 Location
+                                 {t("location")}
                               </p>
                               <p>{listing?.user.location}</p>
                            </div>
@@ -292,7 +292,7 @@ export default function ListingDetailsClientPage({
                            variant="outline"
                            className="w-full shadow-md cursor-pointer"
                            onClick={handleViewProfile}>
-                           View Profile
+                           {t("viewProfile")}
                         </Button>
                      </CardContent>
                   </Card>

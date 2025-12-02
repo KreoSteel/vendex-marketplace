@@ -1,13 +1,13 @@
 "use server";
 
-import { redirect } from "next/navigation";
+import { redirect } from "@/i18n/navigation";
 import { auth } from "@/utils/auth";
 import { signInSchema, signUpSchema } from "@/utils/zod-schemas/auth";
 import { headers } from "next/headers";
 import { ZodError } from "zod";
 
 export async function signUpAction(
-   prevState: { error: string } | null,
+   prevState: { error: string } | undefined,
    formData: FormData
 ) {
    const parsed = signUpSchema.safeParse({
@@ -31,11 +31,11 @@ export async function signUpAction(
    } catch {
       return { error: "Failed to create account" };
    }
-   redirect("/");
+   redirect({ href: "/", locale: "en" });
 }
 
 export async function signInAction(
-   prevState: { error: string } | null,
+   prevState: { error: string } | undefined,
    formData: FormData
 ) {
    const parsed = signInSchema.safeParse({
@@ -60,7 +60,7 @@ export async function signInAction(
       }
       return { error: "Failed to login" };
    }
-   redirect("/");
+   redirect({ href: "/", locale: "en" });
 }
 
 export async function signOutAction() {
@@ -68,5 +68,5 @@ export async function signOutAction() {
       headers: await headers(),
    });
 
-   redirect("/");
+   redirect({ href: "/", locale: "en" });
 }

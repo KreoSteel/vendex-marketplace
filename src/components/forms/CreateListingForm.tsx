@@ -1,6 +1,6 @@
 "use client";
 import { createListingAction } from "@/app/actions/listings";
-import { useActionState, useState, useTransition } from "react";
+import { useActionState, useEffect, useState, useTransition } from "react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
@@ -16,10 +16,16 @@ import { Button } from "../ui/button";
 import { ListingCondition } from "@/utils/generated/enums";
 import { useGetCategories } from "@/hooks/useCategories";
 import { TCategory } from "@/utils/zod-schemas/categories";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "@/i18n/navigation";
 import Image from "next/image";
+import { useLocale, useTranslations } from "next-intl";
 
 export default function CreateListingForm() {
+   const tForms = useTranslations("forms");
+   const tCreateListingForm = useTranslations("createListingForm");
+   const tConditions = useTranslations("conditions");
+   const tButtons = useTranslations("buttons");
+   const router = useRouter();
    const [state, formAction] = useActionState(createListingAction, {
       error: "",
    });
@@ -27,6 +33,12 @@ export default function CreateListingForm() {
    const { data: categories } = useGetCategories();
 
    const [previewImages, setPreviewImages] = useState<File[]>([]);
+
+   useEffect(() => {
+      if ("success" in state && state.success) {
+         router.push(`/listings/${state.success}`);
+      }
+   }, [state, router]);
 
    function handleAddImages(e: React.ChangeEvent<HTMLInputElement>) {
       const files = Array.from(e.target.files || []);
@@ -57,38 +69,41 @@ export default function CreateListingForm() {
          {"error" in state && state.error && (
             <p className="text-red-500 text-sm">{state.error}</p>
          )}
-         {"success" in state && state.success && (
-            redirect(`/listings/${state.success}`)
-         )}
          <div className="grid gap-2">
             <Label htmlFor="title">
-               Title <span className="text-red-500">*</span>
+               {tForms("labels.title")} <span className="text-red-500">*</span>
             </Label>
             <Input
                name="title"
                type="text"
                required
-               placeholder="e.g. 'iPhone 16 Pro Max, Honda Accord 2025'"
+               placeholder={tForms("placeholders.titleListing")}
             />
          </div>
          <div className="grid gap-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">
+               {tForms("labels.description")} <span className="text-red-500">*</span>
+            </Label>
             <Textarea
                name="description"
-               placeholder="Describe the item in detail..."
+               required
+               placeholder={tForms("placeholders.descriptionDetail")}
                rows={4}
                maxLength={1000}
                className="resize-none"
             />
          </div>
          <div className="grid gap-2">
-            <Label>Photos (up to 10)</Label>
+            <Label>
+               {tForms("labels.photos")} <span className="text-red-500">*</span>
+            </Label>
             <Input
                type="file"
                multiple
                accept="image/*"
                onChange={handleAddImages}
                required={previewImages.length === 0}
+               placeholder={tCreateListingForm("photosPlaceholder")}
                className="file:text-foreground file:bg-neutral-200 file:border-none file:px-3 file:py-1 file:rounded-md file:text-sm file:font-medium file:shadow-xs file:transition-[color,box-shadow] file:cursor-pointer disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
             />
          </div>
@@ -116,24 +131,26 @@ export default function CreateListingForm() {
             })}
          </div>
          <div className="grid gap-2">
-            <Label>Price</Label>
+            <Label>
+               {tForms("labels.price")} <span className="text-red-500">*</span>
+            </Label>
             <div className="relative">
                <Euro className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-neutral-500 pointer-events-none" />
                <Input
                   name="price"
                   type="number"
-                  placeholder="e.g. 1000"
+                  placeholder={tForms("placeholders.priceListing")}
                   className="pl-8"
                />
             </div>
          </div>
          <div className="grid gap-2">
             <Label>
-               Category <span className="text-red-500">*</span>
+               {tForms("labels.category")} <span className="text-red-500">*</span>
             </Label>
             <Select name="category" required>
                <SelectTrigger>
-                  <SelectValue placeholder="Select a category" />
+                  <SelectValue placeholder={tForms("placeholders.selectCategory")} />
                </SelectTrigger>
                <SelectContent>
                   {categories?.map((cat: TCategory) => (
@@ -146,41 +163,41 @@ export default function CreateListingForm() {
          </div>
          <div className="grid gap-2">
             <Label>
-               Location <span className="text-red-500">*</span>
+               {tForms("labels.location")} <span className="text-red-500">*</span>
             </Label>
             <Input
                name="location"
                type="text"
                required
-               placeholder="e.g. 'New York, NY'"
+               placeholder={tForms("placeholders.locationExample")}
             />
          </div>
          <div className="grid gap-2">
             <Label>
-               Condition <span className="text-red-500">*</span>
+               {tForms("labels.condition")} <span className="text-red-500">*</span>
             </Label>
             <Select name="condition" required>
                <SelectTrigger>
-                  <SelectValue placeholder="Select a condition" />
+                  <SelectValue placeholder={tForms("placeholders.selectCondition")} />
                </SelectTrigger>
                <SelectContent>
                   <SelectItem value={ListingCondition.NEW}>
-                     New - Brand new, never used
+                     {tConditions("descriptions.NEW")}
                   </SelectItem>
                   <SelectItem value={ListingCondition.LIKE_NEW}>
-                     Like new - Barely used, excellent condition
+                     {tConditions("descriptions.LIKE_NEW")}
                   </SelectItem>
                   <SelectItem value={ListingCondition.USED}>
-                     Used - Used but in good condition
+                     {tConditions("descriptions.USED")}
                   </SelectItem>
                   <SelectItem value={ListingCondition.FOR_PARTS}>
-                     For parts - Not working, needs repair
+                     {tConditions("descriptions.FOR_PARTS")}
                   </SelectItem>
                </SelectContent>
             </Select>
          </div>
          <Button type="submit" disabled={isPending} className="w-fit mx-auto">
-            {isPending ? "Creating listing..." : "Create listing"}
+            {isPending ? tButtons("creatingListing") : tButtons("createListing")}
          </Button>
       </form>
    );

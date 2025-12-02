@@ -1,12 +1,13 @@
 "use client";
 import { Card, CardHeader, CardTitle } from "../ui/card";
 import { getIconForCategory } from "@/lib/utils";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useGetCategories } from "@/hooks/useCategories";
+import { useTranslations } from "next-intl";
 
 export default function BrowseByCategory() {
    const { data: categories } = useGetCategories();
-
+   const t = useTranslations("home.browseByCategory");
    const searchParams = new URLSearchParams();
    searchParams.set("page", "1");
    searchParams.set("sortBy", "createdAt");
@@ -16,7 +17,7 @@ export default function BrowseByCategory() {
       <section className="w-full">
          <div className="container mx-auto">
             <h2 className="text-2xl font-bold mb-8 text-center">
-               Browse by Category
+               {t("title")}
             </h2>
          </div>
          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-7 gap-4">

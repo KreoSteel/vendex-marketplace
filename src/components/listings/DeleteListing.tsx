@@ -12,12 +12,15 @@ import {
    DialogTrigger,
    DialogClose,
 } from "@/components/ui/dialog";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 export default function DeleteListing({ listingId }: { listingId: string }) {
    const [isPending, startTransition] = useTransition();
    const [error, setError] = useState<string | null>(null);
    const [success, setSuccess] = useState<string | null>(null);
+   const tButtons = useTranslations("buttons");
+   const tDialogs = useTranslations("dialogs.deleteListing");
    const router = useRouter();
 
 
@@ -37,15 +40,15 @@ export default function DeleteListing({ listingId }: { listingId: string }) {
          <DialogTrigger asChild>
             <Button variant="outline" className="flex items-center gap-2 shadow-md">
                <TrashIcon className="w-4 h-4 text-red-500" />
-               Delete Listing
+               {tButtons("deleteListing")}
             </Button>
          </DialogTrigger>
          <DialogContent>
             <DialogHeader>
-               <DialogTitle>Delete Listing</DialogTitle>
+               <DialogTitle>{tDialogs("title")}</DialogTitle>
                <DialogDescription>
-                  Are you sure you want to delete this listing? <br />
-                  This action cannot be undone.
+                  {tDialogs("description")} <br />
+                  {tDialogs("cannotUndo")}
                </DialogDescription>
                {error && <p className="text-red-500">{error}</p>}
                {success && <p className="text-green-500">{success}</p>}
@@ -53,11 +56,11 @@ export default function DeleteListing({ listingId }: { listingId: string }) {
             <DialogFooter>
                <DialogClose asChild>
                   <Button variant="outline" disabled={isPending} className="shadow-md">
-                     Cancel
+                     {tButtons("cancel")}
                   </Button>
                </DialogClose>
                <Button variant="destructive" disabled={isPending} onClick={handleDelete} className="shadow-md">
-                  {isPending ? "Deleting..." : "Delete"}
+                  {isPending ? tButtons("deleting") : tButtons("delete")}
                </Button>
             </DialogFooter>
          </DialogContent>

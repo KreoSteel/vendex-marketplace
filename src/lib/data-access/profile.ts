@@ -2,6 +2,7 @@
 import { getUser, requireAuth } from "@/utils/auth";
 import prisma from "@/utils/prisma";
 import { TUpdateUserProfile } from "@/utils/zod-schemas/profile";
+import { getTranslations } from "next-intl/server";
 
 export async function getUserProfile(userId?: string) {
    const currentUser = await getUser();
@@ -21,10 +22,11 @@ export async function updateUserProfile(
    userId: string,
    data: Partial<TUpdateUserProfile>
 ) {
+   const tProfile = await getTranslations("profile");
    const currentUser = await requireAuth();
    
    if (currentUser.id !== userId) {
-      return { error: "You can only update your own profile" };
+      return { error: tProfile("errors.updateProfileError") };
    }
 
    return await prisma.user.update({

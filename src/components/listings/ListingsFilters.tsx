@@ -10,18 +10,17 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Filters } from "@/lib/data-access/listings";
 import { useGetMaxPriceForFilters } from "@/hooks/useListing";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { Button } from "../ui/button";
-
-const filterConditions = [
-   { label: "New", value: ListingCondition.NEW },
-   { label: "Like New", value: ListingCondition.LIKE_NEW },
-   { label: "Used", value: ListingCondition.USED },
-   { label: "For Parts", value: ListingCondition.FOR_PARTS },
-];
+import { useTranslations } from "next-intl";
 
 export default function ListingsFilters() {
    const { data: categories } = useGetCategories();
+   const tConditions = useTranslations("conditions");
+   const tCommon = useTranslations("common");
+   const tButtons = useTranslations("buttons");
+   const tSearchListingsPage = useTranslations("searchListingsPage");
+
    const searchParams = useSearchParams();
 
    const search = searchParams.get("search") || null;
@@ -30,6 +29,18 @@ export default function ListingsFilters() {
    const [selectedConditions, setSelectedConditions] = useState<
       ListingCondition[]
    >([]);
+   const filterConditions = [
+      { label: tConditions("labels.NEW"), value: ListingCondition.NEW },
+      {
+         label: tConditions("labels.LIKE_NEW"),
+         value: ListingCondition.LIKE_NEW,
+      },
+      { label: tConditions("labels.USED"), value: ListingCondition.USED },
+      {
+         label: tConditions("labels.FOR_PARTS"),
+         value: ListingCondition.FOR_PARTS,
+      },
+   ];
 
    const filters: Filters = {
       search: search,
@@ -107,10 +118,9 @@ export default function ListingsFilters() {
 
    useEffect(() => {
       if (maxPrice !== undefined && maxPrice > 0) {
-          
          setPriceRange((prev) => {
-             if (prev[0] === 0 && prev[1] === maxPrice) return prev;
-             return [0, maxPrice];
+            if (prev[0] === 0 && prev[1] === maxPrice) return prev;
+            return [0, maxPrice];
          });
       }
    }, [maxPrice]);
@@ -119,27 +129,33 @@ export default function ListingsFilters() {
       const categories = searchParams.get("category");
       if (categories) {
          const newCategories = categories.split(",");
-          
-         setSelectedCategories(prev => {
-             if (prev.length === newCategories.length && prev.every(c => newCategories.includes(c))) return prev;
-             return newCategories;
+
+         setSelectedCategories((prev) => {
+            if (
+               prev.length === newCategories.length &&
+               prev.every((c) => newCategories.includes(c))
+            )
+               return prev;
+            return newCategories;
          });
       } else {
-           
-          setSelectedCategories(prev => prev.length ? [] : prev);
+         setSelectedCategories((prev) => (prev.length ? [] : prev));
       }
 
       const conditions = searchParams.get("condition");
       if (conditions) {
          const newConditions = conditions.split(",") as ListingCondition[];
-          
-         setSelectedConditions(prev => {
-             if (prev.length === newConditions.length && prev.every(c => newConditions.includes(c))) return prev;
-             return newConditions;
+
+         setSelectedConditions((prev) => {
+            if (
+               prev.length === newConditions.length &&
+               prev.every((c) => newConditions.includes(c))
+            )
+               return prev;
+            return newConditions;
          });
       } else {
-           
-          setSelectedConditions(prev => prev.length ? [] : prev);
+         setSelectedConditions((prev) => (prev.length ? [] : prev));
       }
 
       const minPrice = searchParams.get("minPrice");
@@ -149,10 +165,10 @@ export default function ListingsFilters() {
             minPrice ? parseInt(minPrice, 10) : 0,
             maxPriceParam ? parseInt(maxPriceParam, 10) : 1000,
          ];
-          
-         setPriceRange(prev => {
-             if (prev[0] === newRange[0] && prev[1] === newRange[1]) return prev;
-             return newRange;
+
+         setPriceRange((prev) => {
+            if (prev[0] === newRange[0] && prev[1] === newRange[1]) return prev;
+            return newRange;
          });
       }
    }, [searchParams]);
@@ -160,11 +176,15 @@ export default function ListingsFilters() {
    return (
       <Card className="w-full bg-surface">
          <CardHeader>
-            <CardTitle className="text-lg">Filters</CardTitle>
+            <CardTitle className="text-lg">
+               {tSearchListingsPage("filters.title")}
+            </CardTitle>
          </CardHeader>
          <CardContent className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
-               <Label className="text-base font-medium pb-1.5">Category</Label>
+               <Label className="text-base font-medium pb-1.5">
+                  {tSearchListingsPage("filters.categories")}
+               </Label>
                {categories?.map((category) => (
                   <div key={category.slug} className="flex items-center gap-2">
                      <Checkbox
@@ -173,21 +193,23 @@ export default function ListingsFilters() {
                         onCheckedChange={(checked) =>
                            handleCategoryChange(category.slug, checked === true)
                         }
-                        className="w-4 h-4 border-border rounded-sm border-2 data-[state=checked]:bg-primary-500 data-[state=checked]:border-primary-500">
-                        <CheckboxIndicator>
+                        className="w-4 h-4 border-border rounded-sm border-2 data-[state=checked]:bg-primary-500 data-[state=checked]:border-primary-500 shrink-0">
+                        <CheckboxIndicator className="flex items-center justify-center">
                            <CheckIcon className="w-3 h-3 text-white" />
                         </CheckboxIndicator>
                      </Checkbox>
                      <Label
                         htmlFor={category.slug}
-                        className="text-sm font-normal">
+                        className="text-sm font-normal cursor-pointer select-none">
                         {category.name}
                      </Label>
                   </div>
                ))}
             </div>
             <div className="flex flex-col gap-1.5">
-               <Label className="text-base font-medium pb-1.5">Condition</Label>
+               <Label className="text-base font-medium pb-1.5">
+                  {tSearchListingsPage("filters.conditionTitle")}
+               </Label>
                {filterConditions.map((condition) => (
                   <div
                      key={condition.value}
@@ -201,54 +223,25 @@ export default function ListingsFilters() {
                               checked === true
                            )
                         }
-                        className="w-4 h-4 border-border rounded-sm border-2 data-[state=checked]:bg-primary-500 data-[state=checked]:border-primary-500">
-                        <CheckboxIndicator>
+                        className="w-4 h-4 border-border rounded-sm border-2 data-[state=checked]:bg-primary-500 data-[state=checked]:border-primary-500 shrink-0">
+                        <CheckboxIndicator className="flex items-center justify-center">
                            <CheckIcon className="w-3 h-3 text-white" />
                         </CheckboxIndicator>
                      </Checkbox>
                      <Label
                         htmlFor={condition.value}
-                        className="text-sm font-normal">
+                        className="text-sm font-normal cursor-pointer select-none">
                         {condition.label}
                      </Label>
                   </div>
                ))}
             </div>
-            <div className="flex flex-col gap-2 mt-2">
-               <Label className="text-base font-medium">Price Range</Label>
-               {isLoadingMaxPrice ? (
-                  <div className="text-sm text-gray-500">
-                     Loading price range...
-                  </div>
-               ) : maxPrice && maxPrice > 0 ? (
-                  <>
-                     <Slider
-                        value={priceRange}
-                        onValueChange={setPriceRange}
-                        defaultValue={priceRange}
-                        min={0}
-                        max={maxPrice}
-                        step={1}
-                        className="w-full"
-                     />
-                     <div className="flex justify-between text-sm text-gray-600">
-                        <span>€{priceRange[0].toLocaleString()}</span>
-                        <span>€{priceRange[1].toLocaleString()}</span>
-                     </div>
-                  </>
-               ) : (
-                  <div className="text-sm text-gray-500">
-                     {" "}
-                     No price range found
-                  </div>
-               )}
-            </div>
             <div className="flex gap-2">
                <Button onClick={clearFilters} variant="outline">
-                  Clear
+                  {tSearchListingsPage("filters.clear")}
                </Button>
-               <Button onClick={handleURLChange} className="w-2/3">
-                  Apply
+               <Button onClick={handleURLChange} className="w-full max-w-26">
+                  {tSearchListingsPage("filters.apply")}
                </Button>
             </div>
          </CardContent>

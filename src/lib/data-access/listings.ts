@@ -8,6 +8,7 @@ import {
 } from "@/utils/zod-schemas/listings";
 import { requireAuth } from "@/utils/auth";
 import { ListingCondition, ListingStatus } from "@/utils/generated/enums";
+import { getTranslations } from "next-intl/server";
 
 export type AllListingsParams = {
    currentPage?: string | number;
@@ -147,7 +148,7 @@ export async function getRecentListings() {
       orderBy: {
          createdAt: "desc",
       },
-      take: 16,
+      take: 20,
       select: {
          id: true,
          title: true,
@@ -313,6 +314,7 @@ export async function getUserSoldListings(userId: string): Promise<TListing[]> {
 }
 
 export async function markListingAsSold(id: string) {
+   const tListings = await getTranslations("listings");
    const currentUser = await requireAuth();
    
    const existingListing = await prisma.listing.findUnique({
@@ -326,15 +328,15 @@ export async function markListingAsSold(id: string) {
    });
 
    if (!existingListing) {
-      return { error: "Listing not found" };
+      return { error: tListings("errors.listingNotFound") };
    }
 
    if (existingListing.status === "SOLD") {
-      return { error: "This listing has already been sold" };
+      return { error: tListings("errors.listingAlreadySold") };
    }
 
    if (existingListing.userId !== currentUser.id) {
-      return { error: "You are not the owner of this listing" };
+      return { error: tListings("errors.notListingOwner") };
    }
 
    return await prisma.listing.update({
@@ -368,6 +370,7 @@ export async function createListing(listing: TCreateListing) {
 }
 
 export async function deleteListing(id: string) {
+   const tListings = await getTranslations("listings");
    const currentUser = await requireAuth();
 
    const existingListing = await prisma.listing.findUnique({
@@ -380,11 +383,11 @@ export async function deleteListing(id: string) {
    });
 
    if (!existingListing) {
-      return { error: "Listing not found" };
+      return { error: tListings("errors.listingNotFound") };
    }
 
    if (existingListing.userId !== currentUser.id) {
-      return { error: "You are not the owner of this listing" };
+      return { error: tListings("errors.notListingOwner") };
    }
 
    return await prisma.listing.delete({
@@ -395,6 +398,7 @@ export async function deleteListing(id: string) {
 }
 
 export async function updateListing(id: string, listing: TUpdateListing) {
+   const tListings = await getTranslations("listings");
    const currentUser = await requireAuth();
 
    const existingListing = await prisma.listing.findUnique({
@@ -407,11 +411,11 @@ export async function updateListing(id: string, listing: TUpdateListing) {
    });
 
    if (!existingListing) {
-      return { error: "Listing not found" };
+      return { error: tListings("errors.listingNotFound") };
    }
 
    if (existingListing.userId !== currentUser.id) {
-      return { error: "You are not the owner of this listing" };
+      return { error: tListings("errors.notListingOwner") };
    }
 
    const { images, ...listingData } = listing;

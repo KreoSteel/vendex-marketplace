@@ -8,7 +8,9 @@ import EditProfileForm from "../forms/EditProfileForm";
 import type { User } from "@/utils/generated/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Button } from "../ui/button";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
+import DateFormatter from "../date-formatter";
 
 interface ProfileCardProps {
    user: User;
@@ -27,6 +29,8 @@ export default function ProfileCard({
    isOwner,
    averageRating,
 }: ProfileCardProps) {
+   const t = useTranslations("profilePage");
+   const tCommon = useTranslations("common");
    return (
       <Card className="w-full">
          <CardContent className="flex items-center gap-6 py-4 px-6">
@@ -53,23 +57,22 @@ export default function ProfileCard({
                <div className="flex items-center gap-6">
                   <div className="flex items-center gap-2  text-neutral-500">
                      <MapPinIcon className="size-4" />
-                     <p>{user.location ?? "No location set"}</p>
+                     <p>{user.location ?? tCommon("noLocationSet")}</p>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-neutral-500">
                      <CalendarIcon className="size-4" />
                      <p>
-                        {" "}
-                        Joined{" "}
-                        {format(user.createdAt || new Date(), "d MMM yyyy")}
+                        {tCommon("joined")}: {" "}
+                        {user.createdAt ? DateFormatter({ date: user.createdAt }) : tCommon("unknownUser")}
                      </p>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-neutral-500">
                      <StarIcon className="size-4 text-yellow-500 fill-current" />
                      <p>
-                        Rating:{" "}
+                        {tCommon("rating")}{" "}
                         {averageRating
                            ? averageRating.toFixed(1)
-                           : "No reviews"}
+                           : tCommon("noReviews")}
                      </p>
                   </div>
                   {!isOwner && (
@@ -77,7 +80,7 @@ export default function ProfileCard({
                      <Link href={`/messages/${user.id}`}>
                         <Button>
                            <MessageCircleIcon className="size-4" />
-                           Send Message
+                           {t("sendMessage")}
                         </Button>
                      </Link>
                      </div>
@@ -89,19 +92,19 @@ export default function ProfileCard({
          <CardContent className="flex justify-evenly gap-4">
             <div className="flex flex-col items-center gap-2">
                <h3 className="text-sm text-neutral-500 font-medium">
-                  Active Listings
+                  {t("activeListings")}
                </h3>
                <p>{activeListingsCount}</p>
             </div>
             <div className="flex flex-col items-center gap-2">
                <h3 className="text-sm text-neutral-500 font-medium">
-                  Items Sold
+                  {t("itemsSold")}
                </h3>
                <p>{itemsSoldCount}</p>
             </div>
             <div className="flex flex-col items-center gap-2">
                <h3 className="text-sm text-neutral-500 font-medium">
-                  Total Reviews
+                  {t("totalReviews")}
                </h3>
                <p>{totalReviewsCount}</p>
             </div>

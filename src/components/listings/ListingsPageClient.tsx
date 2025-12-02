@@ -14,16 +14,20 @@ import {
    PaginationNext,
    PaginationPrevious,
 } from "../ui/pagination";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { authClient } from "@/utils/auth-client";
 import { userFavoriteListingsOptions } from "@/lib/query-options/favorites";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 
 export default function ListingsPageClient({
    searchParams,
 }: {
    searchParams: AllListingsParams;
 }) {
+   const tPagination = useTranslations("searchListingsPage.pagination");
+   const tCommon = useTranslations("common");
+   const tSearchListingsPage = useTranslations("searchListingsPage");
    const { data: session } = authClient.useSession();
    const { data: favorites } = useQuery({
       ...userFavoriteListingsOptions(session?.user?.id ?? ""),
@@ -52,23 +56,23 @@ export default function ListingsPageClient({
                   <SearchBar className="w-full" />
                   <div className="text-sm text-gray-500">
                      {isLoading
-                        ? "Loading..."
-                        : `Results: ${data?.totalCount ?? 0}`}
+                        ? tCommon("loading")
+                        : `${tSearchListingsPage("results")} ${data?.totalCount ?? 0}`}
                   </div>
                </div>
 
                {isLoading ? (
                   <div className="flex items-center justify-center gap-2 py-12">
                      <Loader2 className="w-6 h-6 animate-spin" />
-                     <span>Loading listings...</span>
+                     <span>{tCommon("loading")}</span>
                   </div>
                ) : error ? (
                   <div className="text-center py-12 text-red-500">
-                     Error: {error.message}
+                     {tCommon("error")}: {error.message}
                   </div>
                ) : !data || data.listings.length === 0 ? (
                   <div className="text-center py-12 text-gray-500">
-                     No listings found
+                     {tCommon("noListingsFound")}
                   </div>
                ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -86,6 +90,7 @@ export default function ListingsPageClient({
                   <PaginationContent>
                      <PaginationItem>
                         <PaginationPrevious
+                           tPagination={tPagination}
                            onClick={() =>
                               handlePageChange((data?.currentPage ?? 1) - 1)
                            }
@@ -111,6 +116,7 @@ export default function ListingsPageClient({
                      ))}
                      <PaginationItem>
                         <PaginationNext
+                           tPagination={tPagination}
                            onClick={() =>
                               handlePageChange((data?.currentPage ?? 1) + 1)
                            }

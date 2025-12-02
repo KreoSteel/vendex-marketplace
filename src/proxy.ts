@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import createMiddleware from "next-intl/middleware";
+import { routing } from "./i18n/routing";
 import { auth } from "./utils/auth";
+
+export default createMiddleware(routing);
 
 export async function proxy(req: NextRequest) {
    const pathname = req.nextUrl.pathname;
@@ -33,6 +37,6 @@ export async function proxy(req: NextRequest) {
 }
 
 export const config = {
-   matcher: ["/((?!api|_next|_vercel|auth|.*\\..*).*)"],
+   matcher: ["/((?!api|trpc|_next|_vercel|auth|.*\\..*).*)"],
 };
 

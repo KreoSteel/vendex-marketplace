@@ -4,7 +4,7 @@ import { HeartIcon } from "lucide-react";
 import { useIsListingFavorite, useToggleFavorite } from "@/hooks/useFavorites";
 import { authClient } from "@/utils/auth-client";
 import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 
 interface ToggleFavoriteProps {
     listingId: string;

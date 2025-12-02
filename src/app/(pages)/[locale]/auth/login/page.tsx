@@ -11,55 +11,48 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { signUpAction } from "@/app/actions/auth";
+import { signInAction } from "@/app/actions/auth";
 import { useActionState } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 export default function RegisterPage() {
-   const [state, formAction, isPending] = useActionState(signUpAction, {
+   const [state, formAction, isPending] = useActionState(signInAction, {
       error: "",
    });
+   const t = useTranslations("auth.login");
 
    return (
-      <Card className="w-full bg-neutral-50 max-w-md shadow-lg hover:shadow-xl hover:translate-y-[-5px] transition-all duration-300">
+      <Card className="w-full bg-surface max-w-md shadow-lg hover:shadow-xl hover:translate-y-[-5px] transition-all duration-300">
          <CardHeader>
-            <CardTitle>Create an account</CardTitle>
+            <CardTitle>{t("title")}</CardTitle>
             <CardDescription>
-               Enter your email below to create an account
+               {t("description")}
             </CardDescription>
             <CardAction>
                <Button variant="link" asChild>
-                  <Link href="/auth/login">Sign In</Link>
+                  <Link href="/auth/register">{t("signUp")}</Link>
                </Button>
             </CardAction>
          </CardHeader>
          <form action={formAction}>
             <CardContent>
-               {state.error && (
-                  <p className="text-red-500 text-sm">{state.error}</p>
+               {state?.error && (
+                  <p className="text-red-500 text-sm">{state?.error}</p>
                )}
                <div className="flex flex-col gap-6">
                   <div className="grid gap-2">
-                     <Label htmlFor="name">Name</Label>
-                     <Input
-                        name="name"
-                        type="text"
-                        placeholder="John Doe"
-                        required
-                     />
-                  </div>
-                  <div className="grid gap-2">
-                     <Label htmlFor="email">Email</Label>
+                     <Label htmlFor="email">{t("labelEmail")}</Label>
                      <Input
                         name="email"
                         type="email"
-                        placeholder="m@example.com"
+                        placeholder={t("placeholderEmail")}
                         required
                      />
                   </div>
                   <div className="grid gap-2">
                      <div className="flex items-center">
-                        <Label htmlFor="password">Password</Label>
+                        <Label htmlFor="password">{t("labelPassword")}</Label>
                      </div>
                      <Input name="password" type="password" required />
                   </div>
@@ -67,7 +60,7 @@ export default function RegisterPage() {
             </CardContent>
             <CardFooter className="flex-col gap-2 mt-4">
                <Button type="submit" className="w-full" disabled={isPending}>
-                  {isPending ? "Creating account..." : "Create Account"}
+                  {isPending ? t("buttonLoginLoading") : t("buttonLogin")}
                </Button>
             </CardFooter>
          </form>
