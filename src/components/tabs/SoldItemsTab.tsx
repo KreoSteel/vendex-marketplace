@@ -1,6 +1,7 @@
 "use client";
 import ListingCard from "@/components/cards/ListingCard";
-import { useGetUserSoldListings } from "@/hooks/useListing";
+import { userSoldListingsOptions } from "@/lib/query-options/listings";
+import { useQuery } from "@tanstack/react-query";
 import { TListing } from "@/utils/zod-schemas/listings";
 import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -11,7 +12,7 @@ interface SoldItemsTabProps {
 }
 
 export default function SoldItemsTab({ userId }: SoldItemsTabProps) {
-    const { data: listings, isLoading, error } = useGetUserSoldListings(userId);
+    const { data: listings, isLoading, error } = useQuery(userSoldListingsOptions(userId));
     const tCommon = useTranslations("common");
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

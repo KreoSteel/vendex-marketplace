@@ -42,9 +42,9 @@ export async function getAllListings({
    sortOrder = "desc",
 }: AllListingsParams = {}) {
    const page =
-      currentPage === "string" ? parseInt(currentPage, 10) : currentPage;
+      typeof currentPage === "string" ? parseInt(currentPage, 10) : currentPage;
    const items =
-      itemsPerPage === "string" ? parseInt(itemsPerPage, 10) : itemsPerPage;
+      typeof itemsPerPage === "string" ? parseInt(itemsPerPage, 10) : itemsPerPage;
    const skip = ((page as number) - 1) * (items as number);
 
    const where: Prisma.ListingWhereInput = {
@@ -347,7 +347,7 @@ export async function markListingAsSold(id: string) {
          status: "SOLD",
          sold: true,
       }
-   })
+   });
 
 }
 

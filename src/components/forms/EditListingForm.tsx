@@ -26,8 +26,9 @@ import {
 import { TUpdateListing } from "@/utils/zod-schemas/listings";
 import Image from "next/image";
 import { TCategory } from "@/utils/zod-schemas/categories";
-import { useGetCategories } from "@/hooks/useCategories";
+import { categoriesOptions } from "@/hooks/useCategories";
 import { useTranslations } from "next-intl";
+import { useQuery } from "@tanstack/react-query";
 
 export type TEditListing = TUpdateListing & {
    id: string;
@@ -61,7 +62,7 @@ export default function EditListingForm({
       error: "",
       success: "",
    });
-   const { data: categories } = useGetCategories();
+   const { data: categories } = useQuery(categoriesOptions);
    const [isPending, startTransition] = useTransition();
    
    const [existingImages, setExistingImages] = useState<string[]>(() => {

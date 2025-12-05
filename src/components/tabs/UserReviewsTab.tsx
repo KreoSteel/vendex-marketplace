@@ -1,15 +1,16 @@
 "use client";
-import { useGetUserReviews } from "@/hooks/useReviews";
 import { Loader2 } from "lucide-react";
 import ReviewCard from "../cards/ReviewCard";
 import { useTranslations } from "next-intl";
+import { useQuery } from "@tanstack/react-query";
+import { getUserReviewsOptions } from "@/lib/query-options/reviews";
 
 interface UserReviewsTabProps {
    userId: string;
 }
 
 export default function UserReviewsTab({ userId }: UserReviewsTabProps) {
-   const { data: reviews, isLoading, error } = useGetUserReviews(userId);
+   const { data: reviews, isLoading, error } = useQuery(getUserReviewsOptions(userId));
    const tCommon = useTranslations("common");
 
    if (isLoading) {

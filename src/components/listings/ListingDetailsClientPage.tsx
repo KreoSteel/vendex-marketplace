@@ -1,9 +1,7 @@
 "use client";
 import ToggleFavorite from "@/components/favorites/ToggleFavorite";
-import { useGetListingById } from "@/hooks/useListing";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Separator } from "../ui/separator";
-import { ListingCondition } from "@/utils/generated/enums";
 import {
    ArrowLeftIcon,
    CalendarIcon,
@@ -12,7 +10,6 @@ import {
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
-import { format } from "date-fns";
 import { notFound } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 import ImageSlider from "../ui/image-slider";
@@ -24,11 +21,11 @@ import EditListingForm, {
 } from "../forms/EditListingForm";
 import MarkAsSold from "./mark-as-sold";
 import { useTranslations } from "next-intl";
-import { useMemo } from "react";
 import DateFormatter from "../date-formatter";
+import { TListing } from "@/utils/zod-schemas/listings";
 
 interface ListingDetailsClientPageProps {
-   id: string;
+   listing: TListing;
    activeListingsCount: number | undefined;
    itemsSoldCount: number | undefined;
    averageRating: number | undefined;
@@ -36,7 +33,7 @@ interface ListingDetailsClientPageProps {
 }
 
 export default function ListingDetailsClientPage({
-   id,
+   listing,
    activeListingsCount,
    itemsSoldCount,
    averageRating,
@@ -44,7 +41,6 @@ export default function ListingDetailsClientPage({
 }: ListingDetailsClientPageProps) {
    const t = useTranslations("listingDetailsPage");
    const tConditions = useTranslations("conditions");
-   const { data: listing } = useGetListingById(id);
    const userId = listing?.user?.id;
    const isOwner = userId === currentUser;
    const router = useRouter();

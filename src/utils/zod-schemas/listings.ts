@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { ListingCondition, ListingStatus } from "../generated/enums";
+import { categorySchema } from "./categories";
 
 export const createListingSchema = z.object({
     title: z.string().min(1, { message: "Title is required" }),
@@ -20,13 +21,12 @@ export const updateListingSchema = z.object({
     images: z.array(z.string()).min(1, { message: "At least one image is required" }).max(10, { message: "You can only upload up to 10 images" }),
 }).partial();
 
-export const listingSchema = z.object({
+export const recentListingsSchema = z.object({
     id: z.string(),
     title: z.string(),
     price: z.number().nullable(),
     location: z.string().nullable(),
     condition: z.enum(ListingCondition),
-    status: z.enum(ListingStatus).optional(),
     createdAt: z.date(),
     images: z.array(z.object({
         url: z.string(),
@@ -34,6 +34,42 @@ export const listingSchema = z.object({
 });
 
 
+export const listingSchema = z.object({
+    id: z.string(),
+    title: z.string(),
+    description: z.string().nullable(),
+    category: categorySchema,
+    price: z.number().nullable(),
+    featured: z.boolean(),
+    location: z.string().nullable(),
+    condition: z.enum(ListingCondition),
+    status: z.enum(ListingStatus).optional(),
+    createdAt: z.date(),
+    updatedAt: z.date(),
+    images: z.array(z.object({
+        url: z.string(),
+    })),
+    user: z.object({
+        id: z.string(),
+        name: z.string(),
+        avatarImg: z.string(),
+        location: z.string(),
+        createdAt: z.date(),
+    }),
+});
+
+export const ListingsCardSchema = listingSchema.pick({
+    id: true,
+    title: true,
+    price: true,
+    location: true,
+    condition: true,
+    createdAt: true,
+    images: true,
+})
+
 export type TUpdateListing = z.infer<typeof updateListingSchema>;
 export type TCreateListing = z.infer<typeof createListingSchema>;
 export type TListing = z.infer<typeof listingSchema>;
+export type TRecentListings = z.infer<typeof recentListingsSchema>;
+export type TListingsCard = z.infer<typeof ListingsCardSchema>;

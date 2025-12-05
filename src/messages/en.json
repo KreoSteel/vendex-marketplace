@@ -2,6 +2,10 @@
    "common": {
       "loading": "Loading...",
       "error": "Error",
+      "errorTitle": "Something went wrong!",
+      "errorDescription": "We encountered an unexpected error. Please try again.",
+      "tryAgain": "Try again",
+      "goHome": "Go home",
       "noListingsFound": "No listings found",
       "noResultsFound": "No results found",
       "noReviewsFound": "No reviews found",

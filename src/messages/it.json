@@ -2,6 +2,10 @@
    "common": {
       "loading": "Caricamento...",
       "error": "Errore",
+      "errorTitle": "Qualcosa è andato storto!",
+      "errorDescription": "Si è verificato un errore imprevisto. Riprova.",
+      "tryAgain": "Riprova",
+      "goHome": "Vai alla home",
       "noListingsFound": "Nessun annuncio trovato",
       "noResultsFound": "Nessun risultato trovato",
       "noReviewsFound": "Nessuna recensione trovata",

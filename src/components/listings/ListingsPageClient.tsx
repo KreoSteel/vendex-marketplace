@@ -1,9 +1,8 @@
 "use client";
 import { AllListingsParams } from "@/lib/data-access/listings";
-import { useGetAllListings } from "@/hooks/useListing";
 import SearchBar from "../ui/search";
 import ListingCard from "../cards/ListingCard";
-import { TListing } from "@/utils/zod-schemas/listings";
+import { TListing, TListingsCard } from "@/utils/zod-schemas/listings";
 import ListingsFilters from "./ListingsFilters";
 import { Loader2 } from "lucide-react";
 import {
@@ -19,6 +18,7 @@ import { authClient } from "@/utils/auth-client";
 import { userFavoriteListingsOptions } from "@/lib/query-options/favorites";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
+import { allListingsOptions } from "@/lib/query-options/listings";
 
 export default function ListingsPageClient({
    searchParams,
@@ -35,7 +35,7 @@ export default function ListingsPageClient({
    });
    const favoriteIds = new Set(favorites?.map(f => f.id) ?? []);
 
-   const { data, isLoading, error } = useGetAllListings(searchParams);
+   const { data, isLoading, error } = useQuery(allListingsOptions(searchParams));
    const router = useRouter();
 
    const handlePageChange = (page: number) => {
@@ -76,10 +76,10 @@ export default function ListingsPageClient({
                   </div>
                ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                     {data.listings.map((listing: TListing, index: number) => (
+                     {data.listings.map((listing: TListingsCard, index: number) => (
                         <ListingCard
                            key={listing.id}
-                           listing={listing}
+                           listing={listing as TListing}
                            preload={index < 4}
                            isFavorite={favoriteIds.has(listing.id)}
                         />

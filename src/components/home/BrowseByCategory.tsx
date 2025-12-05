@@ -2,11 +2,10 @@
 import { Card, CardHeader, CardTitle } from "../ui/card";
 import { getIconForCategory } from "@/lib/utils";
 import { Link } from "@/i18n/navigation";
-import { useGetCategories } from "@/hooks/useCategories";
 import { useTranslations } from "next-intl";
+import { TCategory } from "@/utils/zod-schemas/categories";
 
-export default function BrowseByCategory() {
-   const { data: categories } = useGetCategories();
+export default function BrowseByCategory({categories}: {categories: TCategory[]}) {
    const t = useTranslations("home.browseByCategory");
    const searchParams = new URLSearchParams();
    searchParams.set("page", "1");

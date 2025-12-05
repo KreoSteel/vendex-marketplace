@@ -1,26 +1,20 @@
 import Hero from "@/components/home/Hero";
 import BrowseByCategory from "@/components/home/BrowseByCategory";
 import RecentListings from "@/components/home/RecentListings";
-import { recentListingsOptions } from "@/lib/query-options/listings";
-import { getQueryClient } from "@/lib/queryClient";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { categoriesOptions } from "@/hooks/useCategories";
+import { getAllCategories } from "@/lib/data-access/category";
+import { TCategory } from "@/utils/zod-schemas/categories";
+import { getRecentListings } from "@/lib/data-access/listings";
+import { TRecentListings } from "@/utils/zod-schemas/listings";
 
 export default async function Home() {
-   const queryClient = getQueryClient();
-
-   await Promise.all([
-      queryClient.prefetchQuery(recentListingsOptions),
-      queryClient.prefetchQuery(categoriesOptions),
-   ]);
+   const categories = (await getAllCategories()) as TCategory[];
+   const listings = (await getRecentListings()) as TRecentListings[];
 
    return (
       <div className="flex flex-col space-y-32 py-16">
          <Hero />
-         <HydrationBoundary state={dehydrate(queryClient)}>
-            <BrowseByCategory />
-            <RecentListings />
-         </HydrationBoundary>
+         <BrowseByCategory categories={categories} />
+         <RecentListings listings={listings} favoriteIds={new Set()} />
       </div>
    );
 }

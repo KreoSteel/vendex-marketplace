@@ -14,11 +14,12 @@ import {
 } from "../ui/select";
 import { Button } from "../ui/button";
 import { ListingCondition } from "@/utils/generated/enums";
-import { useGetCategories } from "@/hooks/useCategories";
+import { categoriesOptions } from "@/hooks/useCategories";
 import { TCategory } from "@/utils/zod-schemas/categories";
 import { redirect, useRouter } from "@/i18n/navigation";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
+import { useQuery } from "@tanstack/react-query";
 
 export default function CreateListingForm() {
    const tForms = useTranslations("forms");
@@ -30,7 +31,7 @@ export default function CreateListingForm() {
       error: "",
    });
    const [isPending, startTransition] = useTransition();
-   const { data: categories } = useGetCategories();
+   const { data: categories } = useQuery(categoriesOptions)
 
    const [previewImages, setPreviewImages] = useState<File[]>([]);
 
@@ -58,9 +59,10 @@ export default function CreateListingForm() {
 
    function handleRemoveImage(index: number) {
       setPreviewImages((prev) => {
-         const newImages = prev.filter((_, item) => item !== index);
-         URL.revokeObjectURL(URL.createObjectURL(prev[index]));
-         return newImages;
+         const fileToRemove = prev[index];
+         const urlToRevoke = URL.createObjectURL(fileToRemove);
+         URL.revokeObjectURL(urlToRevoke);
+         return prev.filter((_, item) => item !== index);
       });
    }
 

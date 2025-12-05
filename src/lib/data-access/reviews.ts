@@ -4,7 +4,6 @@ import prisma from "@/utils/prisma";
 import { CreateReview } from "@/utils/zod-schemas/reviews";
 import { getTranslations } from "next-intl/server";
 export async function getReviews(userId: string) {
-    const tReviews = await getTranslations("reviews");
     return await prisma.review.findMany({
         where: {
             revieweeId: userId,
@@ -72,7 +71,6 @@ export async function createReview(data: CreateReview) {
 
 
 export async function getReviewsStats(userId: string) {
-    const tReviews = await getTranslations("reviews");
     const result = await prisma.review.aggregate({
         where: {
             revieweeId: userId,

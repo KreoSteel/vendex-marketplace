@@ -1,8 +1,5 @@
 import ListingsPageClient from "@/components/listings/ListingsPageClient";
-import { getQueryClient } from "@/lib/queryClient";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { AllListingsParams } from "@/lib/data-access/listings";
-import { allListingsOptions } from "@/lib/query-options/listings";
 import { ListingCondition } from "@/utils/generated/enums";
 
 interface ListingsPageProps {
@@ -18,9 +15,7 @@ interface ListingsPageProps {
     }>;
 }
 
-export default async function ListingsPage({ searchParams }: ListingsPageProps) {
-    const queryClient = getQueryClient();
-    
+export default async function ListingsPage({ searchParams }: ListingsPageProps) {    
     const params = await searchParams;
     
     const listingParams: AllListingsParams = {
@@ -35,11 +30,7 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
         sortOrder: (params.sortOrder === "asc" ? "asc" : "desc"),
     };
 
-    await queryClient.prefetchQuery(allListingsOptions(listingParams));
-
     return (
-        <HydrationBoundary state={dehydrate(queryClient)}>
-            <ListingsPageClient searchParams={listingParams} />
-        </HydrationBoundary>
+        <ListingsPageClient searchParams={listingParams} />
     );
 }

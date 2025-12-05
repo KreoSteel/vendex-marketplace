@@ -2,12 +2,7 @@ import { z } from "zod";
 
 export const conversationSchema = z.object({
     id: z.string(),
-    sender: z.object({
-        id: z.string(),
-        name: z.string(),
-        avatarImg: z.string(),
-    }),
-    receiver: z.object({
+    otherUser: z.object({
         id: z.string(),
         name: z.string(),
         avatarImg: z.string(),
@@ -15,6 +10,7 @@ export const conversationSchema = z.object({
     lastMessage: z.string(),
     lastMessageAt: z.date(),
     unreadCount: z.number(),
+    read: z.boolean(),
 })
 
 export const chatMessageSchema = z.object({
@@ -28,4 +24,4 @@ export const chatMessageSchema = z.object({
     }),
 })
 
-export type Conversation = z.infer<typeof conversationSchema>;
+export type TConversation = z.infer<typeof conversationSchema>;

@@ -3,9 +3,11 @@ import createMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
 import { auth } from "./utils/auth";
 
-export default createMiddleware(routing);
+const intlMiddleware = createMiddleware(routing);
 
 export async function proxy(req: NextRequest) {
+   const response = intlMiddleware(req);
+
    const pathname = req.nextUrl.pathname;
 
    const protectedRoutes = [
@@ -33,7 +35,7 @@ export async function proxy(req: NextRequest) {
       }
    }
 
-   return NextResponse.next();
+   return response;
 }
 
 export const config = {

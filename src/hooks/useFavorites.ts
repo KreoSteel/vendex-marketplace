@@ -3,10 +3,6 @@ import { userFavoriteListingsOptions, isListingFavoriteOptions } from "@/lib/que
 import { toggleFavoriteAction } from "@/app/actions/favorites";
 import { authClient } from "@/utils/auth-client";
 
-export const useGetUserFavoriteListings = (userId: string) => {
-   return useQuery(userFavoriteListingsOptions(userId));
-};
-
 export const useIsListingFavorite = (listingId: string, enabled: boolean = true) => {
     const { data: session } = authClient.useSession();
     const userId = session?.user?.id;

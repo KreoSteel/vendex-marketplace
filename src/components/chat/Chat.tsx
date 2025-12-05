@@ -1,10 +1,13 @@
 "use client";
 
-import { useGetChatWithUser, useSendMessage } from "@/hooks/useChat";
 import { RealtimeChat } from "../../hooks/realtime-chat";
 import { useMemo, useCallback } from "react";
 import { ChatMessage } from "@/hooks/use-realtime-chat";
 import { useTranslations } from "next-intl";
+import { chatWithUserOptions } from "@/lib/query-options/messages";
+import { useMutation } from "@tanstack/react-query";
+import { sendMessageOptions } from "@/lib/mutations/messages";
+import { useQuery } from "@tanstack/react-query";
 
 interface ChatProps {
    userId: string;
@@ -13,8 +16,8 @@ interface ChatProps {
 }
 
 export default function Chat({ userId, username, currentUserId }: ChatProps) {
-   const { data: chat } = useGetChatWithUser(userId);
-   const { mutateAsync: sendMessage } = useSendMessage();
+   const { data: chat } = useQuery(chatWithUserOptions(userId));
+   const { mutateAsync: sendMessage } = useMutation(sendMessageOptions());
    const tChatPage = useTranslations("chatPage");
    
    const handleSendMessage = useCallback(

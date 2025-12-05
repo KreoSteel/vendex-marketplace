@@ -2,23 +2,21 @@
 import { Label } from "../ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Checkbox, CheckboxIndicator } from "@radix-ui/react-checkbox";
-import { useGetCategories } from "@/hooks/useCategories";
 import { CheckIcon } from "lucide-react";
-import { Slider } from "../ui/slider";
 import { ListingCondition } from "@/utils/generated/enums";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Filters } from "@/lib/data-access/listings";
-import { useGetMaxPriceForFilters } from "@/hooks/useListing";
 import { useRouter } from "@/i18n/navigation";
 import { Button } from "../ui/button";
 import { useTranslations } from "next-intl";
+import { useQuery } from "@tanstack/react-query";
+import { categoriesOptions } from "@/hooks/useCategories";
+import { getMaxPriceForFiltersOptions } from "@/lib/utils";
 
 export default function ListingsFilters() {
-   const { data: categories } = useGetCategories();
+   const { data: categories } = useQuery(categoriesOptions);
    const tConditions = useTranslations("conditions");
-   const tCommon = useTranslations("common");
-   const tButtons = useTranslations("buttons");
    const tSearchListingsPage = useTranslations("searchListingsPage");
 
    const searchParams = useSearchParams();
@@ -49,7 +47,7 @@ export default function ListingsFilters() {
    };
 
    const { data: maxPrice, isLoading: isLoadingMaxPrice } =
-      useGetMaxPriceForFilters(filters);
+      useQuery(getMaxPriceForFiltersOptions(filters));
    const [priceRange, setPriceRange] = useState([0, maxPrice || 1000]);
    const router = useRouter();
 

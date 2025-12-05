@@ -1,23 +1,18 @@
-import { getQueryClient } from "@/lib/queryClient";
-import { conversationsWithUserOptions } from "@/lib/query-options/messages";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+
 import ChatSidebar from "@/components/chat/ChatSidebar";
-import { requireAuth } from "@/utils/auth";
+import { getConversationsWithUsers } from "@/lib/data-access/chat";
 
-export default async function ChatLayout({ children }: { children: React.ReactNode }) {
-    await requireAuth();
-    const queryClient = getQueryClient();
-    await queryClient.prefetchQuery(conversationsWithUserOptions());
+export default async function ChatLayout({
+   children,
+}: {
+   children: React.ReactNode;
+}) {
+   const conversations = await getConversationsWithUsers();
 
-    return (
-        <HydrationBoundary state={dehydrate(queryClient)}>
-            <div className="flex h-[calc(100vh-4rem)] w-full -my-12">
-                <ChatSidebar />
-                <div className="flex-1 h-full overflow-hidden">
-                    {children}
-                </div>
-            </div>
-        </HydrationBoundary>
-    );
+   return (
+      <div className="flex h-[calc(100vh-4rem)] w-full -my-12">
+         <ChatSidebar conversations={conversations} />
+         <div className="flex-1 h-full overflow-hidden">{children}</div>
+      </div>
+   );
 }
-

@@ -1,7 +1,8 @@
 "use client";
 import ListingCard from "@/components/cards/ListingCard";
-import { useGetUserFavoriteListings } from "@/hooks/useFavorites";
-import { TListing } from "@/utils/zod-schemas/listings";
+import { userFavoriteListingsOptions } from "@/lib/query-options/favorites";
+import { useQuery } from "@tanstack/react-query";
+import { TListing, TListingsCard } from "@/utils/zod-schemas/listings";
 import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -11,7 +12,7 @@ interface FavoritesListingsTabProps {
 }
 
 export default function FavoritesListingsTab({ userId }: FavoritesListingsTabProps) {
-    const { data: listings, isLoading, error } = useGetUserFavoriteListings(userId);
+    const { data: listings, isLoading, error } = useQuery(userFavoriteListingsOptions(userId));
     const tCommon = useTranslations("common");
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -23,10 +24,10 @@ export default function FavoritesListingsTab({ userId }: FavoritesListingsTabPro
            <div>{tCommon("error")}: {error.message}</div>
         ) : (
             (listings && listings.length > 0) ? (
-                listings.map((listing: TListing, index: number) => (
+                listings.map((listing: TListingsCard, index: number) => (
                     <ListingCard 
                         key={listing.id} 
-                        listing={listing} 
+                        listing={listing as TListing} 
                         preload={index < 4}
                     />
                 ))
