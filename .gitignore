@@ -46,4 +46,8 @@ pnpm-workspace.yaml
 VENDEX_IMPLEMENTATION_PLAN.md
 /app/generated/prisma
 
+.cursor
 seed*
+# Sentry Config File
+.env.sentry-build-plugin
+
