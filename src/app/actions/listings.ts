@@ -36,8 +36,8 @@ export async function createListingAction(
 
    const data = {
       title: formData.get("title") as string,
-      description: (formData.get("description") as string) ?? "",
-      price: formData.get("price")
+      description: (formData.get("description") as string) ?? "No description provided",
+      price: (formData.get("price") as string)
          ? parseFloat(formData.get("price") as string)
          : 0,
       categoryId: formData.get("category") as string,
@@ -45,6 +45,10 @@ export async function createListingAction(
       condition: formData.get("condition") as ListingCondition,
       images: urls,
    };
+
+   if (isNaN(data.price) || data.price < 0) {
+      return { error: "Invalid price" };
+   }
 
    const validatedData = createListingSchema.safeParse(data);
    if (!validatedData.success) {
@@ -156,7 +160,10 @@ export async function markListingAsSoldAction(listingId: string) {
 
       revalidatePath("/profile");
       revalidatePath(`/listings/${listingId}`);
-      return { success: "Listing marked as sold successfully", id: markedListing.id };
+      return {
+         success: "Listing marked as sold successfully",
+         id: markedListing.id,
+      };
    } catch (error) {
       console.error("Mark listing as sold error:", error);
       return {

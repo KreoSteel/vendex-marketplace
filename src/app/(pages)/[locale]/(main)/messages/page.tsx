@@ -1,6 +1,8 @@
 import { MessageSquare } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
+export const dynamic = "force-dynamic";
+
 export default async function MessagesPage({
    params,
 }: {
@@ -9,7 +11,7 @@ export default async function MessagesPage({
    const { locale } = await params;
    setRequestLocale(locale);
    const tMessagesPage = await getTranslations("messagesPage");
-   
+
    return (
       <div className="flex flex-col justify-center items-center h-full w-full bg-muted/30">
          <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mb-4">

@@ -10,9 +10,8 @@ export const chatWithUserOptions = (otherUserId: string) =>
       queryFn: async () => {
          return await getChatWithUser(otherUserId);
       },
-      enabled: !!otherUserId,
-      staleTime: 5 * 1000,
       refetchInterval: 3 * 1000,
+      refetchOnWindowFocus: true,
    });
    
 
@@ -23,6 +22,7 @@ export const conversationsWithUserOptions = () =>
          return await getConversationsWithUsers();
       },
       refetchInterval: 5000,
+      refetchOnWindowFocus: true,
    });
 
 

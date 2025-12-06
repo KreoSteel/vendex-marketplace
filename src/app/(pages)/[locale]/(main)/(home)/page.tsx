@@ -6,10 +6,12 @@ import { TCategory } from "@/utils/zod-schemas/categories";
 import { getRecentListings } from "@/lib/data-access/listings";
 import { TRecentListings } from "@/utils/zod-schemas/listings";
 
+export const revalidate = 60;
+
 export default async function Home() {
    const categories = (await getAllCategories()) as TCategory[];
    const listings = (await getRecentListings()) as TRecentListings[];
-
+   
    return (
       <div className="flex flex-col space-y-32 py-16">
          <Hero />

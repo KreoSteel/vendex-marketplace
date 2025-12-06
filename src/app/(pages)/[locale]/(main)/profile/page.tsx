@@ -8,6 +8,8 @@ import { getLocale } from "next-intl/server";
 import { getUserListingsCount } from "@/lib/data-access/listings";
 import { getReviewsStats } from "@/lib/data-access/reviews";
 
+export const revalidate = 120;
+
 export default async function ProfilePage() {
    const currentUser = await getUser();
    const profileUser = await getUserProfile();

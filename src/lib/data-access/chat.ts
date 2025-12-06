@@ -1,6 +1,8 @@
 "use server";
 import { requireAuth } from "@/utils/auth";
 import prisma from "@/utils/prisma";
+import { revalidatePath } from "next/cache";
+import { TConversation, conversationRowSchema } from "@/utils/zod-schemas/chat";
 
 export async function getChatWithUser(otherUserId: string) {
    const currentUser = await requireAuth();
@@ -27,55 +29,53 @@ export async function getChatWithUser(otherUserId: string) {
    });
 }
 
-export async function getConversationsWithUsers() {
+export async function getConversationsWithUsers(): Promise<TConversation[]> {
    const currentUser = await requireAuth();
 
-   const messages = await prisma.message.findMany({
-      where: {
-         OR: [{ senderId: currentUser.id }, { receiverId: currentUser.id }],
-      },
-      orderBy: {
-         createdAt: "desc",
-      },
-      include: {
-         sender: {
-            select: {
-               id: true,
-               name: true,
-               avatarImg: true,
-            },
+   const rawConversations = await prisma.$queryRaw<TConversation[]>`
+      WITH ranked_messages AS (
+         SELECT 
+            m.*,
+            CASE 
+               WHEN m."senderId" = ${currentUser.id} THEN m."receiverId"
+               ELSE m."senderId"
+            END as other_user_id,
+            ROW_NUMBER() OVER (
+               PARTITION BY 
+                  CASE 
+                     WHEN m."senderId" = ${currentUser.id} THEN m."receiverId"
+                     ELSE m."senderId"
+                  END
+               ORDER BY m."createdAt" DESC
+            ) as rn
+         FROM messages m
+         WHERE m."senderId" = ${currentUser.id} OR m."receiverId" = ${currentUser.id}
+      )
+      SELECT 
+         rm.*,
+         u.id as "otherUser_id",
+         u.name as "otherUser_name",
+         u."avatarImg" as "otherUser_avatarImg"
+      FROM ranked_messages rm
+      JOIN users u ON u.id = rm.other_user_id
+      WHERE rm.rn = 1
+      ORDER BY rm."createdAt" DESC
+   `;
+
+   return rawConversations.map((conv) => {
+      const validated = conversationRowSchema.parse(conv);
+
+      return {
+         otherUser: {
+            id: validated.otherUser_id,
+            name: validated.otherUser_name,
+            avatarImg: validated.otherUser_avatarImg,
          },
-         receiver: {
-            select: {
-               id: true,
-               name: true,
-               avatarImg: true,
-            },
-         },
-      },
+         lastMessage: validated.content,
+         lastMessageAt: validated.createdAt,
+         read: !(validated.receiverId === currentUser.id && !validated.read),
+      };
    });
-
-   const conversationsMap = new Map();
-
-   messages.forEach((message) => {
-      const otherUser =
-         currentUser.id === message.senderId
-            ? message.receiver
-            : message.sender;
-
-      if (conversationsMap.has(otherUser.id)) return;
-
-      const isUnreadForMe = message.receiverId === currentUser.id && !message.read;
-
-      conversationsMap.set(otherUser.id, {
-         otherUser,
-         lastMessage: message.content,
-         lastMessageAt: message.createdAt,
-         read: !isUnreadForMe,
-      });
-   });
-
-   return Array.from(conversationsMap.values());
 }
 
 export async function changeMessageReadStatus(otherUserId: string) {
@@ -91,7 +91,11 @@ export async function changeMessageReadStatus(otherUserId: string) {
          read: true,
          readAt: new Date(),
       },
-   })
+   });
+   revalidatePath("/messages");
+   revalidatePath(`/messages/${otherUserId}`);
+
+   return { success: true };
 }
 
 export async function createMessage(
@@ -101,7 +105,7 @@ export async function createMessage(
 ) {
    const currentUser = await requireAuth();
 
-   return await prisma.message.create({
+   const message = await prisma.message.create({
       data: {
          senderId: currentUser.id,
          receiverId,
@@ -109,4 +113,8 @@ export async function createMessage(
          listingId,
       },
    });
+   revalidatePath("/messages");
+   revalidatePath(`/messages/${receiverId}`);
+
+   return message;
 }

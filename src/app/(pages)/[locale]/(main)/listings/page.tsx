@@ -15,6 +15,8 @@ interface ListingsPageProps {
     }>;
 }
 
+export const revalidate = 120;
+
 export default async function ListingsPage({ searchParams }: ListingsPageProps) {    
     const params = await searchParams;
     

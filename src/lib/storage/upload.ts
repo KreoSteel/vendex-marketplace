@@ -8,10 +8,21 @@ const supabaseAdmin = createClient(
 );
 
 export async function uploadListingImages(files: File[], userId: string) {
+   const MAX_FILE_SIZE = 5 * 1024 * 1024;
+   const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/webp"];
    const urls: string[] = [];
 
    for (let i = 0; i < files.length; ++i) {
       const file = files[i];
+
+      if (file.size > MAX_FILE_SIZE) {
+         return { error: "File size must be less than 5MB" };
+      }
+
+      if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+         return { error: "File type not allowed" };
+      }
+
       const fileName = `${userId}-${file.name}-${Date.now()}-${i}`;
 
       const { error } = await supabaseAdmin.storage
@@ -32,6 +43,17 @@ export async function uploadListingImages(files: File[], userId: string) {
 }
 
 export async function uploadProfileImage(file: File, userId: string) {
+   const MAX_FILE_SIZE = 5 * 1024 * 1024;
+   const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/webp"];
+
+   if (file.size > MAX_FILE_SIZE) {
+      return { error: "File size must be less than 5MB" };
+   }
+
+   if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+      return { error: "File type not allowed" };
+   }
+
    const fileName = `${userId}-${file.name}-${Date.now()}`;
 
    const { error } = await supabaseAdmin.storage

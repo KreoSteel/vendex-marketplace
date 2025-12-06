@@ -1,5 +1,4 @@
 "use client";
-import { conversationsWithUserOptions } from "@/lib/query-options/messages";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
@@ -7,10 +6,15 @@ import { cn } from "@/lib/utils";
 import { usePathname } from "@/i18n/navigation";
 import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { changeMessageReadStatusOptions } from "@/lib/mutations/messages";
+import { changeMessageReadStatusOptions } from "@/lib/mutation-options/messages";
 import { TConversation } from "@/utils/zod-schemas/chat";
+import { conversationsWithUserOptions } from "@/lib/query-options/messages";
 
-export default function ChatSidebar({ conversations }: { conversations: TConversation[] }) {
+export default function ChatSidebar({
+   conversations,
+}: {
+   conversations: TConversation[];
+}) {
    const tChat = useTranslations("chat");
    const pathname = usePathname();
 
@@ -18,12 +22,17 @@ export default function ChatSidebar({ conversations }: { conversations: TConvers
       changeMessageReadStatusOptions()
    );
 
+   const { data: liveConversations = conversations } = useQuery({
+      ...conversationsWithUserOptions(),
+      initialData: conversations || [],
+   });
+
    const markedAsReadRef = useRef<Set<string>>(new Set());
 
    useEffect(() => {
-      if (!conversations) return;
+      if (!liveConversations) return;
 
-      const activeConversations = conversations.find(
+      const activeConversations = liveConversations.find(
          (conversation) => pathname === `/messages/${conversation.otherUser.id}`
       );
 
@@ -35,7 +44,7 @@ export default function ChatSidebar({ conversations }: { conversations: TConvers
          changeMessageReadStatus(activeConversations.otherUser.id);
          markedAsReadRef.current.add(activeConversations.otherUser.id);
       }
-   }, [conversations, changeMessageReadStatus, pathname]);
+   }, [liveConversations, changeMessageReadStatus, pathname]);
 
    return (
       <div className="flex flex-col h-full w-full md:w-80 lg:w-96 border-r bg-white">
@@ -43,7 +52,7 @@ export default function ChatSidebar({ conversations }: { conversations: TConvers
             <h2 className="text-xl font-bold">{tChat("messages")}</h2>
          </div>
          <div className="flex-1 overflow-y-auto">
-            {conversations?.map((conversation) => {
+            {liveConversations?.map((conversation) => {
                const { otherUser, lastMessage, lastMessageAt, read } =
                   conversation;
                const isActive = pathname === `/messages/${otherUser.id}`;

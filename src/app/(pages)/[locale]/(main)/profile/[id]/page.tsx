@@ -8,6 +8,9 @@ import { getUserListingsCount } from "@/lib/data-access/listings";
 import { getReviewsStats } from "@/lib/data-access/reviews";
 import { getLocale } from "next-intl/server";
 
+export const dynamicParams = true;
+export const revalidate = 120;
+
 export default async function UserProfilePage({
    params,
 }: {
@@ -25,7 +28,7 @@ export default async function UserProfilePage({
       redirect({ href: `/auth/login`, locale: locale });
       throw new Error("Unauthorized");
    }
-   
+
    const isItOwner = currentUser.id === userId;
    const [counts, reviewsStats] = await Promise.all([
       getUserListingsCount(userId),

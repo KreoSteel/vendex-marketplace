@@ -9,6 +9,8 @@ import { getReviewsStats } from "@/lib/data-access/reviews";
 import { notFound } from "next/navigation";
 import { getUser } from "@/utils/auth";
 
+export const dynamicParams = true;
+
 export default async function ListingPageDetails({
    params,
 }: {

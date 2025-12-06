@@ -6,7 +6,7 @@ import { ChatMessage } from "@/hooks/use-realtime-chat";
 import { useTranslations } from "next-intl";
 import { chatWithUserOptions } from "@/lib/query-options/messages";
 import { useMutation } from "@tanstack/react-query";
-import { sendMessageOptions } from "@/lib/mutations/messages";
+import { sendMessageOptions } from "@/lib/mutation-options/messages";
 import { useQuery } from "@tanstack/react-query";
 
 interface ChatProps {
