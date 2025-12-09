@@ -7,31 +7,36 @@ import { notFound } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { getUserListingsCount } from "@/lib/data-access/listings";
 import { getReviewsStats } from "@/lib/data-access/reviews";
+import { User } from "@/utils/zod-schemas/auth";
 
 export const revalidate = 120;
 
 export default async function ProfilePage() {
    const currentUser = await getUser();
-   const profileUser = await getUserProfile();
+   const profileUserResult = await getUserProfile();
+   const profileUser = profileUserResult.success
+      ? profileUserResult.data
+      : null;
    const locale = await getLocale();
    if (!profileUser) {
       notFound();
    }
-
    if (!currentUser) {
       redirect({ href: `/auth/login`, locale: locale });
-      throw new Error("Unauthorized");
    }
 
-   const [counts, reviewsStats] = await Promise.all([
+   const [counts, reviewsStatsResult] = await Promise.all([
       getUserListingsCount(profileUser.id),
       getReviewsStats(profileUser.id),
    ]);
 
+   const reviewsStats = reviewsStatsResult.success
+      ? reviewsStatsResult.data
+      : { averageRating: 0, totalReviews: 0 };
    return (
       <div className="container max-w-6xl mx-auto py-6 flex flex-col gap-6">
          <ProfileCard
-            user={profileUser}
+            user={profileUser as User}
             activeListingsCount={counts.activeListings}
             itemsSoldCount={counts.itemsSold}
             totalReviewsCount={reviewsStats.totalReviews}

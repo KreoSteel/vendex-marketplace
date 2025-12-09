@@ -67,6 +67,9 @@
       "errors": {
          "failedToCreateAccount": "Не удалось создать аккаунт",
          "failedToLogin": "Не удалось войти",
+         "listingNotFound": "Объявление не найдено",
+         "listingAlreadySold": "Это объявление уже продано",
+         "notListingOwner": "Вы не владелец этого объявления",
          "unauthorized": "Неавторизовано",
          "nameRequired": "Имя обязательно",
          "invalidEmail": "Некорректный email",
@@ -271,7 +274,8 @@
       "photosAddOrReplace": "Фото (добавить или заменить, до 10)"
    },
    "system": {
-      "noDescriptionProvided": "Описание отсутствует"
+      "noDescriptionProvided": "Описание отсутствует",
+      "invalidPrice": "Некорректная цена"
    },
    "listings": {
       "success": {
@@ -307,7 +311,8 @@
          "failedToUpdateProfile": "Не удалось обновить профиль",
          "failedToUpdateProfileImage": "Не удалось обновить фото профиля",
          "noFileProvided": "Файл не предоставлен",
-         "fileSizeTooLarge": "Размер файла должен быть меньше 5MB"
+         "fileSizeTooLarge": "Размер файла должен быть меньше 5MB",
+         "failedToUploadImage": "Не удалось загрузить фото"
       }
    },
    "reviews": {
@@ -327,7 +332,9 @@
          "removedFromFavorites": "Удалено из избранного"
       },
       "errors": {
-         "unauthorizedAccess": "Несанкционированный доступ к избранному"
+         "unauthorizedAccess": "Несанкционированный доступ к избранному",
+         "failedToToggleFavorite": "Не удалось изменить избранное",
+         "unknownError": "Неизвестная ошибка"
       }
    }
 }

@@ -67,6 +67,9 @@
       "errors": {
          "failedToCreateAccount": "Не вдалося створити акаунт",
          "failedToLogin": "Не вдалося увійти",
+         "listingNotFound": "Оголошення не знайдено",
+         "listingAlreadySold": "Це оголошення вже продано",
+         "notListingOwner": "Ви не є власником цього оголошення",
          "unauthorized": "Не авторизовано",
          "nameRequired": "Ім’я обов’язкове",
          "invalidEmail": "Некоректний email",
@@ -272,7 +275,8 @@
       "photosAddOrReplace": "Фото (додати або замінити, до 10)"
    },
    "system": {
-      "noDescriptionProvided": "Опис відсутній"
+      "noDescriptionProvided": "Опис відсутній",
+      "invalidPrice": "Некоректна ціна"
    },
    "listings": {
       "success": {
@@ -308,7 +312,8 @@
          "failedToUpdateProfile": "Не вдалося оновити профіль",
          "failedToUpdateProfileImage": "Не вдалося оновити фото профілю",
          "noFileProvided": "Файл не надано",
-         "fileSizeTooLarge": "Розмір файлу має бути менше 5MB"
+         "fileSizeTooLarge": "Розмір файлу має бути менше 5MB",
+         "failedToUploadImage": "Не вдалося завантажити фото"
       }
    },
    "reviews": {
@@ -328,7 +333,9 @@
          "removedFromFavorites": "Видалено з обраного"
       },
       "errors": {
-         "unauthorizedAccess": "Несанкціонований доступ до обраного"
+         "unauthorizedAccess": "Несанкціонований доступ до обраного",
+         "failedToToggleFavorite": "Не вдалося змінити обране",
+         "unknownError": "Невідома помилка"
       }
    }
 }

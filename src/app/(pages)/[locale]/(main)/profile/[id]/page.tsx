@@ -7,6 +7,7 @@ import { redirect } from "@/i18n/navigation";
 import { getUserListingsCount } from "@/lib/data-access/listings";
 import { getReviewsStats } from "@/lib/data-access/reviews";
 import { getLocale } from "next-intl/server";
+import { User } from "@/utils/zod-schemas/auth";
 
 export const dynamicParams = true;
 export const revalidate = 120;
@@ -18,7 +19,10 @@ export default async function UserProfilePage({
 }) {
    const { id: userId } = await params;
    const currentUser = await getUser();
-   const userProfile = await getUserProfile(userId);
+   const userProfileResult = await getUserProfile(userId);
+   const userProfile = userProfileResult.success
+      ? userProfileResult.data
+      : null;
    const locale = await getLocale();
    if (!userProfile) {
       notFound();
@@ -26,19 +30,22 @@ export default async function UserProfilePage({
 
    if (!currentUser) {
       redirect({ href: `/auth/login`, locale: locale });
-      throw new Error("Unauthorized");
+      return null;
    }
 
    const isItOwner = currentUser.id === userId;
-   const [counts, reviewsStats] = await Promise.all([
+   const [counts, reviewsStatsResult] = await Promise.all([
       getUserListingsCount(userId),
       getReviewsStats(userId),
    ]);
 
+   const reviewsStats = reviewsStatsResult.success
+      ? reviewsStatsResult.data
+      : { averageRating: 0, totalReviews: 0 };
    return (
       <div className="flex flex-col gap-4 max-w-3/4 mx-auto py-12 px-4">
          <ProfileCard
-            user={userProfile}
+            user={userProfile as User}
             activeListingsCount={counts.activeListings}
             itemsSoldCount={counts.itemsSold}
             totalReviewsCount={reviewsStats.totalReviews}

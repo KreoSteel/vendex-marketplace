@@ -14,12 +14,11 @@ import {
 } from "../ui/select";
 import { Button } from "../ui/button";
 import { ListingCondition } from "@/utils/generated/enums";
-import { categoriesOptions } from "@/hooks/useCategories";
-import { TCategory } from "@/utils/zod-schemas/categories";
-import { redirect, useRouter } from "@/i18n/navigation";
+import { useRouter } from "@/i18n/navigation";
 import Image from "next/image";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
+import { categoriesOptions } from "@/lib/query-options/categories";
 
 export default function CreateListingForm() {
    const tForms = useTranslations("forms");
@@ -27,17 +26,15 @@ export default function CreateListingForm() {
    const tConditions = useTranslations("conditions");
    const tButtons = useTranslations("buttons");
    const router = useRouter();
-   const [state, formAction] = useActionState(createListingAction, {
-      error: "",
-   });
+   const [state, formAction] = useActionState(createListingAction, undefined);
    const [isPending, startTransition] = useTransition();
    const { data: categories } = useQuery(categoriesOptions)
 
    const [previewImages, setPreviewImages] = useState<File[]>([]);
 
    useEffect(() => {
-      if ("success" in state && state.success) {
-         router.push(`/listings/${state.success}`);
+      if (state?.success) {
+         router.push("/listings");
       }
    }, [state, router]);
 
@@ -68,7 +65,7 @@ export default function CreateListingForm() {
 
    return (
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-         {"error" in state && state.error && (
+         {state && "error" in state && state.error && (
             <p className="text-red-500 text-sm">{state.error}</p>
          )}
          <div className="grid gap-2">
@@ -155,7 +152,7 @@ export default function CreateListingForm() {
                   <SelectValue placeholder={tForms("placeholders.selectCategory")} />
                </SelectTrigger>
                <SelectContent>
-                  {categories?.map((cat: TCategory) => (
+                  {categories?.map((cat) => (
                      <SelectItem key={cat.id} value={cat.id}>
                         {cat.name}
                      </SelectItem>

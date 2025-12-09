@@ -21,9 +21,7 @@ export default function EditProfileForm({ user }: { user: User | null }) {
    const tDialogs = useTranslations("dialogs.editProfile");
    const tForms = useTranslations("forms.labels");
    const tButtons = useTranslations("buttons");
-   const [state, formAction, isPending] = useActionState(updateUserProfileAction, {
-      error: "",
-   });
+   const [state, formAction, isPending] = useActionState(updateUserProfileAction, undefined);
 
    if (!user) {
       return null;
@@ -45,11 +43,11 @@ export default function EditProfileForm({ user }: { user: User | null }) {
                </DialogDescription>
             </DialogHeader>
             <form action={formAction}>
-               {"error" in state && state.error && (
-                  <p className="text-red-500 text-sm">{state.error}</p>
+               {!state?.success && (
+                  <p className="text-red-500 text-sm">{state?.error}</p>
                )}
-               {"success" in state && state.success && (
-                  <p className="text-green-500 text-sm">{state.success}</p>
+               {state?.success && (
+                  <p className="text-green-500 text-sm">{state?.success}</p>
                )}
                <div className="flex flex-col gap-3 mt-4">
                   <div className="grid gap-2">

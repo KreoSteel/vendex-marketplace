@@ -28,11 +28,15 @@ export default async function ListingPageDetails({
       notFound();
    }
 
-   const [listingsCounts, reviewsStats] = await Promise.all([
+   const [listingsCounts, reviewsStatsResult] = await Promise.all([
       getUserListingsCount(userId),
       getReviewsStats(userId),
    ]);
 
+   const reviewsStats = reviewsStatsResult.success
+      ? reviewsStatsResult.data
+      : { averageRating: 0, totalReviews: 0 };
+      
    return (
       <ListingDetailsClientPage
          listing={listing as TListing}

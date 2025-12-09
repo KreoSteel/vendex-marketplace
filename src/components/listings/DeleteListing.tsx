@@ -27,12 +27,13 @@ export default function DeleteListing({ listingId }: { listingId: string }) {
    function handleDelete() {
       startTransition(async () => {
          const result = await deleteListingAction(listingId);
-         if ("error" in result) {
-            setError(result.error || null);
-         } else {
-            setSuccess(result.success);
-            router.push("/profile");
+         if (!result.success) {
+            setError(result.error);
+            return;
          }
+
+         setSuccess(result.data);
+         router.push("/profile");
       });
    }
    return (

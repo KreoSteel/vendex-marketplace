@@ -1,7 +1,6 @@
 "use client";
 import { Card, CardContent } from "@/components/ui/card";
 import { CalendarIcon, StarIcon, MapPinIcon, MessageCircleIcon } from "lucide-react";
-import { format } from "date-fns";
 import { Separator } from "@/components/ui/separator";
 import AvatarUpload from "./AvatarUpload";
 import EditProfileForm from "../forms/EditProfileForm";

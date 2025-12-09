@@ -2,7 +2,6 @@
 import { TListing } from "@/utils/zod-schemas/listings";
 import Image from "next/image";
 import ToggleFavorite from "@/components/favorites/ToggleFavorite";
-import { format } from "date-fns";
 import { Link } from "@/i18n/navigation";
 import DateFormatter from "../date-formatter";
 

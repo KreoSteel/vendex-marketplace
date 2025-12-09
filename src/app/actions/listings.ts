@@ -9,34 +9,38 @@ import { uploadListingImages } from "@/lib/storage/upload";
 import { requireAuth } from "@/utils/auth";
 import {
    createListingSchema,
+   TCreateListingResult,
    updateListingSchema,
 } from "@/utils/zod-schemas/listings";
 import { ListingCondition } from "@/utils/generated/enums";
 import { revalidatePath } from "next/cache";
-
-type ActionState =
-   | { error: string; success?: string }
-   | { success: string; error?: string }
-   | undefined;
+import { getTranslations } from "next-intl/server";
+import { Result } from "@/types/result";
 
 export async function createListingAction(
-   prevState: ActionState,
+   _prevState: Result<TCreateListingResult> | undefined,
    formData: FormData
-): Promise<{ error: string } | { success: string }> {
+): Promise<Result<TCreateListingResult>> {
+   const t = await getTranslations("listings.errors");
+   const tSystem = await getTranslations("system");
    const currentUser = await requireAuth();
    const files = formData.getAll("images") as File[];
 
-   const { urls, error: uploadError } = await uploadListingImages(
-      files,
-      currentUser.id
-   );
-   if (uploadError) {
-      return { error: uploadError };
+   if (!currentUser.success) {
+      return { success: false, error: currentUser.error };
    }
+
+   const uploadResult = await uploadListingImages(files, currentUser.data.id);
+   if (!uploadResult.success) {
+      return { success: false, error: uploadResult.error };
+   }
+   const urls = uploadResult.data;
 
    const data = {
       title: formData.get("title") as string,
-      description: (formData.get("description") as string) ?? "No description provided",
+      description:
+         (formData.get("description") as string) ??
+         tSystem("noDescriptionProvided"),
       price: (formData.get("price") as string)
          ? parseFloat(formData.get("price") as string)
          : 0,
@@ -47,57 +51,64 @@ export async function createListingAction(
    };
 
    if (isNaN(data.price) || data.price < 0) {
-      return { error: "Invalid price" };
+      return { success: false, error: tSystem("invalidPrice") };
    }
 
    const validatedData = createListingSchema.safeParse(data);
    if (!validatedData.success) {
-      return { error: validatedData.error.message };
+      return { success: false, error: validatedData.error.message };
    }
 
    try {
       const listing = await createListing(validatedData.data);
-      if ("error" in listing) {
-         return { error: listing.error as string };
+      if (!listing.success) {
+         return { success: false, error: listing.error };
       }
-      return { success: listing.id };
+      return { success: true, data: listing.data };
    } catch (error) {
       console.error("Create listing error:", error);
       return {
+         success: false,
          error:
-            error instanceof Error ? error.message : "Failed to create listing",
+            error instanceof Error ? error.message : t("failedToCreateListing"),
       };
    }
 }
 
 export async function updateListingAction(
-   prevState: ActionState,
+   _prevState: Result<string> | undefined,
    formData: FormData
-): Promise<{ error: string } | { success: string }> {
+): Promise<Result<string>> {
+   const t = await getTranslations("listings.errors");
+   const tSystem = await getTranslations("system");
    const currentUser = await requireAuth();
    const files = formData.getAll("images") as File[];
    const existingImages: string[] = formData
       .getAll("existingImages")
       .filter((item): item is string => typeof item === "string") as string[];
 
-   const { urls = [], error: uploadError } = await uploadListingImages(
-      files,
-      currentUser.id
-   );
-
-   if (uploadError) {
-      return { error: uploadError };
+   if (!currentUser.success) {
+      return { success: false, error: currentUser.error };
    }
+
+   const uploadResult = await uploadListingImages(files, currentUser.data.id);
+
+   if (!uploadResult.success) {
+      return { success: false, error: uploadResult.error };
+   }
+
+   const urls = uploadResult.data;
 
    const listingId = formData.get("id") as string;
    if (!listingId) {
-      return { error: "Listing ID is required" };
+      return { success: false, error: t("listingIdRequired") };
    }
 
    const data = {
       title: formData.get("title") as string,
       description:
-         (formData.get("description") as string) ?? "No description provided",
+         (formData.get("description") as string) ??
+         tSystem("noDescriptionProvided"),
       price: formData.get("price")
          ? parseFloat(formData.get("price") as string)
          : 0,
@@ -109,68 +120,78 @@ export async function updateListingAction(
    const validatedData = updateListingSchema.safeParse(data);
 
    if (!validatedData.success) {
-      return { error: validatedData.error.message };
+      return { success: false, error: validatedData.error.message };
    }
 
    try {
       const editedListing = await updateListing(listingId, validatedData.data);
       if ("error" in editedListing) {
-         return { error: editedListing.error as string };
+         return { success: false, error: editedListing.error as string };
       }
 
       revalidatePath(`/listings/${listingId}`);
-      return { success: "Listing edited successfully" };
+      return { success: true, data: t("listingEditedSuccessfully") };
    } catch (error) {
       console.error("Update listing error:", error);
       return {
+         success: false,
          error:
-            error instanceof Error ? error.message : "Failed to update listing",
+            error instanceof Error ? error.message : t("failedToUpdateListing"),
       };
    }
 }
 
-export async function deleteListingAction(listingId: string) {
+export async function deleteListingAction(
+   listingId: string
+): Promise<Result<string>> {
+   const t = await getTranslations("listings.errors");
    try {
       const deletedListing = await deleteListing(listingId);
 
       if ("error" in deletedListing) {
-         return { error: deletedListing.error as string };
+         return { success: false, error: deletedListing.error as string };
       }
 
       revalidatePath("/profile");
       revalidatePath("/listings");
       revalidatePath(`/listings/${listingId}`);
 
-      return { success: "Listing deleted successfully" };
+      return { success: true, data: t("listingDeletedSuccessfully") };
    } catch (error) {
       console.error("Delete listing error:", error);
       return {
+         success: false,
          error:
-            error instanceof Error ? error.message : "Failed to delete listing",
+            error instanceof Error ? error.message : t("failedToDeleteListing"),
       };
    }
 }
 
-export async function markListingAsSoldAction(listingId: string) {
+export async function markListingAsSoldAction(
+   listingId: string
+): Promise<Result<{ id: string; message: string }>> {
+   const t = await getTranslations("listings.errors");
    try {
       const markedListing = await markListingAsSold(listingId);
-      if ("error" in markedListing) {
-         return { error: markedListing.error as string };
+      if (!markedListing.success) {
+         return { success: false, error: markedListing.error };
       }
 
       revalidatePath("/profile");
       revalidatePath(`/listings/${listingId}`);
       return {
-         success: "Listing marked as sold successfully",
-         id: markedListing.id,
+         success: true,
+         data: {
+            id: markedListing.data,
+            message: t("listingMarkedAsSoldSuccessfully"),
+         },
       };
    } catch (error) {
       console.error("Mark listing as sold error:", error);
       return {
+         success: false,
          error:
-            error instanceof Error
-               ? error.message
-               : "Failed to mark listing as sold",
+            error instanceof Error ? error.message : t("failedToMarkAsSold"),
       };
    }
 }

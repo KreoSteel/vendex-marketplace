@@ -67,6 +67,9 @@
       "errors": {
          "failedToCreateAccount": "Failed to create account",
          "failedToLogin": "Failed to login",
+         "listingNotFound": "Listing not found",
+         "listingAlreadySold": "This listing has already been sold",
+         "notListingOwner": "You are not the owner of this listing",
          "unauthorized": "Unauthorized",
          "nameRequired": "Name is required",
          "invalidEmail": "Invalid email address",
@@ -132,7 +135,10 @@
       "viewProfile": "View Profile"
    },
    "chatPage": { "viewProfile": "View Profile", "unknownUser": "Unknown User" },
-   "messagesPage": { "yourMessages": "Your Messages", "selectConversation": "Select a conversation from the sidebar to start chatting" },
+   "messagesPage": {
+      "yourMessages": "Your Messages",
+      "selectConversation": "Select a conversation from the sidebar to start chatting"
+   },
    "createListingPage": {
       "title": "Create a new listing",
       "description": "Create a new listing to sell your products",
@@ -257,7 +263,10 @@
       "photosLabel": "Photos (up to 10)",
       "photosAddOrReplace": "Photos (add or replace, up to 10)"
    },
-   "system": { "noDescriptionProvided": "No description provided" },
+   "system": {
+      "noDescriptionProvided": "No description provided",
+      "invalidPrice": "Invalid price"
+   },
    "listings": {
       "success": {
          "listingEditedSuccessfully": "Listing edited successfully",
@@ -292,7 +301,8 @@
          "failedToUpdateProfile": "Failed to update profile",
          "failedToUpdateProfileImage": "Failed to update profile image",
          "noFileProvided": "No file provided",
-         "fileSizeTooLarge": "File size must be less than 5MB"
+         "fileSizeTooLarge": "File size must be less than 5MB",
+         "failedToUploadImage": "Failed to upload image"
       }
    },
    "reviews": {
@@ -309,6 +319,10 @@
          "addedToFavorites": "Added to favorites",
          "removedFromFavorites": "Removed from favorites"
       },
-      "errors": { "unauthorizedAccess": "Unauthorized access to favorites" }
+      "errors": {
+         "unauthorizedAccess": "Unauthorized access to favorites",
+         "failedToToggleFavorite": "Failed to toggle favorite",
+         "unknownError": "Unknown error"
+      }
    }
 }

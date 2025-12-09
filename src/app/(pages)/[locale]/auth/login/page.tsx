@@ -17,9 +17,7 @@ import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 
 export default function RegisterPage() {
-   const [state, formAction, isPending] = useActionState(signInAction, {
-      error: "",
-   });
+   const [state, formAction, isPending] = useActionState(signInAction, { success: true, data: undefined });
    const t = useTranslations("auth.login");
 
    return (
@@ -37,8 +35,8 @@ export default function RegisterPage() {
          </CardHeader>
          <form action={formAction}>
             <CardContent>
-               {state?.error && (
-                  <p className="text-red-500 text-sm">{state?.error}</p>
+               {state.success === false && (
+                  <p className="text-red-500 text-sm">{state.error}</p>
                )}
                <div className="flex flex-col gap-6">
                   <div className="grid gap-2">

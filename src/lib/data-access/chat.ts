@@ -3,15 +3,20 @@ import { requireAuth } from "@/utils/auth";
 import prisma from "@/utils/prisma";
 import { revalidatePath } from "next/cache";
 import { TConversation, conversationRowSchema } from "@/utils/zod-schemas/chat";
+import { Result } from "@/types/result";
+import { Message } from "@/utils/generated/client";
 
-export async function getChatWithUser(otherUserId: string) {
+export async function getChatWithUser(otherUserId: string): Promise<Result<Message[]>> {
    const currentUser = await requireAuth();
+   if (!currentUser.success) {
+      return { success: false, error: currentUser.error };
+   }
 
-   return await prisma.message.findMany({
+   const messages = await prisma.message.findMany({
       where: {
          OR: [
-            { senderId: currentUser.id, receiverId: otherUserId },
-            { senderId: otherUserId, receiverId: currentUser.id },
+            { senderId: currentUser.data.id, receiverId: otherUserId },
+            { senderId: otherUserId, receiverId: currentUser.data.id },
          ],
       },
       orderBy: {
@@ -27,29 +32,34 @@ export async function getChatWithUser(otherUserId: string) {
          },
       },
    });
+
+   return { success: true, data: messages };
 }
 
 export async function getConversationsWithUsers(): Promise<TConversation[]> {
    const currentUser = await requireAuth();
-
+   if (!currentUser.success) {
+      return [];
+   }
+   
    const rawConversations = await prisma.$queryRaw<TConversation[]>`
       WITH ranked_messages AS (
          SELECT 
             m.*,
             CASE 
-               WHEN m."senderId" = ${currentUser.id} THEN m."receiverId"
+               WHEN m."senderId" = ${currentUser.data.id} THEN m."receiverId"
                ELSE m."senderId"
             END as other_user_id,
             ROW_NUMBER() OVER (
                PARTITION BY 
                   CASE 
-                     WHEN m."senderId" = ${currentUser.id} THEN m."receiverId"
+                     WHEN m."senderId" = ${currentUser.data.id} THEN m."receiverId"
                      ELSE m."senderId"
                   END
                ORDER BY m."createdAt" DESC
             ) as rn
          FROM messages m
-         WHERE m."senderId" = ${currentUser.id} OR m."receiverId" = ${currentUser.id}
+         WHERE m."senderId" = ${currentUser.data.id} OR m."receiverId" = ${currentUser.data.id}
       )
       SELECT 
          rm.*,
@@ -73,18 +83,21 @@ export async function getConversationsWithUsers(): Promise<TConversation[]> {
          },
          lastMessage: validated.content,
          lastMessageAt: validated.createdAt,
-         read: !(validated.receiverId === currentUser.id && !validated.read),
+         read: !(validated.receiverId === currentUser.data.id && !validated.read),
       };
    });
 }
 
 export async function changeMessageReadStatus(otherUserId: string) {
    const currentUser = await requireAuth();
-
+   if (!currentUser.success) {
+      return { success: false, error: currentUser.error };
+   }
+   
    await prisma.message.updateMany({
       where: {
          senderId: otherUserId,
-         receiverId: currentUser.id,
+         receiverId: currentUser.data.id,
          read: false,
       },
       data: {
@@ -102,12 +115,15 @@ export async function createMessage(
    receiverId: string,
    content: string,
    listingId?: string | null
-) {
+): Promise<Result<Message>> {
    const currentUser = await requireAuth();
-
+   if (!currentUser.success) {
+      return { success: false, error: currentUser.error };
+   }
+   
    const message = await prisma.message.create({
       data: {
-         senderId: currentUser.id,
+         senderId: currentUser.data.id,
          receiverId,
          content,
          listingId,
@@ -116,5 +132,5 @@ export async function createMessage(
    revalidatePath("/messages");
    revalidatePath(`/messages/${receiverId}`);
 
-   return message;
+   return { success: true, data: message };
 }

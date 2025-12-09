@@ -5,11 +5,15 @@ import { auth } from "@/utils/auth";
 import { signInSchema, signUpSchema } from "@/utils/zod-schemas/auth";
 import { headers } from "next/headers";
 import { ZodError } from "zod";
+import { getTranslations } from "next-intl/server";
+import { Result } from "@/types/result";
 
 export async function signUpAction(
-   prevState: { error: string } | undefined,
+   _prevState: Result<void> | undefined,
    formData: FormData
-) {
+): Promise<Result<void>> {
+   const t = await getTranslations("auth.errors");
+
    const parsed = signUpSchema.safeParse({
       name: formData.get("name") as string,
       email: formData.get("email") as string,
@@ -17,7 +21,7 @@ export async function signUpAction(
    });
 
    if (!parsed.success) {
-      return { error: parsed.error.message };
+      return { success: false, error: parsed.error.message };
    }
 
    try {
@@ -28,23 +32,29 @@ export async function signUpAction(
             password: parsed.data.password,
          },
       });
-   } catch {
-      return { error: "Failed to create account" };
+   } catch (error) {
+      if (error instanceof ZodError) {
+         return { success: false, error: error.message };
+      }
+      return { success: false, error: t("failedToCreateAccount") };
    }
    redirect({ href: "/", locale: "en" });
+   return { success: true, data: undefined };
 }
 
 export async function signInAction(
-   prevState: { error: string } | undefined,
+   _prevState: Result<void> | undefined,
    formData: FormData
-) {
+): Promise<Result<void>> {
+   const t = await getTranslations("auth.errors");
+
    const parsed = signInSchema.safeParse({
       email: formData.get("email") as string,
       password: formData.get("password") as string,
    });
 
    if (!parsed.success) {
-      return { error: parsed.error.message };
+      return { success: false, error: parsed.error.message };
    }
 
    try {
@@ -56,11 +66,12 @@ export async function signInAction(
       });
    } catch (error) {
       if (error instanceof ZodError) {
-         return { error: error.message };
+         return { success: false, error: error.message };
       }
-      return { error: "Failed to login" };
+      return { success: false, error: t("failedToLogin") };
    }
    redirect({ href: "/", locale: "en" });
+   return { success: true, data: undefined };
 }
 
 export async function signOutAction() {

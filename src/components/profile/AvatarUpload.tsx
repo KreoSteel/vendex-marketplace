@@ -24,11 +24,12 @@ export default function AvatarUpload({ currentAvatarUrl }: AvatarUploadProps) {
          const formData = new FormData();
          formData.append("avatarImg", file);
 
-         const result = await updateUserProfileImageAction(formData);
-         if ("success" in result) {
+         const result = await updateUserProfileImageAction(undefined, formData);
+         if (result.success) {
             router.refresh();
-         } else if ("error" in result) {
+         } else {
             setError(result.error);
+            return;
          }
 
          if (fileInputRef.current) {

@@ -5,6 +5,8 @@ import { nextCookies } from "better-auth/next-js";
 import { NextRequest } from "next/server";
 import { headers } from "next/headers";
 import { redirect } from "@/i18n/navigation";
+import { Result } from "@/types/result";
+import { User } from "./zod-schemas/auth";
 
 export const auth = betterAuth({
    database: prismaAdapter(prisma, {
@@ -16,20 +18,18 @@ export const auth = betterAuth({
    plugins: [nextCookies()],
 });
 
-export async function requireAuth(options?: { redirect?: boolean }) {
+export async function requireAuth(options?: { redirect?: boolean }): Promise<Result<User>> {
    const user = await getUser();
-
    if (!user) {
       if (options?.redirect !== false) {
          redirect({ href: "/auth/login", locale: "en" });
       }
-      throw new Error("Unauthorized");
+      return { success: false, error: "Unauthorized" };
    }
-
-   return user;
+   return { success: true, data: user} ;
 }
 
-export async function getUser(req?: NextRequest) {
+export async function getUser(req?: NextRequest): Promise<User | null> {
    try {
       const session = await auth.api.getSession({
          headers: req ? req.headers : await headers(),
@@ -39,7 +39,7 @@ export async function getUser(req?: NextRequest) {
          return null;
       }
 
-      return await prisma.user.findUnique({
+      return prisma.user.findUnique({
          where: {
             id: session.user.id,
          },
@@ -55,7 +55,7 @@ export async function getUser(req?: NextRequest) {
             emailVerified: true,
             phone: true,
          },
-      });
+      }) as Promise<User>;
    } catch (error) {
       console.error(error);
       return null;

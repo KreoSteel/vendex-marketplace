@@ -13,10 +13,15 @@ export default async function ChatPage({
 }) {
    const { userId } = await params;
 
-   const [currentUser, otherUser] = await Promise.all([
+   const [currentUserResult, otherUserResult] = await Promise.all([
       getUserProfile(),
       getUserProfile(userId),
    ]);
+
+   const currentUser = currentUserResult.success
+      ? currentUserResult.data
+      : null;
+   const otherUser = otherUserResult.success ? otherUserResult.data : null;
 
    if (!otherUser) {
       notFound();
@@ -34,8 +39,8 @@ export default async function ChatPage({
          <div className="flex-1 min-h-0">
             <Chat
                userId={userId}
-               username={currentUser?.name ?? undefined}
-               currentUserId={currentUser?.id ?? ""}
+               username={currentUser?.name || undefined}
+               currentUserId={currentUser?.id || ""}
             />
          </div>
       </div>

@@ -23,10 +23,10 @@ export default function ActiveListingsTab({ userId }: ActiveListingsTabProps) {
             <div>{tCommon("error")}: {error.message}</div>
          ) : (
             (listings && listings.length > 0) ? (
-                listings.map((listing: TListing, index: number) => (
+                listings.map((listing, index: number) => (
                     <ListingCard 
                         key={listing.id} 
-                        listing={listing} 
+                        listing={listing as TListing} 
                         preload={index < 4}
                     />
                 ))

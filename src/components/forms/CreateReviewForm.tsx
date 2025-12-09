@@ -25,7 +25,7 @@ export default function CreateReviewForm({
    revieweeId,
 }: CreateReviewFormProps) {
    const [isPending, startTransition] = useTransition();
-   const [state, formAction] = useActionState(createReviewAction, null);
+   const [state, formAction] = useActionState(createReviewAction, undefined);
    const tButtons = useTranslations("buttons");
    const tDialogs = useTranslations("dialogs.createReview");
    const tForms = useTranslations("forms");

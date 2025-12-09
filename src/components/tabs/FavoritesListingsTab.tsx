@@ -2,7 +2,7 @@
 import ListingCard from "@/components/cards/ListingCard";
 import { userFavoriteListingsOptions } from "@/lib/query-options/favorites";
 import { useQuery } from "@tanstack/react-query";
-import { TListing, TListingsCard } from "@/utils/zod-schemas/listings";
+import { TListing } from "@/utils/zod-schemas/listings";
 import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -23,8 +23,8 @@ export default function FavoritesListingsTab({ userId }: FavoritesListingsTabPro
         ) : error ? (
            <div>{tCommon("error")}: {error.message}</div>
         ) : (
-            (listings && listings.length > 0) ? (
-                listings.map((listing: TListingsCard, index: number) => (
+            (listings?.success && listings.data?.length > 0) ? (
+                listings.data.map((listing, index: number) => (
                     <ListingCard 
                         key={listing.id} 
                         listing={listing as TListing} 

@@ -25,18 +25,23 @@ export default function ListingsPageClient({
 }: {
    searchParams: AllListingsParams;
 }) {
+   const router = useRouter();
    const tPagination = useTranslations("searchListingsPage.pagination");
    const tCommon = useTranslations("common");
    const tSearchListingsPage = useTranslations("searchListingsPage");
    const { data: session } = authClient.useSession();
+   const { data, isLoading, error } = useQuery(allListingsOptions(searchParams));
    const { data: favorites } = useQuery({
       ...userFavoriteListingsOptions(session?.user?.id ?? ""),
       enabled: !!session?.user?.id,
    });
-   const favoriteIds = new Set(favorites?.map(f => f.id) ?? []);
+   if (!favorites?.success) {
+      return <div className="text-center py-12 text-red-500">
+         {tCommon("error")}: {favorites?.error}
+      </div>
+   }
+   const favoriteIds = new Set(favorites.data ?? []);
 
-   const { data, isLoading, error } = useQuery(allListingsOptions(searchParams));
-   const router = useRouter();
 
    const handlePageChange = (page: number) => {
       const params = new URLSearchParams(searchParams.toString());
@@ -57,7 +62,7 @@ export default function ListingsPageClient({
                   <div className="text-sm text-gray-500">
                      {isLoading
                         ? tCommon("loading")
-                        : `${tSearchListingsPage("results")} ${data?.totalCount ?? 0}`}
+                        : `${tSearchListingsPage("results")} ${data?.totalItems ?? 0}`}
                   </div>
                </div>
 
@@ -81,7 +86,7 @@ export default function ListingsPageClient({
                            key={listing.id}
                            listing={listing as TListing}
                            preload={index < 4}
-                           isFavorite={favoriteIds.has(listing.id)}
+                           isFavorite={favoriteIds.has(listing as TListing)}
                         />
                      ))}
                   </div>

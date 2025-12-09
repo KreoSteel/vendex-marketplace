@@ -23,14 +23,13 @@ import {
    SelectItem,
    SelectValue,
 } from "../ui/select";
-import { TUpdateListing } from "@/utils/zod-schemas/listings";
 import Image from "next/image";
 import { TCategory } from "@/utils/zod-schemas/categories";
-import { categoriesOptions } from "@/hooks/useCategories";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
+import { categoriesOptions } from "@/lib/query-options/categories";
 
-export type TEditListing = TUpdateListing & {
+export type TEditListing = {
    id: string;
    title: string;
    description: string | null;
@@ -38,7 +37,8 @@ export type TEditListing = TUpdateListing & {
    location: string | null;
    condition: ListingCondition;
    category: TCategory | null;
-};
+   images?: (string | { url: string })[];
+ };
 
 export const conditions = {
    [ListingCondition.NEW]: "New - Brand new, never used",
@@ -58,10 +58,7 @@ export default function EditListingForm({
    const tConditions = useTranslations("conditions");
    const tMedia = useTranslations("media");
    const tButtons = useTranslations("buttons");
-   const [state, formAction] = useActionState(updateListingAction, {
-      error: "",
-      success: "",
-   });
+   const [state, formAction] = useActionState(updateListingAction, undefined);
    const { data: categories } = useQuery(categoriesOptions);
    const [isPending, startTransition] = useTransition();
    
@@ -79,7 +76,7 @@ export default function EditListingForm({
    const [open, setOpen] = useState(false);
 
    useEffect(() => {
-      if (state && "success" in state && state.success) {
+      if (state?.success) {
          // eslint-disable-next-line react-hooks/set-state-in-effect
          setOpen(false);
          setNewImages([]);
@@ -144,8 +141,8 @@ export default function EditListingForm({
             <form onSubmit={handleSubmit} className="flex flex-col gap-5 mt-2">
                <input type="hidden" name="id" value={listing.id} />
 
-               {"error" in state && state.error && (
-                  <p className="text-red-500 text-sm">{state.error}</p>
+               {!state?.success && (
+                  <p className="text-red-500 text-sm">{state?.error}</p>
                )}
 
                <div className="space-y-2">
@@ -277,7 +274,7 @@ export default function EditListingForm({
                            <SelectValue placeholder={tForms("placeholders.selectCondition")} />
                         </SelectTrigger>
                         <SelectContent>
-                           {Object.entries(conditions).map(([key, value]) => (
+                           {Object.entries(conditions).map(([key]) => (
                               <SelectItem key={key} value={key as ListingCondition}>
                                  {tConditions("descriptions." + key)}
                               </SelectItem>
@@ -294,7 +291,7 @@ export default function EditListingForm({
                            <SelectValue placeholder="Select a category" />
                         </SelectTrigger>
                         <SelectContent>
-                           {categories?.map((cat: TCategory) => (
+                           {categories?.map((cat) => (
                               <SelectItem key={cat.id} value={cat.id}>
                                  {cat.name}
                               </SelectItem>

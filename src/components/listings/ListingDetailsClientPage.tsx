@@ -186,7 +186,7 @@ export default function ListingDetailsClientPage({
                               <>
                                  <EditListingForm
                                     key={listing.updatedAt.toString()}
-                                    listing={listing as unknown as TEditListing}
+                                    listing={listing as TEditListing}
                                  />
                                  <DeleteListing listingId={listing.id} />
                                  {listing.status !== "SOLD" && (

@@ -2,7 +2,6 @@
 import ListingCard from "@/components/cards/ListingCard";
 import { userSoldListingsOptions } from "@/lib/query-options/listings";
 import { useQuery } from "@tanstack/react-query";
-import { TListing } from "@/utils/zod-schemas/listings";
 import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -23,8 +22,8 @@ export default function SoldItemsTab({ userId }: SoldItemsTabProps) {
         ) : error ? (
            <div>{tCommon("error")}: {error.message}</div>
         ) : (
-            (listings && listings.length > 0) ? (
-                listings.map((listing: TListing, index: number) => (
+            (listings?.success && listings.data?.length > 0) ? (
+                listings.data.map((listing, index: number) => (
                     <ListingCard 
                         key={listing.id} 
                         listing={listing} 

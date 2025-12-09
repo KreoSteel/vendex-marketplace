@@ -14,10 +14,10 @@ export default function MarkAsSold({ listingId }: { listingId: string }) {
    function handleMarkAsSold() {
       startTransition(async () => {
          const result = await markListingAsSoldAction(listingId);
-         if ("error" in result) {
-            setError(result.error || null);
+         if (!result.success) {
+            setError(result.error);
          } else {
-            setSuccess(result.success);
+            setSuccess(result.data?.message);
          }
       });
    }

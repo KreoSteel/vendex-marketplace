@@ -67,6 +67,9 @@
       "errors": {
          "failedToCreateAccount": "Impossibile creare l'account",
          "failedToLogin": "Impossibile accedere",
+         "listingNotFound": "Annuncio non trovato",
+         "listingAlreadySold": "Questo annuncio è già stato venduto",
+         "notListingOwner": "Non sei il proprietario di questo annuncio",
          "unauthorized": "Non autorizzato",
          "nameRequired": "Il nome è obbligatorio",
          "invalidEmail": "Email non valida",
@@ -271,7 +274,8 @@
       "photosAddOrReplace": "Foto (aggiungi o sostituisci, fino a 10)"
    },
    "system": {
-      "noDescriptionProvided": "Nessuna descrizione fornita"
+      "noDescriptionProvided": "Nessuna descrizione fornita",
+      "invalidPrice": "Prezzo non valido"
    },
    "listings": {
       "success": {
@@ -307,7 +311,8 @@
          "failedToUpdateProfile": "Impossibile aggiornare il profilo",
          "failedToUpdateProfileImage": "Impossibile aggiornare l'immagine del profilo",
          "noFileProvided": "Nessun file fornito",
-         "fileSizeTooLarge": "La dimensione del file deve essere inferiore a 5MB"
+         "fileSizeTooLarge": "La dimensione del file deve essere inferiore a 5MB",
+         "failedToUploadImage": "Impossibile caricare l'immagine"
       }
    },
    "reviews": {
@@ -327,7 +332,9 @@
          "removedFromFavorites": "Rimosso dai preferiti"
       },
       "errors": {
-         "unauthorizedAccess": "Accesso non autorizzato ai preferiti"
+         "unauthorizedAccess": "Accesso non autorizzato ai preferiti",
+         "failedToToggleFavorite": "Impossibile aggiornare il preferito",
+         "unknownError": "Errore sconosciuto"
       }
    }
 }

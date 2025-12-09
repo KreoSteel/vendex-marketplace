@@ -3,16 +3,14 @@ import { createReview } from "@/lib/data-access/reviews";
 import { requireAuth } from "@/utils/auth";
 import { createReviewSchema } from "@/utils/zod-schemas/reviews";
 import { revalidatePath } from "next/cache";
-
-type ActionState =
-   | { error: string; success?: string }
-   | { success: string; error?: string }
-   | null;
+import { getTranslations } from "next-intl/server";
+import { Result } from "@/types/result";
 
 export async function createReviewAction(
-   prevState: ActionState,
+   _prevState: Result<string> | undefined,
    formData: FormData
-) {
+): Promise<Result<string>> {
+   const tReviews = await getTranslations("reviews");
    await requireAuth();
 
    const data = {
@@ -24,13 +22,13 @@ export async function createReviewAction(
 
    const validatedData = createReviewSchema.safeParse(data);
    if (!validatedData.success) {
-      return { error: validatedData.error.message };
+      return { success: false, error: validatedData.error.message };
    }
 
    try {
       const result = await createReview(validatedData.data);
-      if (result.error) {
-         return { error: result.error };
+      if (!result.success) {
+         return { success: false, error: result.error };
       }
 
       revalidatePath(`/profile/${validatedData.data.revieweeId}`);
@@ -38,9 +36,9 @@ export async function createReviewAction(
          revalidatePath(`/listings/${validatedData.data.listingId}`);
       }
 
-      return { success: "Review created successfully" };
+      return { success: true, data: tReviews("reviewCreatedSuccessfully") };
    } catch (error) {
-      console.error("Create review error:", error);
-      return { error: "Failed to create review" };
+      console.error(tReviews("failedToCreateReview"), error);
+      return { success: false, error: tReviews("failedToCreateReview") };
    }
 }

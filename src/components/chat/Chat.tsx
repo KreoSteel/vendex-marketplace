@@ -5,9 +5,8 @@ import { useMemo, useCallback } from "react";
 import { ChatMessage } from "@/hooks/use-realtime-chat";
 import { useTranslations } from "next-intl";
 import { chatWithUserOptions } from "@/lib/query-options/messages";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { sendMessageOptions } from "@/lib/mutation-options/messages";
-import { useQuery } from "@tanstack/react-query";
 
 interface ChatProps {
    userId: string;
@@ -27,20 +26,27 @@ export default function Chat({ userId, username, currentUserId }: ChatProps) {
             content: message,
             listingId: null,
          });
+         if (!createdMessage.success) {
+            return undefined;
+         }
          return {
-            id: createdMessage.id,
-            content: createdMessage.content,
+            id: createdMessage.data.id,
+            content: createdMessage.data.content,
             user: {
                name: username ?? tChatPage("unknownUser"),
             },
-            createdAt: createdMessage.createdAt.toISOString(),
-         };
+            createdAt: createdMessage.data.createdAt.toISOString(),
+         } as ChatMessage;
       },
-      [userId, sendMessage, username]
+      [userId, sendMessage, username, tChatPage]
    );
 
    const formattedMessages = useMemo<ChatMessage[] | undefined>(() => {
       if (!chat) return undefined;
+      // If query returned an error Result shape
+      if (!Array.isArray(chat)) {
+         return chat.success === false ? [] : undefined;
+      }
 
       return chat.map((message) => ({
          id: message.id,
@@ -50,7 +56,7 @@ export default function Chat({ userId, username, currentUserId }: ChatProps) {
          },
          createdAt: message.createdAt.toISOString(),
       }));
-   }, [chat]);
+   }, [chat, tChatPage]);
 
    const roomName = useMemo(
       () => `chat-${[currentUserId, userId].sort().join("-")}`,

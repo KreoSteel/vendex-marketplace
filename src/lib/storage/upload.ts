@@ -1,13 +1,14 @@
 import { createClient } from "@supabase/supabase-js";
 import { serverEnv } from "@/utils/zod-schemas/env/server";
 import { clientEnv } from "@/utils/zod-schemas/env/client";
+import { Result } from "@/types/result";
 
 const supabaseAdmin = createClient(
    clientEnv.NEXT_PUBLIC_SUPABASE_URL,
    serverEnv.SUPABASE_SERVICE_ROLE_KEY
 );
 
-export async function uploadListingImages(files: File[], userId: string) {
+export async function uploadListingImages(files: File[], userId: string): Promise<Result<string[]>> {
    const MAX_FILE_SIZE = 5 * 1024 * 1024;
    const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/webp"];
    const urls: string[] = [];
@@ -16,11 +17,11 @@ export async function uploadListingImages(files: File[], userId: string) {
       const file = files[i];
 
       if (file.size > MAX_FILE_SIZE) {
-         return { error: "File size must be less than 5MB" };
+         return { success: false, error: "File size must be less than 5MB" };
       }
 
       if (!ALLOWED_FILE_TYPES.includes(file.type)) {
-         return { error: "File type not allowed" };
+         return { success: false, error: "File type not allowed" };
       }
 
       const fileName = `${userId}-${file.name}-${Date.now()}-${i}`;
@@ -30,7 +31,7 @@ export async function uploadListingImages(files: File[], userId: string) {
          .upload(fileName, file);
 
       if (error) {
-         return { error: error.message };
+         return { success: false, error: error.message };
       }
       const { data: urlData } = supabaseAdmin.storage
          .from("listing_images")
@@ -39,19 +40,19 @@ export async function uploadListingImages(files: File[], userId: string) {
       urls.push(urlData.publicUrl);
    }
 
-   return { urls };
+   return { success: true, data: urls };
 }
 
-export async function uploadProfileImage(file: File, userId: string) {
+export async function uploadProfileImage(file: File, userId: string): Promise<Result<string>> {
    const MAX_FILE_SIZE = 5 * 1024 * 1024;
    const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
    if (file.size > MAX_FILE_SIZE) {
-      return { error: "File size must be less than 5MB" };
+      return { success: false, error: "File size must be less than 5MB" };
    }
 
    if (!ALLOWED_FILE_TYPES.includes(file.type)) {
-      return { error: "File type not allowed" };
+      return { success: false, error: "File type not allowed" };
    }
 
    const fileName = `${userId}-${file.name}-${Date.now()}`;
@@ -61,7 +62,7 @@ export async function uploadProfileImage(file: File, userId: string) {
       .upload(fileName, file);
 
    if (error) {
-      return { error: error.message };
+      return { success: false, error: error.message };
    }
    const { data: urlData } = supabaseAdmin.storage
       .from("users_avatars")
@@ -73,5 +74,5 @@ export async function uploadProfileImage(file: File, userId: string) {
          },
       });
 
-   return { url: urlData.publicUrl };
+   return { success: true, data: urlData.publicUrl };
 }

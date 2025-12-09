@@ -3,12 +3,15 @@ import prisma from "@/utils/prisma";
 import { Prisma } from "@/utils/generated/client";
 import {
    TCreateListing,
+   TCreateListingResult,
    TListing,
    TUpdateListing,
 } from "@/utils/zod-schemas/listings";
 import { requireAuth } from "@/utils/auth";
 import { ListingCondition, ListingStatus } from "@/utils/generated/enums";
 import { getTranslations } from "next-intl/server";
+import { TPaginationListings } from "@/utils/zod-schemas/listings";
+import { Result } from "@/types/result";
 
 export type AllListingsParams = {
    currentPage?: string | number;
@@ -40,12 +43,41 @@ export async function getAllListings({
    maxPrice,
    sortBy = "createdAt",
    sortOrder = "desc",
-}: AllListingsParams = {}) {
+}: AllListingsParams = {}): Promise<TPaginationListings> {
    const page =
       typeof currentPage === "string" ? parseInt(currentPage, 10) : currentPage;
    const items =
-      typeof itemsPerPage === "string" ? parseInt(itemsPerPage, 10) : itemsPerPage;
+      typeof itemsPerPage === "string"
+         ? parseInt(itemsPerPage, 10)
+         : itemsPerPage;
    const skip = ((page as number) - 1) * (items as number);
+
+   const MAX_ARRAY_LENGTH = 50;
+   if (categorySlugs && categorySlugs.length > MAX_ARRAY_LENGTH) {
+      throw new Error("Category slugs array is too long");
+   }
+
+   if (categorySlugs) {
+      categorySlugs.forEach((slug) => {
+         if (!/^[a-z0-9-]+$/.test(slug)) {
+            throw new Error("Invalid category slug");
+         }
+      });
+   }
+
+   if (conditions && conditions.length > MAX_ARRAY_LENGTH) {
+      throw new Error("Conditions array is too long");
+   }
+
+   if (conditions) {
+      conditions.forEach((condition) => {
+         if (!Object.values(ListingCondition).includes(condition)) {
+            throw new Error("Invalid condition");
+         }
+      });
+   }
+
+   const sanitizedSearch = search ? search.trim().slice(0, 100) : null;
 
    const where: Prisma.ListingWhereInput = {
       status: ListingStatus.ACTIVE,
@@ -59,10 +91,20 @@ export async function getAllListings({
          minPrice !== undefined && { price: { gte: minPrice } }),
       ...(maxPrice !== null &&
          maxPrice !== undefined && { price: { lte: maxPrice } }),
-      ...(search && {
+      ...(sanitizedSearch && {
          OR: [
-            { title: { contains: search, mode: "insensitive" as const } },
-            { description: { contains: search, mode: "insensitive" as const } },
+            {
+               title: {
+                  contains: sanitizedSearch,
+                  mode: "insensitive" as const,
+               },
+            },
+            {
+               description: {
+                  contains: sanitizedSearch,
+                  mode: "insensitive" as const,
+               },
+            },
          ],
       }),
       ...(condition && { condition }),
@@ -99,11 +141,11 @@ export async function getAllListings({
    ]);
 
    return {
-      listings,
-      totalCount,
+      listings: listings as TListing[],
       currentPage: page as number,
       itemsPerPage: items as number,
       totalPages: Math.ceil(totalCount / (items as number)),
+      totalItems: totalCount,
    };
 }
 
@@ -276,16 +318,13 @@ export async function getUserActiveListings(userId: string) {
    });
 }
 
-export async function getUserSoldListings(userId: string): Promise<TListing[]> {
+export async function getUserSoldListings(
+   userId: string
+): Promise<Result<TListing[]>> {
    const result = await prisma.listing.findMany({
       where: {
          userId,
-         OR: [
-            {
-               status: "SOLD",
-               sold: true,
-            },
-         ],
+         status: "SOLD",
       },
       orderBy: {
          createdAt: "desc",
@@ -310,55 +349,71 @@ export async function getUserSoldListings(userId: string): Promise<TListing[]> {
       },
    });
 
-   return result as unknown as TListing[];
+   return { success: true, data: result as TListing[] };
 }
 
-export async function markListingAsSold(id: string) {
+export async function markListingAsSold(id: string): Promise<Result<string>> {
    const tListings = await getTranslations("listings");
    const currentUser = await requireAuth();
-   
-   const existingListing = await prisma.listing.findUnique({
-      where: {
-         id: id,
-      },
-      select: {
-         userId: true,
-         status: true,
-      },
-   });
 
-   if (!existingListing) {
-      return { error: tListings("errors.listingNotFound") };
+   if (!currentUser.success) {
+      return { success: false, error: currentUser.error };
    }
 
-   if (existingListing.status === "SOLD") {
-      return { error: tListings("errors.listingAlreadySold") };
-   }
+   return await prisma.$transaction(async (tx) => {
+      const existingListing = await tx.listing.findUnique({
+         where: {
+            id: id,
+         },
+         select: {
+            userId: true,
+            status: true,
+         },
+      });
 
-   if (existingListing.userId !== currentUser.id) {
-      return { error: tListings("errors.notListingOwner") };
-   }
-
-   return await prisma.listing.update({
-      where: {
-         id,
-      },
-      data: {
-         status: "SOLD",
-         sold: true,
+      if (!existingListing) {
+         return { success: false, error: tListings("errors.listingNotFound") };
       }
-   });
 
+      if (existingListing.status === "SOLD") {
+         return {
+            success: false,
+            error: tListings("errors.listingAlreadySold"),
+         };
+      }
+
+      if (existingListing.userId !== currentUser.data.id) {
+         return { success: false, error: tListings("errors.notListingOwner") };
+      }
+
+      const updatedListing = await tx.listing.update({
+         where: {
+            id,
+         },
+         data: {
+            status: "SOLD",
+            sold: true,
+         },
+      });
+
+      return { success: true, data: updatedListing.id };
+   });
 }
 
-export async function createListing(listing: TCreateListing) {
+export async function createListing(
+   listing: TCreateListing
+): Promise<Result<TCreateListingResult>> {
    const user = await requireAuth();
 
-   return await prisma.listing.create({
+   if (!user.success) {
+      return { success: false, error: user.error };
+   }
+
+   const result = await prisma.listing.create({
       data: {
          ...listing,
          description: listing.description ?? "No description provided",
-         userId: user.id,
+         userId: user.data.id,
          images: {
             create: listing.images.map((image, index) => ({
                url: image,
@@ -366,79 +421,114 @@ export async function createListing(listing: TCreateListing) {
             })),
          },
       },
-   });
-}
-
-export async function deleteListing(id: string) {
-   const tListings = await getTranslations("listings");
-   const currentUser = await requireAuth();
-
-   const existingListing = await prisma.listing.findUnique({
-      where: {
-         id: id,
-      },
-      select: {
-         userId: true,
-      },
-   });
-
-   if (!existingListing) {
-      return { error: tListings("errors.listingNotFound") };
-   }
-
-   if (existingListing.userId !== currentUser.id) {
-      return { error: tListings("errors.notListingOwner") };
-   }
-
-   return await prisma.listing.delete({
-      where: {
-         id: id,
-      },
-   });
-}
-
-export async function updateListing(id: string, listing: TUpdateListing) {
-   const tListings = await getTranslations("listings");
-   const currentUser = await requireAuth();
-
-   const existingListing = await prisma.listing.findUnique({
-      where: {
-         id: id,
-      },
-      select: {
-         userId: true,
-      },
-   });
-
-   if (!existingListing) {
-      return { error: tListings("errors.listingNotFound") };
-   }
-
-   if (existingListing.userId !== currentUser.id) {
-      return { error: tListings("errors.notListingOwner") };
-   }
-
-   const { images, ...listingData } = listing;
-
-   return await prisma.listing.update({
-      where: {
-         id: id,
-      },
-      data: {
-         ...listingData,
-         ...(images &&
-            images.length > 0 && {
-               images: {
-                  deleteMany: {},
-                  create: images.map((image, index) => ({
-                     url: image,
-                     order: index,
-                  })),
-               },
-            }),
-      },
       include: {
          images: true,
       },
+   });
+
+   const responseData: TCreateListingResult = {
+      description: result.description ?? "No description provided",
+      userId: result.userId,
+      images: result.images.map(({ url, order }) => ({ url, order })),
+      title: result.title,
+      price: result.price ?? 0,
+      categoryId: result.categoryId,
+      location: result.location ?? "",
+      condition: result.condition,
+   };
+
+   return { success: true, data: responseData };
+}
+
+export async function deleteListing(id: string): Promise<Result<string>> {
+   const tListings = await getTranslations("listings");
+   const currentUser = await requireAuth();
+
+   if (!currentUser.success) {
+      return { success: false, error: currentUser.error };
+   }
+
+   return await prisma.$transaction(async (tx) => {
+      const existingListing = await tx.listing.findUnique({
+         where: {
+            id: id,
+         },
+         select: {
+            userId: true,
+         },
+      });
+
+      if (!existingListing) {
+         return { success: false, error: tListings("errors.listingNotFound") };
+      }
+
+      if (existingListing.userId !== currentUser.data.id) {
+         return { success: false, error: tListings("errors.notListingOwner") };
+      }
+
+      const result = await tx.listing.delete({
+         where: {
+            id: id,
+         },
+      });
+
+      return { success: true, data: result.id };
+   });
+}
+
+export async function updateListing(
+   id: string,
+   listing: TUpdateListing
+): Promise<Result<string>> {
+   const tListings = await getTranslations("listings");
+   const currentUser = await requireAuth();
+
+   if (!currentUser.success) {
+      return { success: false, error: currentUser.error };
+   }
+
+   return await prisma.$transaction(async (tx) => {
+      const existingListing = await tx.listing.findUnique({
+         where: {
+            id: id,
+         },
+         select: {
+            userId: true,
+         },
+      });
+
+      if (!existingListing) {
+         return { success: false, error: tListings("errors.listingNotFound") };
+      }
+
+      if (existingListing.userId !== currentUser.data.id) {
+         return { success: false, error: tListings("errors.notListingOwner") };
+      }
+
+      const { images, ...listingData } = listing;
+
+      const result = await tx.listing.update({
+         where: {
+            id: id,
+         },
+         data: {
+            ...listingData,
+            ...(images &&
+               images.length > 0 && {
+                  images: {
+                     deleteMany: {},
+                     create: images.map((image, index) => ({
+                        url: image,
+                        order: index,
+                     })),
+                  },
+               }),
+         },
+         include: {
+            images: true,
+         },
+      });
+
+      return { success: true, data: result.id };
    });
 }

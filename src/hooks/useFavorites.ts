@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { userFavoriteListingsOptions, isListingFavoriteOptions } from "@/lib/query-options/favorites";
+import { isListingFavoriteOptions } from "@/lib/query-options/favorites";
 import { toggleFavoriteAction } from "@/app/actions/favorites";
 import { authClient } from "@/utils/auth-client";
 
@@ -21,9 +21,9 @@ export const useToggleFavorite = () => {
         mutationFn: async (listingId: string) => {
             const result = await toggleFavoriteAction(listingId);
             if (!result.success) {
-                throw new Error(result.message);
+                return { success: false, error: result.error };
             }
-            return result;
+            return { success: true, data: result };
         },
         onSuccess: (data, listingId) => {
             queryClient.invalidateQueries({ queryKey: ["is-listing-favorite", listingId] });

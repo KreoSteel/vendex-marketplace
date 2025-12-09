@@ -27,7 +27,7 @@ export default function UserReviewsTab({ userId }: UserReviewsTabProps) {
             {tCommon("error")}: {error.message}
          </div>
       );
-   } else if (!reviews || reviews.length === 0) {
+   } else if (!reviews?.success || reviews.data?.length === 0) {
       return (
          <div className="text-center py-10 text-neutral-500">
             {tCommon("noReviewsFound")}
@@ -36,7 +36,7 @@ export default function UserReviewsTab({ userId }: UserReviewsTabProps) {
    } else {
       return (
          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {reviews.map((review) => (
+            {reviews.data.map((review) => (
                <ReviewCard key={review.id} review={review} />
             ))}
          </div>

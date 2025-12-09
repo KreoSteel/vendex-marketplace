@@ -5,13 +5,13 @@ import { Checkbox, CheckboxIndicator } from "@radix-ui/react-checkbox";
 import { CheckIcon } from "lucide-react";
 import { ListingCondition } from "@/utils/generated/enums";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { Filters } from "@/lib/data-access/listings";
 import { useRouter } from "@/i18n/navigation";
 import { Button } from "../ui/button";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
-import { categoriesOptions } from "@/hooks/useCategories";
+import { categoriesOptions } from "@/lib/query-options/categories";
 import { getMaxPriceForFiltersOptions } from "@/lib/utils";
 
 export default function ListingsFilters() {
@@ -46,9 +46,10 @@ export default function ListingsFilters() {
       conditions: selectedConditions.length > 0 ? selectedConditions : null,
    };
 
-   const { data: maxPrice, isLoading: isLoadingMaxPrice } =
+   const { data: maxPrice } =
       useQuery(getMaxPriceForFiltersOptions(filters));
    const [priceRange, setPriceRange] = useState([0, maxPrice || 1000]);
+   const [isPending, startTransition] = useTransition();
    const router = useRouter();
 
    const handleURLChange = () => {
@@ -116,44 +117,54 @@ export default function ListingsFilters() {
 
    useEffect(() => {
       if (maxPrice !== undefined && maxPrice > 0) {
-         setPriceRange((prev) => {
-            if (prev[0] === 0 && prev[1] === maxPrice) return prev;
-            return [0, maxPrice];
+         startTransition(() => {
+            setPriceRange((prev) => {
+               if (prev[0] === 0 && prev[1] === maxPrice) return prev;
+               return [0, maxPrice];
+            });
          });
       }
-   }, [maxPrice]);
+   }, [maxPrice, startTransition]);
 
    useEffect(() => {
       const categories = searchParams.get("category");
       if (categories) {
          const newCategories = categories.split(",");
 
-         setSelectedCategories((prev) => {
-            if (
-               prev.length === newCategories.length &&
-               prev.every((c) => newCategories.includes(c))
-            )
-               return prev;
-            return newCategories;
+         startTransition(() => {
+            setSelectedCategories((prev) => {
+               if (
+                  prev.length === newCategories.length &&
+                  prev.every((c) => newCategories.includes(c))
+               )
+                  return prev;
+               return newCategories;
+            });
          });
       } else {
-         setSelectedCategories((prev) => (prev.length ? [] : prev));
+         startTransition(() => {
+            setSelectedCategories((prev) => (prev.length ? [] : prev));
+         });
       }
 
       const conditions = searchParams.get("condition");
       if (conditions) {
          const newConditions = conditions.split(",") as ListingCondition[];
 
-         setSelectedConditions((prev) => {
-            if (
-               prev.length === newConditions.length &&
-               prev.every((c) => newConditions.includes(c))
-            )
-               return prev;
-            return newConditions;
+         startTransition(() => {
+            setSelectedConditions((prev) => {
+               if (
+                  prev.length === newConditions.length &&
+                  prev.every((c) => newConditions.includes(c))
+               )
+                  return prev;
+               return newConditions;
+            });
          });
       } else {
-         setSelectedConditions((prev) => (prev.length ? [] : prev));
+         startTransition(() => {
+            setSelectedConditions((prev) => (prev.length ? [] : prev));
+         });
       }
 
       const minPrice = searchParams.get("minPrice");
@@ -164,12 +175,15 @@ export default function ListingsFilters() {
             maxPriceParam ? parseInt(maxPriceParam, 10) : 1000,
          ];
 
-         setPriceRange((prev) => {
-            if (prev[0] === newRange[0] && prev[1] === newRange[1]) return prev;
-            return newRange;
+         startTransition(() => {
+            setPriceRange((prev) => {
+               if (prev[0] === newRange[0] && prev[1] === newRange[1])
+                  return prev;
+               return newRange;
+            });
          });
       }
-   }, [searchParams]);
+   }, [searchParams, startTransition]);
 
    return (
       <Card className="w-full bg-surface">
@@ -235,11 +249,11 @@ export default function ListingsFilters() {
                ))}
             </div>
             <div className="flex gap-2">
-               <Button onClick={clearFilters} variant="outline">
-                  {tSearchListingsPage("filters.clear")}
+               <Button onClick={clearFilters} variant="outline" disabled={isPending}>
+                  {isPending ? tSearchListingsPage("filters.clearing") : tSearchListingsPage("filters.clear")}
                </Button>
-               <Button onClick={handleURLChange} className="w-full max-w-26">
-                  {tSearchListingsPage("filters.apply")}
+               <Button onClick={handleURLChange} className="w-full max-w-26" disabled={isPending}>
+                  {isPending ? tSearchListingsPage("filters.applying") : tSearchListingsPage("filters.apply")}
                </Button>
             </div>
          </CardContent>

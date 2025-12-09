@@ -2,7 +2,7 @@
 
 import { toggleFavorite } from "@/lib/data-access/favorites";
 import { revalidatePath } from "next/cache";
-
+import { getTranslations } from "next-intl/server";
 export async function toggleFavoriteAction(listingId: string) {
    try {
       const result = await toggleFavorite(listingId);
@@ -14,10 +14,11 @@ export async function toggleFavoriteAction(listingId: string) {
       
       return result;
    } catch (error) {
-      console.error("Failed to toggle favorite:", error);
+      const t = await getTranslations("favorites.errors");
+      console.error(t("failedToToggleFavorite"), error);
       return {
          success: false,
-         message: "Failed to toggle favorite: " + (error instanceof Error ? error.message : "Unknown error"),
+         error: t("failedToToggleFavorite") + (error instanceof Error ? error.message : t("unknownError")),
       };
    }
 }
