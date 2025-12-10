@@ -1,4 +1,3 @@
-"use server";
 import ListingDetailsClientPage from "@/components/listings/ListingDetailsClientPage";
 import {
    getListingById,
@@ -18,7 +17,8 @@ export default async function ListingPageDetails({
 }) {
    const { id } = await params;
    const currentUser = await getUser();
-   const listing = await getListingById(id);
+   const listingResult = await getListingById(id);
+   const listing = listingResult.success ? listingResult.data : null;
    if (!listing) {
       notFound();
    }
@@ -41,9 +41,11 @@ export default async function ListingPageDetails({
       <ListingDetailsClientPage
          listing={listing as TListing}
          currentUser={currentUser?.id || ""}
-         activeListingsCount={listingsCounts.activeListings}
-         itemsSoldCount={listingsCounts.itemsSold}
-         averageRating={reviewsStats.averageRating}
+         stats={{
+            activeListingsCount: listingsCounts.activeListings,
+            itemsSoldCount: listingsCounts.itemsSold,
+            averageRating: reviewsStats.averageRating,
+         }}
       />
    );
 }

@@ -6,7 +6,7 @@ import {
    updateListing,
 } from "@/lib/data-access/listings";
 import { uploadListingImages } from "@/lib/storage/upload";
-import { requireAuth } from "@/utils/auth";
+import { getUser, withAuth } from "@/utils/auth";
 import {
    createListingSchema,
    TCreateListingResult,
@@ -16,21 +16,22 @@ import { ListingCondition } from "@/utils/generated/enums";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { Result } from "@/types/result";
+import * as Sentry from "@sentry/nextjs";
 
-export async function createListingAction(
+export const createListingAction = withAuth(async (
    _prevState: Result<TCreateListingResult> | undefined,
    formData: FormData
-): Promise<Result<TCreateListingResult>> {
+): Promise<Result<TCreateListingResult>> => {
    const t = await getTranslations("listings.errors");
    const tSystem = await getTranslations("system");
-   const currentUser = await requireAuth();
+   const currentUser = await getUser();
    const files = formData.getAll("images") as File[];
 
-   if (!currentUser.success) {
-      return { success: false, error: currentUser.error };
-   }
+   if (!currentUser) {
+      return { success: false, error: "Unauthorized" };
+   }  
 
-   const uploadResult = await uploadListingImages(files, currentUser.data.id);
+   const uploadResult = await uploadListingImages(files, currentUser.id);
    if (!uploadResult.success) {
       return { success: false, error: uploadResult.error };
    }
@@ -66,32 +67,31 @@ export async function createListingAction(
       }
       return { success: true, data: listing.data };
    } catch (error) {
-      console.error("Create listing error:", error);
+      Sentry.captureException(error);
       return {
          success: false,
-         error:
-            error instanceof Error ? error.message : t("failedToCreateListing"),
+         error: t("failedToCreateListing"),
       };
    }
-}
+});
 
-export async function updateListingAction(
+export const updateListingAction = withAuth(async (
    _prevState: Result<string> | undefined,
    formData: FormData
-): Promise<Result<string>> {
+): Promise<Result<string>> => {
    const t = await getTranslations("listings.errors");
    const tSystem = await getTranslations("system");
-   const currentUser = await requireAuth();
+   const currentUser = await getUser();
    const files = formData.getAll("images") as File[];
    const existingImages: string[] = formData
       .getAll("existingImages")
       .filter((item): item is string => typeof item === "string") as string[];
 
-   if (!currentUser.success) {
-      return { success: false, error: currentUser.error };
+   if (!currentUser) {
+      return { success: false, error: "Unauthorized" };
    }
 
-   const uploadResult = await uploadListingImages(files, currentUser.data.id);
+   const uploadResult = await uploadListingImages(files, currentUser.id);
 
    if (!uploadResult.success) {
       return { success: false, error: uploadResult.error };
@@ -132,18 +132,17 @@ export async function updateListingAction(
       revalidatePath(`/listings/${listingId}`);
       return { success: true, data: t("listingEditedSuccessfully") };
    } catch (error) {
-      console.error("Update listing error:", error);
+      Sentry.captureException(error);
       return {
          success: false,
-         error:
-            error instanceof Error ? error.message : t("failedToUpdateListing"),
+         error: t("failedToUpdateListing"),
       };
    }
-}
+});
 
-export async function deleteListingAction(
+export const deleteListingAction = withAuth(async (
    listingId: string
-): Promise<Result<string>> {
+): Promise<Result<string>> => {
    const t = await getTranslations("listings.errors");
    try {
       const deletedListing = await deleteListing(listingId);
@@ -158,18 +157,17 @@ export async function deleteListingAction(
 
       return { success: true, data: t("listingDeletedSuccessfully") };
    } catch (error) {
-      console.error("Delete listing error:", error);
+      Sentry.captureException(error);
       return {
          success: false,
-         error:
-            error instanceof Error ? error.message : t("failedToDeleteListing"),
+         error: t("failedToDeleteListing"),
       };
    }
-}
+});
 
-export async function markListingAsSoldAction(
+export const markListingAsSoldAction = withAuth(async (
    listingId: string
-): Promise<Result<{ id: string; message: string }>> {
+): Promise<Result<{ id: string; message: string }>> => {
    const t = await getTranslations("listings.errors");
    try {
       const markedListing = await markListingAsSold(listingId);
@@ -187,11 +185,10 @@ export async function markListingAsSoldAction(
          },
       };
    } catch (error) {
-      console.error("Mark listing as sold error:", error);
+      Sentry.captureException(error);
       return {
          success: false,
-         error:
-            error instanceof Error ? error.message : t("failedToMarkAsSold"),
+         error: t("failedToMarkAsSold"),
       };
    }
-}
+});

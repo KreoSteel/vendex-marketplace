@@ -1,7 +1,9 @@
+"use client";
 import { mutationOptions } from "@tanstack/react-query";
 import { changeMessageReadStatus, createMessage } from "../data-access/chat";
 import { getQueryClient } from "../queryClient";
-
+import * as Sentry from "@sentry/nextjs";
+import { toast } from "sonner";
 
 export interface ISendMessageOptions {
    receiverId: string;
@@ -21,7 +23,8 @@ export const sendMessageOptions = () =>
           queryClient.invalidateQueries({ queryKey: ["conversations"] });
        },
        onError: (error) => {
-          console.error(error.message);
+          Sentry.captureException(error);
+          toast.error(error instanceof Error ? error.message : "Unknown error");
        },
     });
  
@@ -36,6 +39,7 @@ export const sendMessageOptions = () =>
           queryClient.invalidateQueries({ queryKey: ["conversations"] });
        },
        onError: (error) => {
-          console.error(error.message);
+          Sentry.captureException(error);
+          toast.error(error instanceof Error ? error.message : "Unknown error");
        },
     });

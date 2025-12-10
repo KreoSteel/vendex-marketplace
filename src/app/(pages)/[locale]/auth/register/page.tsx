@@ -12,21 +12,29 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signUpAction } from "@/app/actions/auth";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 export default function RegisterPage() {
-   const [state, formAction, isPending] = useActionState(signUpAction, { success: true, data: undefined });
+   const [state, formAction, isPending] = useActionState(signUpAction, {
+      success: true,
+      data: undefined,
+   });
    const t = useTranslations("auth.register");
+
+   useEffect(() => {
+      if (state && "error" in state && state.error) {
+         toast.error(state.error);
+      }
+   }, [state]);
 
    return (
       <Card className="w-full bg-neutral-50 max-w-md shadow-lg hover:shadow-xl hover:translate-y-[-5px] transition-all duration-300">
          <CardHeader>
             <CardTitle>{t("title")}</CardTitle>
-            <CardDescription>
-               {t("description")}
-            </CardDescription>
+            <CardDescription>{t("description")}</CardDescription>
             <CardAction>
                <Button variant="link" asChild>
                   <Link href="/auth/login">{t("signIn")}</Link>
@@ -35,9 +43,6 @@ export default function RegisterPage() {
          </CardHeader>
          <form action={formAction}>
             <CardContent>
-               {state.success === false && (
-                  <p className="text-red-500 text-sm">{state.error}</p>
-               )}
                <div className="flex flex-col gap-6">
                   <div className="grid gap-2">
                      <Label htmlFor="name">{t("labelName")}</Label>
@@ -61,7 +66,12 @@ export default function RegisterPage() {
                      <div className="flex items-center">
                         <Label htmlFor="password">{t("labelPassword")}</Label>
                      </div>
-                     <Input name="password" type="password" placeholder={t("placeholderPassword")} required />
+                     <Input
+                        name="password"
+                        type="password"
+                        placeholder={t("placeholderPassword")}
+                        required
+                     />
                   </div>
                </div>
             </CardContent>

@@ -1,19 +1,19 @@
 "use server";
-import { requireAuth } from "@/utils/auth";
+import { getUser, withAuth } from "@/utils/auth";
 import prisma from "@/utils/prisma";
 import { getTranslations } from "next-intl/server";
 import { Result } from "@/types/result";
 import { TListing } from "@/utils/zod-schemas/listings";
 
-export async function toggleFavorite(
+export const toggleFavorite = withAuth(async (
    listingId: string
-): Promise<Result<string>> {
+): Promise<Result<string>> => {
    const tFavorites = await getTranslations("favorites");
-   const user = await requireAuth();
-   if (!user.success) {
+   const user = await getUser();
+   if (!user) {
       return { success: false, error: tFavorites("errors.unauthorizedAccess") };
    }
-   const userId = user.data!.id;
+   const userId = user.id;
 
    const result = await prisma.$transaction(async (tx) => {
       const existingFavorite = await tx.favorite.findUnique({
@@ -54,14 +54,14 @@ export async function toggleFavorite(
       }
    });
    return { success: true, data: result.message };
-}
+});
 
-export async function getUserFavoriteListings(
+export const getUserFavoriteListings = withAuth(async (
    userId: string
-): Promise<Result<TListing[]>> {
+): Promise<Result<TListing[]>> => {
    const tFavorites = await getTranslations("favorites");
-   const user = await requireAuth();
-   if (!user.success || user.data!.id !== userId) {
+   const user = await getUser();
+   if (!user || user.id !== userId) {
       return { success: false, error: tFavorites("errors.unauthorizedAccess") };
    }
 
@@ -98,15 +98,15 @@ export async function getUserFavoriteListings(
    });
 
    return { success: true, data: result.map((fav) => fav.listing as TListing) };
-}
+});
 
 export async function isListingFavorite(listingId: string) {
-   const user = await requireAuth({ redirect: false }).catch(() => null);
-   if (!user?.success) return false;
+   const user = await getUser()
+   if (!user) return false;
 
    const count = await prisma.favorite.count({
       where: {
-         userId: user.data!.id,
+         userId: user.id,
          listingId,
       },
    });

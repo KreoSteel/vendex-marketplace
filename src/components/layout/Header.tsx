@@ -1,6 +1,6 @@
 import {
    Package,
-   User,
+   User as UserIcon,
    Plus,
    MessageCircle,
    Heart,
@@ -19,6 +19,7 @@ import {
 import { signOutAction } from "@/app/actions/auth";
 import Image from "next/image";
 import { getUser } from "@/utils/auth";
+import { User } from "@/utils/zod-schemas/auth";
 import SearchBar from "../ui/search";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { getTranslations } from "next-intl/server";
@@ -58,7 +59,7 @@ export default async function Header() {
                      <div className="flex items-center gap-2">
                         <Link href="/auth/register">
                            <Button>
-                              <User className="size-4" />
+                              <UserIcon className="size-4" />
                               {t("signUp")}
                            </Button>
                         </Link>
@@ -74,20 +75,7 @@ export default async function Header() {
                   {user ? (
                      <DropdownMenu>
                         <DropdownMenuTrigger className="outline-none">
-                           {user.avatarImg ? (
-                              <Image
-                                 src={user.avatarImg}
-                                 alt={user.name ?? "User avatar"}
-                                 width={42}
-                                 height={42}
-                                 className="rounded-full object-cover"
-                                 sizes="42px"
-                              />
-                           ) : (
-                              <div className="size-10 rounded-full bg-primary-100 flex items-center justify-center">
-                                 <User className="size-5 text-primary-600" />
-                              </div>
-                           )}
+                           <UserAvatar user={user} size={42} />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                            <div className="flex items-center gap-2 px-2 py-1">
@@ -102,7 +90,7 @@ export default async function Header() {
                                  />
                               ) : (
                                  <div className="size-10 rounded-full bg-primary-100 flex items-center justify-center">
-                                    <User className="size-5 text-primary-600" />
+                                    <UserIcon className="size-5 text-primary-600" />
                                  </div>
                               )}
                               <div className="flex flex-col">
@@ -117,7 +105,7 @@ export default async function Header() {
                            <DropdownMenuSeparator />
                            <DropdownMenuItem className="hover:bg-neutral-100">
                               <Link href="/profile" className="flex items-center gap-2">
-                                 <User className="size-4" />
+                                 <UserIcon className="size-4" />
                                  {t("MyProfile")}
                               </Link>
                            </DropdownMenuItem>
@@ -155,3 +143,23 @@ export default async function Header() {
       </header>
    );
 }
+
+interface UserAvatarProps {
+   user: User;
+   size?: number;
+}
+
+function UserAvatar({ user, size = 42 }: UserAvatarProps) {
+   return user.avatarImg ? (
+     <Image
+       src={user.avatarImg}
+       alt={user.name ?? "User"}
+       width={size}
+       height={size}
+     />
+   ) : (
+     <div className={`size-${size / 4} rounded-full bg-primary-100`}>
+       <UserIcon className="size-5 text-primary-600" />
+     </div>
+   );
+ }

@@ -12,10 +12,11 @@ import { PencilIcon } from "lucide-react";
 import { DialogDescription, DialogHeader } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { updateUserProfileAction } from "@/app/actions/profile";
 import type { User } from "@/utils/generated/client";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 export default function EditProfileForm({ user }: { user: User | null }) {
    const tDialogs = useTranslations("dialogs.editProfile");
@@ -26,6 +27,15 @@ export default function EditProfileForm({ user }: { user: User | null }) {
    if (!user) {
       return null;
    }
+
+   useEffect(() => {
+      if (state && "success" in state && state.success) {
+         toast.success(state.data);
+      }
+      if (state && "error" in state && state.error) {
+         toast.error(state.error);
+      }
+   }, [state]);
 
    return (
       <Dialog>
@@ -43,12 +53,6 @@ export default function EditProfileForm({ user }: { user: User | null }) {
                </DialogDescription>
             </DialogHeader>
             <form action={formAction}>
-               {!state?.success && (
-                  <p className="text-red-500 text-sm">{state?.error}</p>
-               )}
-               {state?.success && (
-                  <p className="text-green-500 text-sm">{state?.success}</p>
-               )}
                <div className="flex flex-col gap-3 mt-4">
                   <div className="grid gap-2">
                      <Label>

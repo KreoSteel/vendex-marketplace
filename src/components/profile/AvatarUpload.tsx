@@ -1,10 +1,11 @@
 "use client";
-import { useRef, useTransition, useState } from "react";
+import { useRef, useTransition } from "react";
 import { Input } from "../ui/input";
 import { updateUserProfileImageAction } from "@/app/actions/profile";
 import { CameraIcon, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "@/i18n/navigation";
+import { toast } from "sonner";
 
 interface AvatarUploadProps {
    currentAvatarUrl: string | null;
@@ -12,7 +13,6 @@ interface AvatarUploadProps {
 
 export default function AvatarUpload({ currentAvatarUrl }: AvatarUploadProps) {
    const [isPending, startTransition] = useTransition();
-   const [error, setError] = useState<string | null>(null);
    const fileInputRef = useRef<HTMLInputElement>(null);
    const router = useRouter();
 
@@ -27,9 +27,8 @@ export default function AvatarUpload({ currentAvatarUrl }: AvatarUploadProps) {
          const result = await updateUserProfileImageAction(undefined, formData);
          if (result.success) {
             router.refresh();
-         } else {
-            setError(result.error);
-            return;
+         } else if (result.error) {
+            toast.error(result.error);
          }
 
          if (fileInputRef.current) {
@@ -67,11 +66,6 @@ export default function AvatarUpload({ currentAvatarUrl }: AvatarUploadProps) {
             onChange={handleFileChange}
             className="hidden"
          />
-         {error && (
-            <p className="mt-2 text-sm text-red-500">
-               {error}
-            </p>
-         )}
       </div>
    );
 }

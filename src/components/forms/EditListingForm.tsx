@@ -13,8 +13,6 @@ import {
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import { useActionState, useEffect, useState, useTransition } from "react";
-import { updateListingAction } from "@/app/actions/listings";
 import { ListingCondition } from "@/utils/generated/enums";
 import {
    Select,
@@ -26,6 +24,8 @@ import {
 import Image from "next/image";
 import { TCategory } from "@/utils/zod-schemas/categories";
 import { useTranslations } from "next-intl";
+import { useEditListing, useImagePreview } from "@/hooks/use-edit-listing";
+import { TListing } from "@/utils/zod-schemas/listings";
 import { useQuery } from "@tanstack/react-query";
 import { categoriesOptions } from "@/lib/query-options/categories";
 
@@ -38,7 +38,7 @@ export type TEditListing = {
    condition: ListingCondition;
    category: TCategory | null;
    images?: (string | { url: string })[];
- };
+};
 
 export const conditions = {
    [ListingCondition.NEW]: "New - Brand new, never used",
@@ -46,7 +46,6 @@ export const conditions = {
    [ListingCondition.USED]: "Used - Used but in good condition",
    [ListingCondition.FOR_PARTS]: "For Parts - Not working, needs repair",
 };
-
 
 export default function EditListingForm({
    listing,
@@ -58,67 +57,14 @@ export default function EditListingForm({
    const tConditions = useTranslations("conditions");
    const tMedia = useTranslations("media");
    const tButtons = useTranslations("buttons");
-   const [state, formAction] = useActionState(updateListingAction, undefined);
    const { data: categories } = useQuery(categoriesOptions);
-   const [isPending, startTransition] = useTransition();
-   
-   const [existingImages, setExistingImages] = useState<string[]>(() => {
-      if (listing.images && Array.isArray(listing.images)) {
-          return listing.images
-            .map((img: string | { url?: string }) =>
-               typeof img === "string" ? img : img.url || ""
-            )
-            .filter((url: string) => url && url.trim() !== "") as string[];
-      }
-      return [];
-   });
-   const [newImages, setNewImages] = useState<File[]>([]);
-   const [open, setOpen] = useState(false);
-
-   useEffect(() => {
-      if (state?.success) {
-         // eslint-disable-next-line react-hooks/set-state-in-effect
-         setOpen(false);
-         setNewImages([]);
-      }
-   }, [state]);
-
-   function handleAddImages(e: React.ChangeEvent<HTMLInputElement>) {
-      const files = Array.from(e.target.files || []);
-      setNewImages((prev) => [...prev, ...files]);
-      e.target.value = "";
-   }
-
-   function handleRemoveExistingImage(index: number) {
-      setExistingImages((prev) => prev.filter((_, i) => i !== index));
-   }
-
-   function handleRemoveNewImage(index: number) {
-      setNewImages((prev) => {
-         const newFiles = prev.filter((_, i) => i !== index);
-         const fileToRemove = prev[index];
-         if (fileToRemove) {
-            const url = URL.createObjectURL(fileToRemove);
-            URL.revokeObjectURL(url);
-         }
-         return newFiles;
-      });
-   }
-
-   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-      e.preventDefault();
-      const formData = new FormData(e.currentTarget);
-
-      existingImages.forEach((url) => formData.append("existingImages", url));
-      newImages.forEach((file) => formData.append("images", file));
-
-      startTransition(() => {
-         formAction(formData);
-      });
-   }
+   const { handleSubmit, existingImages, newImages, isPending } =
+      useEditListing(listing as TListing);
+   const { handleAddImages, handleRemoveExistingImage, handleRemoveNewImage } =
+      useImagePreview(listing as TListing);
 
    return (
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog>
          <DialogTrigger asChild>
             <Button
                variant="outline"
@@ -141,13 +87,10 @@ export default function EditListingForm({
             <form onSubmit={handleSubmit} className="flex flex-col gap-5 mt-2">
                <input type="hidden" name="id" value={listing.id} />
 
-               {!state?.success && (
-                  <p className="text-red-500 text-sm">{state?.error}</p>
-               )}
-
                <div className="space-y-2">
                   <Label htmlFor="title" className="text-sm font-medium">
-                     {tForms("labels.title")} <span className="text-red-500">*</span>
+                     {tForms("labels.title")}{" "}
+                     <span className="text-red-500">*</span>
                   </Label>
                   <Input
                      id="title"
@@ -159,7 +102,8 @@ export default function EditListingForm({
 
                <div className="space-y-2">
                   <Label htmlFor="price" className="text-sm font-medium">
-                     {tForms("labels.price")} <span className="text-red-500">*</span>
+                     {tForms("labels.price")}{" "}
+                     <span className="text-red-500">*</span>
                   </Label>
                   <div className="relative">
                      <Euro className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-neutral-500 pointer-events-none" />
@@ -271,11 +215,17 @@ export default function EditListingForm({
                         required
                         defaultValue={listing.condition}>
                         <SelectTrigger>
-                           <SelectValue placeholder={tForms("placeholders.selectCondition")} />
+                           <SelectValue
+                              placeholder={tForms(
+                                 "placeholders.selectCondition"
+                              )}
+                           />
                         </SelectTrigger>
                         <SelectContent>
                            {Object.entries(conditions).map(([key]) => (
-                              <SelectItem key={key} value={key as ListingCondition}>
+                              <SelectItem
+                                 key={key}
+                                 value={key as ListingCondition}>
                                  {tConditions("descriptions." + key)}
                               </SelectItem>
                            ))}
@@ -286,7 +236,10 @@ export default function EditListingForm({
                      <Label htmlFor="category" className="text-sm font-medium">
                         {tForms("labels.category")}
                      </Label>
-                     <Select name="category" required defaultValue={listing.category?.id}>
+                     <Select
+                        name="category"
+                        required
+                        defaultValue={listing.category?.id}>
                         <SelectTrigger>
                            <SelectValue placeholder="Select a category" />
                         </SelectTrigger>

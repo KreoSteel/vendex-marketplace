@@ -7,11 +7,12 @@ import {
    TListing,
    TUpdateListing,
 } from "@/utils/zod-schemas/listings";
-import { requireAuth } from "@/utils/auth";
+import { getUser, withAuth } from "@/utils/auth";
 import { ListingCondition, ListingStatus } from "@/utils/generated/enums";
 import { getTranslations } from "next-intl/server";
 import { TPaginationListings } from "@/utils/zod-schemas/listings";
 import { Result } from "@/types/result";
+import * as Sentry from "@sentry/nextjs";
 
 export type AllListingsParams = {
    currentPage?: string | number;
@@ -44,15 +45,16 @@ export async function getAllListings({
    sortBy = "createdAt",
    sortOrder = "desc",
 }: AllListingsParams = {}): Promise<TPaginationListings> {
+   const MAX_ITEMS_PER_PAGE = 50;
+   const MAX_ARRAY_LENGTH = 50;
    const page =
       typeof currentPage === "string" ? parseInt(currentPage, 10) : currentPage;
    const items =
-      typeof itemsPerPage === "string"
+      Math.min(typeof itemsPerPage === "string"
          ? parseInt(itemsPerPage, 10)
-         : itemsPerPage;
+         : itemsPerPage, MAX_ITEMS_PER_PAGE);
    const skip = ((page as number) - 1) * (items as number);
 
-   const MAX_ARRAY_LENGTH = 50;
    if (categorySlugs && categorySlugs.length > MAX_ARRAY_LENGTH) {
       throw new Error("Category slugs array is too long");
    }
@@ -60,7 +62,7 @@ export async function getAllListings({
    if (categorySlugs) {
       categorySlugs.forEach((slug) => {
          if (!/^[a-z0-9-]+$/.test(slug)) {
-            throw new Error("Invalid category slug");
+            Sentry.captureException(new Error("Invalid category slug"));
          }
       });
    }
@@ -72,7 +74,7 @@ export async function getAllListings({
    if (conditions) {
       conditions.forEach((condition) => {
          if (!Object.values(ListingCondition).includes(condition)) {
-            throw new Error("Invalid condition");
+            Sentry.captureException(new Error("Invalid condition"));
          }
       });
    }
@@ -150,6 +152,7 @@ export async function getAllListings({
 }
 
 export async function getMaxPrice(params: Filters) {
+   const DEFAULT_MAX_PRICE = 10000;
    const where: Prisma.ListingWhereInput = {
       status: ListingStatus.ACTIVE,
       ...(params.categorySlugs &&
@@ -182,7 +185,7 @@ export async function getMaxPrice(params: Filters) {
       },
    });
 
-   return result._max?.price ?? 1000;
+   return result._max?.price ?? DEFAULT_MAX_PRICE;
 }
 
 export async function getRecentListings() {
@@ -246,7 +249,7 @@ export async function getUserListingsCount(userId: string) {
 }
 
 export async function getListingById(id: string) {
-   return await prisma.listing.findUnique({
+   const listing = await prisma.listing.findUnique({
       where: {
          id: id,
       },
@@ -286,6 +289,17 @@ export async function getListingById(id: string) {
          },
       },
    });
+   if (!listing) {
+      return {
+         success: false,
+         error: "Listing not found",
+      };
+   }
+
+   return {
+      success: true,
+      data: listing,
+   };
 }
 
 export async function getUserActiveListings(userId: string) {
@@ -352,12 +366,12 @@ export async function getUserSoldListings(
    return { success: true, data: result as TListing[] };
 }
 
-export async function markListingAsSold(id: string): Promise<Result<string>> {
+export const markListingAsSold = withAuth(async (id: string): Promise<Result<string>> => {
    const tListings = await getTranslations("listings");
-   const currentUser = await requireAuth();
+   const currentUser = await getUser();
 
-   if (!currentUser.success) {
-      return { success: false, error: currentUser.error };
+   if (!currentUser) {
+      return { success: false, error: "Unauthorized" };
    }
 
    return await prisma.$transaction(async (tx) => {
@@ -382,7 +396,7 @@ export async function markListingAsSold(id: string): Promise<Result<string>> {
          };
       }
 
-      if (existingListing.userId !== currentUser.data.id) {
+      if (existingListing.userId !== currentUser.id) {
          return { success: false, error: tListings("errors.notListingOwner") };
       }
 
@@ -398,22 +412,22 @@ export async function markListingAsSold(id: string): Promise<Result<string>> {
 
       return { success: true, data: updatedListing.id };
    });
-}
+});
 
-export async function createListing(
+export const createListing = withAuth(async (
    listing: TCreateListing
-): Promise<Result<TCreateListingResult>> {
-   const user = await requireAuth();
+): Promise<Result<TCreateListingResult>> => {
+   const user = await getUser();
 
-   if (!user.success) {
-      return { success: false, error: user.error };
+   if (!user) {
+      return { success: false, error: "Unauthorized" };
    }
 
    const result = await prisma.listing.create({
       data: {
          ...listing,
          description: listing.description ?? "No description provided",
-         userId: user.data.id,
+         userId: user.id,
          images: {
             create: listing.images.map((image, index) => ({
                url: image,
@@ -438,14 +452,14 @@ export async function createListing(
    };
 
    return { success: true, data: responseData };
-}
+});
 
-export async function deleteListing(id: string): Promise<Result<string>> {
+export const deleteListing = withAuth(async (id: string): Promise<Result<string>> => {
    const tListings = await getTranslations("listings");
-   const currentUser = await requireAuth();
+   const currentUser = await getUser();
 
-   if (!currentUser.success) {
-      return { success: false, error: currentUser.error };
+   if (!currentUser) {
+      return { success: false, error: "Unauthorized" };
    }
 
    return await prisma.$transaction(async (tx) => {
@@ -462,7 +476,7 @@ export async function deleteListing(id: string): Promise<Result<string>> {
          return { success: false, error: tListings("errors.listingNotFound") };
       }
 
-      if (existingListing.userId !== currentUser.data.id) {
+      if (existingListing.userId !== currentUser.id) {
          return { success: false, error: tListings("errors.notListingOwner") };
       }
 
@@ -474,17 +488,17 @@ export async function deleteListing(id: string): Promise<Result<string>> {
 
       return { success: true, data: result.id };
    });
-}
+});
 
-export async function updateListing(
+export const updateListing = withAuth(async (
    id: string,
    listing: TUpdateListing
-): Promise<Result<string>> {
+): Promise<Result<string>> => {
    const tListings = await getTranslations("listings");
-   const currentUser = await requireAuth();
+   const currentUser = await getUser();
 
-   if (!currentUser.success) {
-      return { success: false, error: currentUser.error };
+   if (!currentUser) {
+      return { success: false, error: "Unauthorized" };
    }
 
    return await prisma.$transaction(async (tx) => {
@@ -501,7 +515,7 @@ export async function updateListing(
          return { success: false, error: tListings("errors.listingNotFound") };
       }
 
-      if (existingListing.userId !== currentUser.data.id) {
+      if (existingListing.userId !== currentUser.id) {
          return { success: false, error: tListings("errors.notListingOwner") };
       }
 
@@ -531,4 +545,4 @@ export async function updateListing(
 
       return { success: true, data: result.id };
    });
-}
+});

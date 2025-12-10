@@ -1,17 +1,17 @@
 "use server";
 import { createReview } from "@/lib/data-access/reviews";
-import { requireAuth } from "@/utils/auth";
+import { withAuth } from "@/utils/auth";
 import { createReviewSchema } from "@/utils/zod-schemas/reviews";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { Result } from "@/types/result";
+import * as Sentry from "@sentry/nextjs";
 
-export async function createReviewAction(
+export const createReviewAction = withAuth(async (
    _prevState: Result<string> | undefined,
    formData: FormData
-): Promise<Result<string>> {
+): Promise<Result<string>> => {
    const tReviews = await getTranslations("reviews");
-   await requireAuth();
 
    const data = {
       rating: Number(formData.get("rating")),
@@ -38,7 +38,7 @@ export async function createReviewAction(
 
       return { success: true, data: tReviews("reviewCreatedSuccessfully") };
    } catch (error) {
-      console.error(tReviews("failedToCreateReview"), error);
+      Sentry.captureException(error);
       return { success: false, error: tReviews("failedToCreateReview") };
    }
-}
+});

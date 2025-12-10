@@ -19,6 +19,8 @@ import { userFavoriteListingsOptions } from "@/lib/query-options/favorites";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { allListingsOptions } from "@/lib/query-options/listings";
+import { toast } from "sonner";
+import { useEffect } from "react";
 
 export default function ListingsPageClient({
    searchParams,
@@ -35,12 +37,14 @@ export default function ListingsPageClient({
       ...userFavoriteListingsOptions(session?.user?.id ?? ""),
       enabled: !!session?.user?.id,
    });
-   if (!favorites?.success) {
-      return <div className="text-center py-12 text-red-500">
-         {tCommon("error")}: {favorites?.error}
-      </div>
-   }
-   const favoriteIds = new Set(favorites.data ?? []);
+   
+   useEffect(() => {
+      if (favorites && "error" in favorites && favorites.error) {
+         toast.error(favorites.error);
+      }
+   }, [favorites]);
+
+   const favoriteIds = new Set(favorites?.success ? favorites.data ?? [] : []);
 
 
    const handlePageChange = (page: number) => {

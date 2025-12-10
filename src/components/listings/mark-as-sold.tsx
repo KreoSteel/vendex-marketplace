@@ -1,38 +1,28 @@
 "use client";
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import { Button } from "../ui/button";
 import { CheckIcon } from "lucide-react";
 import { markListingAsSoldAction } from "@/app/actions/listings";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 export default function MarkAsSold({ listingId }: { listingId: string }) {
    const [isPending, startTransition] = useTransition();
-   const [error, setError] = useState<string | null>(null);
-   const [success, setSuccess] = useState<string | null>(null);
    const tButtons = useTranslations("buttons");
 
    function handleMarkAsSold() {
       startTransition(async () => {
          const result = await markListingAsSoldAction(listingId);
-         if (!result.success) {
-            setError(result.error);
-         } else {
-            setSuccess(result.data?.message);
+         if (result.success) {
+            toast.success(result.data?.message);
+         } else if (result.error) {
+            toast.error(result.error);
          }
       });
    }
 
-   if (error) {
-      return <p className="text-red-500">{error}</p>;
-   }
-   if (success) {
-      return <p className="text-green-500">{success}</p>;
-   }
-
    return (
       <>
-         {error && <p className="text-red-500">{error}</p>}
-         {success && <p className="text-green-500">{success}</p>}
          <Button
             variant="outline"
             className="flex items-center gap-2 shadow-md"

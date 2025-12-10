@@ -13,20 +13,19 @@ import DateFormatter from "../date-formatter";
 
 interface ProfileCardProps {
    user: User;
-   activeListingsCount: number;
-   itemsSoldCount: number;
-   totalReviewsCount: number;
    isOwner: boolean;
-   averageRating: number;
+   stats: {
+      averageRating: number;
+      activeListingsCount: number;
+      itemsSoldCount: number;
+      totalReviewsCount: number;
+   }
 }
 
 export default function ProfileCard({
    user,
-   activeListingsCount,
-   itemsSoldCount,
-   totalReviewsCount,
+   stats,
    isOwner,
-   averageRating,
 }: ProfileCardProps) {
    const t = useTranslations("profilePage");
    const tCommon = useTranslations("common");
@@ -69,8 +68,8 @@ export default function ProfileCard({
                      <StarIcon className="size-4 text-yellow-500 fill-current" />
                      <p>
                         {tCommon("rating")}{" "}
-                        {averageRating
-                           ? averageRating.toFixed(1)
+                        {stats.averageRating
+                           ? stats.averageRating.toFixed(1)
                            : tCommon("noReviews")}
                      </p>
                   </div>
@@ -93,19 +92,19 @@ export default function ProfileCard({
                <h3 className="text-sm text-neutral-500 font-medium">
                   {t("activeListings")}
                </h3>
-               <p>{activeListingsCount}</p>
+               <p>{stats.activeListingsCount}</p>
             </div>
             <div className="flex flex-col items-center gap-2">
                <h3 className="text-sm text-neutral-500 font-medium">
                   {t("itemsSold")}
                </h3>
-               <p>{itemsSoldCount}</p>
+               <p>{stats.itemsSoldCount}</p>
             </div>
             <div className="flex flex-col items-center gap-2">
                <h3 className="text-sm text-neutral-500 font-medium">
                   {t("totalReviews")}
                </h3>
-               <p>{totalReviewsCount}</p>
+               <p>{stats.totalReviewsCount}</p>
             </div>
          </CardContent>
       </Card>

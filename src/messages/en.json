@@ -67,6 +67,7 @@
       "errors": {
          "failedToCreateAccount": "Failed to create account",
          "failedToLogin": "Failed to login",
+         "failedToGetUser": "Failed to get user",
          "listingNotFound": "Listing not found",
          "listingAlreadySold": "This listing has already been sold",
          "notListingOwner": "You are not the owner of this listing",

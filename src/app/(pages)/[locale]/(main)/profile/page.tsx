@@ -8,6 +8,7 @@ import { getLocale } from "next-intl/server";
 import { getUserListingsCount } from "@/lib/data-access/listings";
 import { getReviewsStats } from "@/lib/data-access/reviews";
 import { User } from "@/utils/zod-schemas/auth";
+import { ProfileProvider } from "@/context/profile-context";
 
 export const revalidate = 120;
 
@@ -34,23 +35,28 @@ export default async function ProfilePage() {
       ? reviewsStatsResult.data
       : { averageRating: 0, totalReviews: 0 };
    return (
+      <ProfileProvider userId={profileUser.id}>
       <div className="container max-w-6xl mx-auto py-6 flex flex-col gap-6">
          <ProfileCard
             user={profileUser as User}
-            activeListingsCount={counts.activeListings}
-            itemsSoldCount={counts.itemsSold}
-            totalReviewsCount={reviewsStats.totalReviews}
+            stats={{
+               activeListingsCount: counts.activeListings,
+               itemsSoldCount: counts.itemsSold,
+               totalReviewsCount: reviewsStats.totalReviews,
+               averageRating: reviewsStats.averageRating,
+            }}
             isOwner={true}
-            averageRating={reviewsStats.averageRating}
          />
          <ListingTabs
-            userId={profileUser.id}
-            activeListingsCount={counts.activeListings}
-            soldListingsCount={counts.itemsSold}
-            favoritesListingsCount={counts.favoritesListings}
-            reviewsCount={reviewsStats.totalReviews}
+            stats={{
+               activeListingsCount: counts.activeListings,
+               soldListingsCount: counts.itemsSold,
+               favoritesListingsCount: counts.favoritesListings,
+               reviewsCount: reviewsStats.totalReviews,
+            }}
             showFavorites={true}
          />
       </div>
+      </ProfileProvider>
    );
 }

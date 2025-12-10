@@ -14,11 +14,10 @@ import {
 } from "@/components/ui/dialog";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 export default function DeleteListing({ listingId }: { listingId: string }) {
    const [isPending, startTransition] = useTransition();
-   const [error, setError] = useState<string | null>(null);
-   const [success, setSuccess] = useState<string | null>(null);
    const tButtons = useTranslations("buttons");
    const tDialogs = useTranslations("dialogs.deleteListing");
    const router = useRouter();
@@ -27,13 +26,12 @@ export default function DeleteListing({ listingId }: { listingId: string }) {
    function handleDelete() {
       startTransition(async () => {
          const result = await deleteListingAction(listingId);
-         if (!result.success) {
-            setError(result.error);
-            return;
+         if (result.success) {
+            toast.success(result.data);
+            router.push("/profile");
+         } else if (result.error) {
+            toast.error(result.error);
          }
-
-         setSuccess(result.data);
-         router.push("/profile");
       });
    }
    return (
@@ -51,8 +49,6 @@ export default function DeleteListing({ listingId }: { listingId: string }) {
                   {tDialogs("description")} <br />
                   {tDialogs("cannotUndo")}
                </DialogDescription>
-               {error && <p className="text-red-500">{error}</p>}
-               {success && <p className="text-green-500">{success}</p>}
             </DialogHeader>
             <DialogFooter>
                <DialogClose asChild>

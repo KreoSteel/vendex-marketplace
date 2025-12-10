@@ -19,6 +19,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import { categoriesOptions } from "@/lib/query-options/categories";
+import { toast } from "sonner";
 
 export default function CreateListingForm() {
    const tForms = useTranslations("forms");
@@ -35,6 +36,8 @@ export default function CreateListingForm() {
    useEffect(() => {
       if (state?.success) {
          router.push("/listings");
+      } else if (state?.error) {
+         toast.error(state.error);
       }
    }, [state, router]);
 
@@ -65,9 +68,6 @@ export default function CreateListingForm() {
 
    return (
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-         {state && "error" in state && state.error && (
-            <p className="text-red-500 text-sm">{state.error}</p>
-         )}
          <div className="grid gap-2">
             <Label htmlFor="title">
                {tForms("labels.title")} <span className="text-red-500">*</span>

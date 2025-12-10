@@ -1,22 +1,24 @@
 "use server";
-import { requireAuth } from "@/utils/auth";
+import { getUser, withAuth } from "@/utils/auth";
 import prisma from "@/utils/prisma";
 import { revalidatePath } from "next/cache";
 import { TConversation, conversationRowSchema } from "@/utils/zod-schemas/chat";
 import { Result } from "@/types/result";
 import { Message } from "@/utils/generated/client";
 
-export async function getChatWithUser(otherUserId: string): Promise<Result<Message[]>> {
-   const currentUser = await requireAuth();
-   if (!currentUser.success) {
-      return { success: false, error: currentUser.error };
+export const getChatWithUser = withAuth(async (
+   otherUserId: string
+): Promise<Result<Message[]>> => {
+   const currentUser = await getUser();
+   if (!currentUser) {
+      return { success: false, error: "Unauthorized" };
    }
 
    const messages = await prisma.message.findMany({
       where: {
          OR: [
-            { senderId: currentUser.data.id, receiverId: otherUserId },
-            { senderId: otherUserId, receiverId: currentUser.data.id },
+            { senderId: currentUser.id, receiverId: otherUserId },
+            { senderId: otherUserId, receiverId: currentUser.id },
          ],
       },
       orderBy: {
@@ -34,32 +36,32 @@ export async function getChatWithUser(otherUserId: string): Promise<Result<Messa
    });
 
    return { success: true, data: messages };
-}
+});
 
-export async function getConversationsWithUsers(): Promise<TConversation[]> {
-   const currentUser = await requireAuth();
-   if (!currentUser.success) {
+export const getConversationsWithUsers = withAuth(async (): Promise<TConversation[]> => {
+   const currentUser = await getUser();
+   if (!currentUser) {
       return [];
    }
-   
+
    const rawConversations = await prisma.$queryRaw<TConversation[]>`
       WITH ranked_messages AS (
          SELECT 
             m.*,
             CASE 
-               WHEN m."senderId" = ${currentUser.data.id} THEN m."receiverId"
+               WHEN m."senderId" = ${currentUser.id} THEN m."receiverId"
                ELSE m."senderId"
             END as other_user_id,
             ROW_NUMBER() OVER (
                PARTITION BY 
                   CASE 
-                     WHEN m."senderId" = ${currentUser.data.id} THEN m."receiverId"
+                     WHEN m."senderId" = ${currentUser.id} THEN m."receiverId"
                      ELSE m."senderId"
                   END
                ORDER BY m."createdAt" DESC
             ) as rn
          FROM messages m
-         WHERE m."senderId" = ${currentUser.data.id} OR m."receiverId" = ${currentUser.data.id}
+         WHERE m."senderId" = ${currentUser.id} OR m."receiverId" = ${currentUser.id}
       )
       SELECT 
          rm.*,
@@ -83,21 +85,23 @@ export async function getConversationsWithUsers(): Promise<TConversation[]> {
          },
          lastMessage: validated.content,
          lastMessageAt: validated.createdAt,
-         read: !(validated.receiverId === currentUser.data.id && !validated.read),
+         read: !(
+            validated.receiverId === currentUser.id && !validated.read
+         ),
       };
    });
-}
+});
 
-export async function changeMessageReadStatus(otherUserId: string) {
-   const currentUser = await requireAuth();
-   if (!currentUser.success) {
-      return { success: false, error: currentUser.error };
+export const changeMessageReadStatus = withAuth(async (otherUserId: string) => {
+   const currentUser = await getUser();
+   if (!currentUser) {
+      return { success: false, error: "Unauthorized" };
    }
-   
+
    await prisma.message.updateMany({
       where: {
          senderId: otherUserId,
-         receiverId: currentUser.data.id,
+         receiverId: currentUser.id,
          read: false,
       },
       data: {
@@ -109,21 +113,21 @@ export async function changeMessageReadStatus(otherUserId: string) {
    revalidatePath(`/messages/${otherUserId}`);
 
    return { success: true };
-}
+});
 
-export async function createMessage(
+export const createMessage = withAuth(async (
    receiverId: string,
    content: string,
    listingId?: string | null
-): Promise<Result<Message>> {
-   const currentUser = await requireAuth();
-   if (!currentUser.success) {
-      return { success: false, error: currentUser.error };
+): Promise<Result<Message>> => {
+   const currentUser = await getUser();
+   if (!currentUser) {
+      return { success: false, error: "Unauthorized" };
    }
-   
+
    const message = await prisma.message.create({
       data: {
-         senderId: currentUser.data.id,
+         senderId: currentUser.id,
          receiverId,
          content,
          listingId,
@@ -133,4 +137,4 @@ export async function createMessage(
    revalidatePath(`/messages/${receiverId}`);
 
    return { success: true, data: message };
-}
+});

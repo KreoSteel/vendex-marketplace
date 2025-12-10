@@ -1,7 +1,10 @@
+"use client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { isListingFavoriteOptions } from "@/lib/query-options/favorites";
 import { toggleFavoriteAction } from "@/app/actions/favorites";
 import { authClient } from "@/utils/auth-client";
+import * as Sentry from "@sentry/nextjs";
+import { toast } from "sonner";
 
 export const useIsListingFavorite = (listingId: string, enabled: boolean = true) => {
     const { data: session } = authClient.useSession();
@@ -30,7 +33,8 @@ export const useToggleFavorite = () => {
             queryClient.invalidateQueries({ queryKey: ["user-favorite-listings"] });
         },
         onError: (error) => {
-            console.error(error.message);
+            Sentry.captureException(error);
+            toast.error(error instanceof Error ? error.message : "Unknown error");
         }
     });
 }

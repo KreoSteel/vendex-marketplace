@@ -2,18 +2,19 @@
 
 import { updateUserProfile } from "@/lib/data-access/profile";
 import { uploadProfileImage } from "@/lib/storage/upload";
-import { requireAuth } from "@/utils/auth";
+import { getUser, withAuth } from "@/utils/auth";
 import { updateUserProfileSchema } from "@/utils/zod-schemas/profile";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { Result } from "@/types/result";
+import * as Sentry from "@sentry/nextjs";
 
-export async function updateUserProfileAction(
+export const updateUserProfileAction = withAuth(async (
    _prevState: Result<string> | undefined,
    formData: FormData
-): Promise<Result<string>> {
+): Promise<Result<string>> => {
    const t = await getTranslations("profile.errors");
-   const currentUser = await requireAuth();
+   const currentUser = await getUser();
 
    const parsed = updateUserProfileSchema.safeParse({
       name: formData.get("name") as string,
@@ -25,25 +26,25 @@ export async function updateUserProfileAction(
       return { success: false, error: parsed.error.message };
    }
 
-   if (!currentUser.success) {
-      return { success: false, error: currentUser.error };
+   if (!currentUser) {
+      return { success: false, error: "Unauthorized" };
    }
    try {
-      await updateUserProfile(currentUser.data.id, parsed.data);
+      await updateUserProfile(currentUser.id, parsed.data);
       revalidatePath("/profile");
       return { success: true, data: t("profileUpdatedSuccessfully") };
    } catch (error) {
-      console.error(t("failedToUpdateProfile"), error);
+      Sentry.captureException(error);
       return { success: false, error: t("failedToUpdateProfile") };
    }
-}
+});
 
-export async function updateUserProfileImageAction(
+export const updateUserProfileImageAction = withAuth(async (
    _prevState: Result<string> | undefined,
    formData: FormData
-): Promise<Result<string>> {
+): Promise<Result<string>> => {
    const t = await getTranslations("profile.errors");
-   const currentUser = await requireAuth();
+   const currentUser = await getUser();
    const file = formData.get("avatarImg") as File;
    if (!file || file.size === 0) {
       return { success: false, error: t("noFileProvided") };
@@ -53,11 +54,11 @@ export async function updateUserProfileImageAction(
       return { success: false, error: t("fileSizeTooLarge") };
    }
 
-   if (!currentUser.success) {
-      return { success: false, error: currentUser.error };
+   if (!currentUser) {
+      return { success: false, error: "Unauthorized" };
    }
 
-   const uploadResult = await uploadProfileImage(file, currentUser.data.id);
+   const uploadResult = await uploadProfileImage(file, currentUser.id);
    if (!uploadResult.success) {
       return { success: false, error: uploadResult.error };
    }
@@ -69,11 +70,11 @@ export async function updateUserProfileImageAction(
    }
 
    try {
-      await updateUserProfile(currentUser.data.id, parsed.data);
+      await updateUserProfile(currentUser.id, parsed.data);
       revalidatePath("/profile");
       return { success: true, data: t("profileImageUpdatedSuccessfully") };
    } catch (error) {
-      console.error(t("failedToUpdateProfileImage"), error);
+      Sentry.captureException(error);
       return { success: false, error: t("failedToUpdateProfileImage") };
    }
-}
+});

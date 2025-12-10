@@ -10,10 +10,11 @@ import {
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { createReviewAction } from "@/app/actions/reviews";
-import { useActionState, useTransition } from "react";
+import { useActionState, useEffect, useTransition } from "react";
 import { StarIcon } from "lucide-react";
 import { Input } from "../ui/input";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 interface CreateReviewFormProps {
    listingId: string;
@@ -42,6 +43,15 @@ export default function CreateReviewForm({
       });
    }
 
+   useEffect(() => {
+      if (state && "success" in state && state.success) {
+         toast.success(state.data);
+      }
+      if (state && "error" in state && state.error) {
+         toast.error(state.error);
+      }
+   }, [state]);
+
    return (
       <Dialog>
          <DialogTrigger asChild>
@@ -57,25 +67,12 @@ export default function CreateReviewForm({
                <DialogDescription className="text-base text-gray-600">
                   {tDialogs("description")}
                </DialogDescription>
-               {state && "error" in state && state.error && (
-                  <div className="rounded-md bg-red-50 border border-red-200 p-3">
-                     <p className="text-red-700 text-sm font-medium">
-                        {state.error}
-                     </p>
-                  </div>
-               )}
-               {state && "success" in state && state.success && (
-                  <div className="rounded-md bg-green-50 border border-green-200 p-3">
-                     <p className="text-green-700 text-sm font-medium">
-                        {state.success}
-                     </p>
-                  </div>
-               )}
             </DialogHeader>
             <form onSubmit={handleSubmit} className="flex flex-col gap-6 mt-2">
                <div className="space-y-3">
                   <Label htmlFor="rating" className="text-base font-medium">
-                     {tForms("labels.rating")} <span className="text-red-500">*</span>
+                     {tForms("labels.rating")}{" "}
+                     <span className="text-red-500">*</span>
                   </Label>
                   <div className="flex items-center gap-2">
                      <Input
@@ -89,26 +86,25 @@ export default function CreateReviewForm({
 
                <div className="space-y-3">
                   <Label htmlFor="comment" className="text-base font-medium">
-                     {tForms("labels.comment")} {" "}
-                     <span className="text-gray-400 text-sm">{tForms("optional")}</span>
+                     {tForms("labels.comment")}{" "}
+                     <span className="text-gray-400 text-sm">
+                        {tForms("optional")}
+                     </span>
                   </Label>
                   <Textarea
                      id="comment"
                      name="comment"
                      rows={5}
-                     placeholder={
-                        tFormsPlaceholders("commentReview")
-                     }
+                     placeholder={tFormsPlaceholders("commentReview")}
                      className="resize-none"
                   />
                </div>
 
                <div className="flex gap-3 pt-2">
-                  <Button
-                     type="submit"
-                     disabled={isPending}
-                     className="flex-1">
-                     {isPending ? tButtons("submitting") : tButtons("submitReview")}
+                  <Button type="submit" disabled={isPending} className="flex-1">
+                     {isPending
+                        ? tButtons("submitting")
+                        : tButtons("submitReview")}
                   </Button>
                </div>
             </form>

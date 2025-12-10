@@ -1,5 +1,5 @@
 "use server";
-import { getUser, requireAuth } from "@/utils/auth";
+import { getUser, withAuth } from "@/utils/auth";
 import prisma from "@/utils/prisma";
 import { TUpdateUserProfile, TUserProfile } from "@/utils/zod-schemas/profile";
 import { getTranslations } from "next-intl/server";
@@ -29,18 +29,18 @@ export async function getUserProfile(
    return { success: true, data: user as TUserProfile };
 }
 
-export async function updateUserProfile(
+export const updateUserProfile = withAuth(async (
    userId: string,
    data: Partial<TUpdateUserProfile>
-): Promise<Result<TUpdateUserProfile>> {
+): Promise<Result<TUpdateUserProfile>> => {
    const t = await getTranslations("listings");
-   const currentUser = await requireAuth();
+   const currentUser = await getUser();
 
-   if (!currentUser.success) {
-      return { success: false, error: currentUser.error };
-   }
+   if (!currentUser) {
+      return { success: false, error: "Unauthorized" };
+}
 
-   if (currentUser.data.id !== userId) {
+   if (currentUser.id !== userId) {
       return { success: false, error: t("errors.updateProfileError") };
    }
 
@@ -54,4 +54,4 @@ export async function updateUserProfile(
       },
    });
    return { success: true, data: updatedUser as TUpdateUserProfile };
-}
+});

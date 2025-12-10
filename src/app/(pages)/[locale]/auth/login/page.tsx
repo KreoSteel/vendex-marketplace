@@ -12,13 +12,20 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signInAction } from "@/app/actions/auth";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 export default function RegisterPage() {
    const [state, formAction, isPending] = useActionState(signInAction, { success: true, data: undefined });
    const t = useTranslations("auth.login");
+
+   useEffect(() => {
+      if (state && "error" in state && state.error) {
+         toast.error(state.error);
+      }
+   }, [state]);
 
    return (
       <Card className="w-full bg-surface max-w-md shadow-lg hover:shadow-xl hover:translate-y-[-5px] transition-all duration-300">
@@ -35,9 +42,6 @@ export default function RegisterPage() {
          </CardHeader>
          <form action={formAction}>
             <CardContent>
-               {state.success === false && (
-                  <p className="text-red-500 text-sm">{state.error}</p>
-               )}
                <div className="flex flex-col gap-6">
                   <div className="grid gap-2">
                      <Label htmlFor="email">{t("labelEmail")}</Label>
