@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import { Link } from "@/i18n/navigation";
 import { TPublicReview } from "@/utils/zod-schemas/reviews";
 import { useTranslations } from "next-intl";
+import { cn } from "@/lib/utils";
 
 interface ReviewCardProps {
     review: TPublicReview;
@@ -69,11 +70,10 @@ export default function ReviewCard({ review }: ReviewCardProps) {
                     {Array.from({ length: 5 }).map((_, index) => (
                         <Star 
                             key={index}
-                            className={`size-4 ${
-                                index < review.rating 
-                                    ? "text-yellow-400 fill-yellow-400" 
-                                    : "text-neutral-200 fill-neutral-200"
-                            }`} 
+                            className={cn("size-4", {
+                                "text-yellow-400 fill-yellow-400": index < review.rating,
+                                "text-neutral-200 fill-neutral-200": index >= review.rating,
+                            })} 
                         />
                     ))}
                 </div>

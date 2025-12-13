@@ -1,6 +1,12 @@
 "use client";
 import { createListingAction } from "@/app/actions/listings";
-import { useActionState, useEffect, useState, useTransition } from "react";
+import {
+   useActionState,
+   useEffect,
+   useRef,
+   useState,
+   useTransition,
+} from "react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
@@ -29,9 +35,24 @@ export default function CreateListingForm() {
    const router = useRouter();
    const [state, formAction] = useActionState(createListingAction, undefined);
    const [isPending, startTransition] = useTransition();
-   const { data: categories } = useQuery(categoriesOptions)
+   const { data: categories } = useQuery(categoriesOptions);
 
-   const [previewImages, setPreviewImages] = useState<File[]>([]);
+   const [previewImages, setPreviewImages] = useState<
+      { file: File; url: string }[]
+   >([]);
+   const previewImagesRef = useRef<{ file: File; url: string }[]>([]);
+
+   useEffect(() => {
+      previewImagesRef.current = previewImages;
+   }, [previewImages]);
+
+   useEffect(() => {
+      return () => {
+         previewImagesRef.current.forEach((image) => {
+            URL.revokeObjectURL(image.url);
+         });
+      };
+   }, []);
 
    useEffect(() => {
       if (state?.success) {
@@ -43,15 +64,19 @@ export default function CreateListingForm() {
 
    function handleAddImages(e: React.ChangeEvent<HTMLInputElement>) {
       const files = Array.from(e.target.files || []);
-      setPreviewImages((prev) => [...prev, ...files]);
+      const newImages = files.map((file) => ({
+         file,
+         url: URL.createObjectURL(file),
+      }));
+      setPreviewImages((prev) => [...prev, ...newImages]);
       e.target.value = "";
    }
 
    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
       e.preventDefault();
       const formData = new FormData(e.currentTarget);
-      previewImages.forEach((file) => formData.append("images", file));
-      
+      previewImages.forEach((image) => formData.append("images", image.file));
+
       startTransition(() => {
          formAction(formData);
       });
@@ -60,9 +85,11 @@ export default function CreateListingForm() {
    function handleRemoveImage(index: number) {
       setPreviewImages((prev) => {
          const fileToRemove = prev[index];
-         const urlToRevoke = URL.createObjectURL(fileToRemove);
-         URL.revokeObjectURL(urlToRevoke);
-         return prev.filter((_, item) => item !== index);
+         if (fileToRemove) {
+            URL.revokeObjectURL(fileToRemove.url);
+         }
+         const newFiles = prev.filter((_, item) => item !== index);
+         return newFiles;
       });
    }
 
@@ -81,7 +108,8 @@ export default function CreateListingForm() {
          </div>
          <div className="grid gap-2">
             <Label htmlFor="description">
-               {tForms("labels.description")} <span className="text-red-500">*</span>
+               {tForms("labels.description")}{" "}
+               <span className="text-red-500">*</span>
             </Label>
             <Textarea
                name="description"
@@ -108,14 +136,20 @@ export default function CreateListingForm() {
          </div>
          <div className="flex flex-wrap gap-2">
             {previewImages.map((image, index) => {
-               const url = URL.createObjectURL(image);
+               const url = image.url;
                return (
-                  <div key={index} className="relative">
+                  <div
+                     key={
+                        image.file.name +
+                        image.file.size +
+                        image.file.lastModified
+                     }
+                     className="relative h-32 w-32">
                      <Image
                         src={url}
-                        alt={image.name}
+                        alt={image.file.name}
                         fill
-                        sizes="150px"
+                        sizes="128px"
                         className="rounded-md object-cover"
                      />
                      <Button
@@ -145,11 +179,14 @@ export default function CreateListingForm() {
          </div>
          <div className="grid gap-2">
             <Label>
-               {tForms("labels.category")} <span className="text-red-500">*</span>
+               {tForms("labels.category")}{" "}
+               <span className="text-red-500">*</span>
             </Label>
             <Select name="category" required>
                <SelectTrigger>
-                  <SelectValue placeholder={tForms("placeholders.selectCategory")} />
+                  <SelectValue
+                     placeholder={tForms("placeholders.selectCategory")}
+                  />
                </SelectTrigger>
                <SelectContent>
                   {categories?.map((cat) => (
@@ -162,7 +199,8 @@ export default function CreateListingForm() {
          </div>
          <div className="grid gap-2">
             <Label>
-               {tForms("labels.location")} <span className="text-red-500">*</span>
+               {tForms("labels.location")}{" "}
+               <span className="text-red-500">*</span>
             </Label>
             <Input
                name="location"
@@ -173,11 +211,14 @@ export default function CreateListingForm() {
          </div>
          <div className="grid gap-2">
             <Label>
-               {tForms("labels.condition")} <span className="text-red-500">*</span>
+               {tForms("labels.condition")}{" "}
+               <span className="text-red-500">*</span>
             </Label>
             <Select name="condition" required>
                <SelectTrigger>
-                  <SelectValue placeholder={tForms("placeholders.selectCondition")} />
+                  <SelectValue
+                     placeholder={tForms("placeholders.selectCondition")}
+                  />
                </SelectTrigger>
                <SelectContent>
                   <SelectItem value={ListingCondition.NEW}>
@@ -196,7 +237,9 @@ export default function CreateListingForm() {
             </Select>
          </div>
          <Button type="submit" disabled={isPending} className="w-fit mx-auto">
-            {isPending ? tButtons("creatingListing") : tButtons("createListing")}
+            {isPending
+               ? tButtons("creatingListing")
+               : tButtons("createListing")}
          </Button>
       </form>
    );

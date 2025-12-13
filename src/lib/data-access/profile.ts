@@ -24,6 +24,7 @@ export async function getUserProfile(
          location: true,
          phone: true,
          avatarImg: true,
+         createdAt: true,
       },
    });
    return { success: true, data: user as TUserProfile };
@@ -33,15 +34,15 @@ export const updateUserProfile = withAuth(async (
    userId: string,
    data: Partial<TUpdateUserProfile>
 ): Promise<Result<TUpdateUserProfile>> => {
-   const t = await getTranslations("listings");
+   const t = await getTranslations("profile.errors");
    const currentUser = await getUser();
 
    if (!currentUser) {
-      return { success: false, error: "Unauthorized" };
+      return { success: false, error: t("unauthorizedAccess") };
 }
 
    if (currentUser.id !== userId) {
-      return { success: false, error: t("errors.updateProfileError") };
+      return { success: false, error: t("failedToUpdateProfile") };
    }
 
    const updatedUser = await prisma.user.update({

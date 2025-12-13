@@ -51,7 +51,7 @@ export default function ListingDetailsClientPage({
             <div className="lg:col-span-2 space-y-6">
                <div className="relative w-full aspect-3/2 rounded-lg overflow-hidden bg-gray-100 shadow-sm">
                   <ImageSlider
-                     slides={listing?.images.map((image) => image.url) || []}
+                     slides={listing?.images.map((image) => image.url).filter((url) => typeof url === "string" && url.trim() !== "") || []}
                   />
                </div>
                <ListingInfo listing={listing} />

@@ -10,7 +10,7 @@ export const createListingSchema = z.object({
       .optional(),
    price: z
       .number()
-      .max(1000000, { message: "Price must be less than 1000000" }),
+      .max(10000000, { message: "Price must be less than 10000000" }),
    categoryId: z.string().min(1, { message: "Category is required" }),
    location: z.string().min(1, { message: "Location is required" }),
    condition: z.enum(ListingCondition).default("USED"),
@@ -31,7 +31,7 @@ export const updateListingSchema = z
          .optional(),
       price: z
          .number()
-         .max(1000000, { message: "Price must be less than 1000000" }),
+         .max(10000000, { message: "Price must be less than 10000000" }),
       location: z.string().min(1, { message: "Location is required" }),
       condition: z.enum(ListingCondition).default("USED"),
       images: z
@@ -81,9 +81,25 @@ export const listingSchema = z.object({
    }),
 });
 
+export const listingRowSchema = z.object({
+   id: z.string(),
+   title: z.string(),
+   price: z.number().nullable(),
+   location: z.string().nullable(),
+   condition: z.enum(ListingCondition),
+   createdAt: z.date(),
+   updatedAt: z.date(),
+   images: z.array(
+      z.object({
+         url: z.string(),
+      })
+   ),
+});
+
+
 export const paginationListingsSchema = z.object({
    listings: z
-      .array(listingSchema)
+      .array(listingRowSchema)
       .min(1, { message: "There must be at least one listing" }),
    currentPage: z
       .number()
@@ -127,6 +143,7 @@ export type TCreateListingResult = z.infer<typeof CreateListingResultSchema>;
 export type TUpdateListing = z.infer<typeof updateListingSchema>;
 export type TCreateListing = z.infer<typeof createListingSchema>;
 export type TListing = z.infer<typeof listingSchema>;
+export type TListingRow = z.infer<typeof listingRowSchema>;
 export type TRecentListings = z.infer<typeof recentListingsSchema>;
 export type TListingsCard = z.infer<typeof ListingsCardSchema>;
 export type TPaginationListings = z.infer<typeof paginationListingsSchema>;

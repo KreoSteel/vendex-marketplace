@@ -14,20 +14,16 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { useActionState, useEffect } from "react";
 import { updateUserProfileAction } from "@/app/actions/profile";
-import type { User } from "@/utils/generated/client";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
+import type { TUserProfile } from "@/utils/zod-schemas/profile";
 
-export default function EditProfileForm({ user }: { user: User | null }) {
+export default function EditProfileForm({ user }: { user: TUserProfile | null }) {
    const tDialogs = useTranslations("dialogs.editProfile");
    const tForms = useTranslations("forms.labels");
    const tButtons = useTranslations("buttons");
    const [state, formAction, isPending] = useActionState(updateUserProfileAction, undefined);
-
-   if (!user) {
-      return null;
-   }
-
+   
    useEffect(() => {
       if (state && "success" in state && state.success) {
          toast.success(state.data);
@@ -36,6 +32,11 @@ export default function EditProfileForm({ user }: { user: User | null }) {
          toast.error(state.error);
       }
    }, [state]);
+
+   if (!user) {
+      return null;
+   }
+
 
    return (
       <Dialog>

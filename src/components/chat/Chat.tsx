@@ -7,11 +7,16 @@ import { useTranslations } from "next-intl";
 import { chatWithUserOptions } from "@/lib/query-options/messages";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { sendMessageOptions } from "@/lib/mutation-options/messages";
+import { Message } from "@/utils/generated/client";
 
 interface ChatProps {
    userId: string;
    username?: string;
    currentUserId: string;
+}
+
+interface MessageWithSender {
+   sender: { id: string; name: string | null; avatarImg: string | null }
 }
 
 export default function Chat({ userId, username, currentUserId }: ChatProps) {
@@ -45,17 +50,37 @@ export default function Chat({ userId, username, currentUserId }: ChatProps) {
       if (!chat) return undefined;
       // If query returned an error Result shape
       if (!Array.isArray(chat)) {
-         return chat.success === false ? [] : undefined;
+         if (chat.success === false) {
+            return [];
+         }
+         // If success is true, access the data property
+         if (chat.success === true) {
+            return chat.data.map((message) => {
+               const messageWithSender = message as Message & MessageWithSender;
+               return {
+                  id: message.id,
+                  content: message.content,
+                  user: {
+                     name: messageWithSender.sender.name ?? tChatPage("unknownUser"),
+                  },
+                  createdAt: message.createdAt.toISOString(),
+               };
+            });
+         }
+         return undefined;
       }
 
-      return chat.map((message) => ({
-         id: message.id,
-         content: message.content,
-         user: {
-            name: message.sender.name ?? tChatPage("unknownUser"),
-         },
-         createdAt: message.createdAt.toISOString(),
-      }));
+      return chat.map((message) => {
+         const messageWithSender = message as Message & MessageWithSender;
+         return {
+            id: message.id,
+            content: message.content,
+            user: {
+               name: messageWithSender.sender.name ?? tChatPage("unknownUser"),
+            },
+            createdAt: message.createdAt.toISOString(),
+         };
+      });
    }, [chat, tChatPage]);
 
    const roomName = useMemo(

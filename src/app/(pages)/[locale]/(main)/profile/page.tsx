@@ -7,8 +7,8 @@ import { notFound } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { getUserListingsCount } from "@/lib/data-access/listings";
 import { getReviewsStats } from "@/lib/data-access/reviews";
-import { User } from "@/utils/zod-schemas/auth";
 import { ProfileProvider } from "@/context/profile-context";
+import type { TUserProfile } from "@/utils/zod-schemas/profile";
 
 export const revalidate = 120;
 
@@ -38,7 +38,7 @@ export default async function ProfilePage() {
       <ProfileProvider userId={profileUser.id}>
       <div className="container max-w-6xl mx-auto py-6 flex flex-col gap-6">
          <ProfileCard
-            user={profileUser as User}
+            user={profileUser}
             stats={{
                activeListingsCount: counts.activeListings,
                itemsSoldCount: counts.itemsSold,

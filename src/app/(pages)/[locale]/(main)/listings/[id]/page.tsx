@@ -9,6 +9,7 @@ import { notFound } from "next/navigation";
 import { getUser } from "@/utils/auth";
 
 export const dynamicParams = true;
+export const revalidate = 120;
 
 export default async function ListingPageDetails({
    params,

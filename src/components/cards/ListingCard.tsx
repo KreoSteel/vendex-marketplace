@@ -1,12 +1,12 @@
 "use client";
-import { TListing } from "@/utils/zod-schemas/listings";
+import { TListingsCard } from "@/utils/zod-schemas/listings";
 import Image from "next/image";
 import ToggleFavorite from "@/components/favorites/ToggleFavorite";
 import { Link } from "@/i18n/navigation";
 import DateFormatter from "../date-formatter";
 
 interface ListingCardProps {
-   listing: TListing;
+   listing: TListingsCard;
    preload?: boolean;
    isFavorite?: boolean;
 }

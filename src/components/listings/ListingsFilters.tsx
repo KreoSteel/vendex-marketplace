@@ -4,186 +4,104 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Checkbox, CheckboxIndicator } from "@radix-ui/react-checkbox";
 import { CheckIcon } from "lucide-react";
 import { ListingCondition } from "@/utils/generated/enums";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
-import { Filters } from "@/lib/data-access/listings";
-import { useRouter } from "@/i18n/navigation";
 import { Button } from "../ui/button";
 import { useTranslations } from "next-intl";
-import { useQuery } from "@tanstack/react-query";
-import { categoriesOptions } from "@/lib/query-options/categories";
+import { useListingsFilters } from "@/hooks/useListingsFilters";
+import { initialState } from "@/hooks/use-filters-reducer";
+import { useRouter } from "@/i18n/navigation";
+import { Slider } from "../ui/slider";
 import { getMaxPriceForFiltersOptions } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { Filters } from "@/lib/data-access/listings";
+import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function ListingsFilters() {
-   const { data: categories } = useQuery(categoriesOptions);
-   const tConditions = useTranslations("conditions");
-   const tSearchListingsPage = useTranslations("searchListingsPage");
-
+   const {
+      state,
+      categories,
+      handleCategoryChange,
+      handleConditionChange,
+      handlePriceRangeChange,
+      clearFilters,
+   } = useListingsFilters();
    const searchParams = useSearchParams();
+   const queryString = searchParams.toString();
+   const urlCategory = searchParams.get("category")
+      ? (searchParams.get("category")?.split(",") as string[])
+      : [];
+   const urlCondition = searchParams.get("condition")
+      ? (searchParams.get("condition")?.split(",") as ListingCondition[])
+      : [];
+   const urlSearch = searchParams.get("search")
+      ? searchParams.get("search")
+      : null;
 
-   const search = searchParams.get("search") || null;
+   const maxPriceParams: Filters = {
+      categorySlugs: urlCategory.length > 0 ? urlCategory : undefined,
+      conditions: urlCondition.length > 0 ? urlCondition : undefined,
+      search: urlSearch,
+   };
 
-   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-   const [selectedConditions, setSelectedConditions] = useState<
-      ListingCondition[]
-   >([]);
+   const tCommon = useTranslations("common");
+   const tSearchListingsPage = useTranslations("searchListingsPage");
+   const router = useRouter();
+   const { data: maxPrice } = useQuery({
+      ...getMaxPriceForFiltersOptions(maxPriceParams),
+      queryKey: ["max-price", queryString],
+   });
+
+   function handleApplyFilters() {
+      const maxPriceValue = maxPrice ?? initialState.priceRange[1];
+      const params = new URLSearchParams();
+      if (state.categories.length > 0) {
+         params.set("category", state.categories.join(","));
+      }
+      if (state.conditions.length > 0) {
+         params.set("condition", state.conditions.join(","));
+      }
+      if (state.priceRange[0] > 0) {
+         params.set("minPrice", state.priceRange[0].toString());
+      }
+      if (state.priceRange[1] < maxPriceValue) {
+         params.set("maxPrice", state.priceRange[1].toString());
+      }
+      const queryString = params.toString();
+      router.push(`/listings?${queryString}`);
+   }
+
+   useEffect(() => {
+      const DEFAULT_MAX_PRICE = initialState.priceRange[1];
+      if (!maxPrice || maxPrice <= 0) return;
+      const needsClamp =
+         state.priceRange[1] === DEFAULT_MAX_PRICE ||
+         state.priceRange[1] > maxPrice;
+      if (needsClamp) {
+         handlePriceRangeChange([
+            Math.min(state.priceRange[0], maxPrice),
+            maxPrice,
+         ]);
+      }
+   }, [maxPrice, state.priceRange, handlePriceRangeChange]);
+
    const filterConditions = [
-      { label: tConditions("labels.NEW"), value: ListingCondition.NEW },
       {
-         label: tConditions("labels.LIKE_NEW"),
-         value: ListingCondition.LIKE_NEW,
+         value: ListingCondition.NEW,
+         label: tSearchListingsPage("filters.conditions.new"),
       },
-      { label: tConditions("labels.USED"), value: ListingCondition.USED },
       {
-         label: tConditions("labels.FOR_PARTS"),
+         value: ListingCondition.LIKE_NEW,
+         label: tSearchListingsPage("filters.conditions.likeNew"),
+      },
+      {
+         value: ListingCondition.USED,
+         label: tSearchListingsPage("filters.conditions.used"),
+      },
+      {
          value: ListingCondition.FOR_PARTS,
+         label: tSearchListingsPage("filters.conditions.forParts"),
       },
    ];
-
-   const filters: Filters = {
-      search: search,
-      categorySlugs: selectedCategories.length > 0 ? selectedCategories : null,
-      conditions: selectedConditions.length > 0 ? selectedConditions : null,
-   };
-
-   const { data: maxPrice } =
-      useQuery(getMaxPriceForFiltersOptions(filters));
-   const [priceRange, setPriceRange] = useState([0, maxPrice || 1000]);
-   const [isPending, startTransition] = useTransition();
-   const router = useRouter();
-
-   const handleURLChange = () => {
-      const params = new URLSearchParams(searchParams.toString());
-
-      if (search) {
-         params.set("search", search);
-      } else {
-         params.delete("search");
-      }
-
-      if (selectedCategories.length > 0) {
-         params.set("category", selectedCategories.join(","));
-      } else {
-         params.delete("category");
-      }
-
-      if (selectedConditions.length > 0) {
-         params.set("condition", selectedConditions.join(","));
-      } else {
-         params.delete("condition");
-      }
-
-      if (priceRange[0] > 0 || (maxPrice && priceRange[1] < maxPrice)) {
-         params.set("minPrice", priceRange[0].toString());
-         params.set("maxPrice", priceRange[1].toString());
-      } else {
-         params.delete("minPrice");
-         params.delete("maxPrice");
-      }
-
-      router.push(`/listings?${params.toString()}`);
-   };
-
-   const handleCategoryChange = (slug: string, checked: boolean) => {
-      setSelectedCategories((prev) =>
-         checked ? [...prev, slug] : prev.filter((sl) => sl !== slug)
-      );
-   };
-
-   const handleConditionChange = (
-      condition: ListingCondition,
-      checked: boolean
-   ) => {
-      setSelectedConditions((prev) =>
-         checked
-            ? [...prev, condition]
-            : prev.filter((cond) => cond !== condition)
-      );
-   };
-
-   const clearFilters = () => {
-      setSelectedCategories([]);
-      setSelectedConditions([]);
-      setPriceRange([0, maxPrice || 1000]);
-      const params = new URLSearchParams(searchParams.toString());
-
-      params.delete("category");
-      params.delete("condition");
-      params.delete("minPrice");
-      params.delete("maxPrice");
-
-      router.push(`/listings?${params.toString()}`);
-   };
-
-   useEffect(() => {
-      if (maxPrice !== undefined && maxPrice > 0) {
-         startTransition(() => {
-            setPriceRange((prev) => {
-               if (prev[0] === 0 && prev[1] === maxPrice) return prev;
-               return [0, maxPrice];
-            });
-         });
-      }
-   }, [maxPrice, startTransition]);
-
-   useEffect(() => {
-      const categories = searchParams.get("category");
-      if (categories) {
-         const newCategories = categories.split(",");
-
-         startTransition(() => {
-            setSelectedCategories((prev) => {
-               if (
-                  prev.length === newCategories.length &&
-                  prev.every((c) => newCategories.includes(c))
-               )
-                  return prev;
-               return newCategories;
-            });
-         });
-      } else {
-         startTransition(() => {
-            setSelectedCategories((prev) => (prev.length ? [] : prev));
-         });
-      }
-
-      const conditions = searchParams.get("condition");
-      if (conditions) {
-         const newConditions = conditions.split(",") as ListingCondition[];
-
-         startTransition(() => {
-            setSelectedConditions((prev) => {
-               if (
-                  prev.length === newConditions.length &&
-                  prev.every((c) => newConditions.includes(c))
-               )
-                  return prev;
-               return newConditions;
-            });
-         });
-      } else {
-         startTransition(() => {
-            setSelectedConditions((prev) => (prev.length ? [] : prev));
-         });
-      }
-
-      const minPrice = searchParams.get("minPrice");
-      const maxPriceParam = searchParams.get("maxPrice");
-      if (minPrice || maxPriceParam) {
-         const newRange = [
-            minPrice ? parseInt(minPrice, 10) : 0,
-            maxPriceParam ? parseInt(maxPriceParam, 10) : 1000,
-         ];
-
-         startTransition(() => {
-            setPriceRange((prev) => {
-               if (prev[0] === newRange[0] && prev[1] === newRange[1])
-                  return prev;
-               return newRange;
-            });
-         });
-      }
-   }, [searchParams, startTransition]);
 
    return (
       <Card className="w-full bg-surface">
@@ -197,63 +115,105 @@ export default function ListingsFilters() {
                <Label className="text-base font-medium pb-1.5">
                   {tSearchListingsPage("filters.categories")}
                </Label>
-               {categories?.map((category) => (
-                  <div key={category.slug} className="flex items-center gap-2">
-                     <Checkbox
-                        id={category.slug}
-                        checked={selectedCategories.includes(category.slug)}
-                        onCheckedChange={(checked) =>
-                           handleCategoryChange(category.slug, checked === true)
-                        }
-                        className="w-4 h-4 border-border rounded-sm border-2 data-[state=checked]:bg-primary-500 data-[state=checked]:border-primary-500 shrink-0">
-                        <CheckboxIndicator className="flex items-center justify-center">
-                           <CheckIcon className="w-3 h-3 text-white" />
-                        </CheckboxIndicator>
-                     </Checkbox>
-                     <Label
-                        htmlFor={category.slug}
-                        className="text-sm font-normal cursor-pointer select-none">
-                        {category.name}
-                     </Label>
-                  </div>
-               ))}
+               {categories?.map((category) => {
+                  const isChecked = state.categories.includes(category.slug);
+                  const handleChange = (checked: boolean) => {
+                     if (checked) {
+                        handleCategoryChange([
+                           ...state.categories,
+                           category.slug,
+                        ]);
+                     } else {
+                        handleCategoryChange(
+                           state.categories.filter((c) => c !== category.slug)
+                        );
+                     }
+                  };
+                  return (
+                     <div
+                        key={category.slug}
+                        className="flex items-center gap-2">
+                        <Checkbox
+                           id={category.slug}
+                           checked={isChecked}
+                           onCheckedChange={handleChange}
+                           className="w-4 h-4 border-border rounded-sm border-2 data-[state=checked]:bg-primary-500 data-[state=checked]:border-primary-500 shrink-0">
+                           <CheckboxIndicator className="flex items-center justify-center">
+                              <CheckIcon className="w-3 h-3 text-white" />
+                           </CheckboxIndicator>
+                        </Checkbox>
+                        <Label
+                           htmlFor={category.slug}
+                           className="text-sm font-normal cursor-pointer select-none">
+                           {category.name}
+                        </Label>
+                     </div>
+                  );
+               })}
             </div>
             <div className="flex flex-col gap-1.5">
                <Label className="text-base font-medium pb-1.5">
                   {tSearchListingsPage("filters.conditionTitle")}
                </Label>
-               {filterConditions.map((condition) => (
-                  <div
-                     key={condition.value}
-                     className="flex items-center gap-2">
-                     <Checkbox
-                        id={condition.value}
-                        checked={selectedConditions.includes(condition.value)}
-                        onCheckedChange={(checked) =>
-                           handleConditionChange(
-                              condition.value,
-                              checked === true
-                           )
-                        }
-                        className="w-4 h-4 border-border rounded-sm border-2 data-[state=checked]:bg-primary-500 data-[state=checked]:border-primary-500 shrink-0">
-                        <CheckboxIndicator className="flex items-center justify-center">
-                           <CheckIcon className="w-3 h-3 text-white" />
-                        </CheckboxIndicator>
-                     </Checkbox>
-                     <Label
-                        htmlFor={condition.value}
-                        className="text-sm font-normal cursor-pointer select-none">
-                        {condition.label}
-                     </Label>
-                  </div>
-               ))}
+               {filterConditions.map((condition) => {
+                  const isChecked = state.conditions.includes(condition.value);
+                  const handleChange = (checked: boolean) => {
+                     if (checked) {
+                        handleConditionChange([
+                           ...state.conditions,
+                           condition.value,
+                        ]);
+                     } else {
+                        handleConditionChange(
+                           state.conditions.filter((c) => c !== condition.value)
+                        );
+                     }
+                  };
+                  return (
+                     <div
+                        key={condition.value}
+                        className="flex items-center gap-2">
+                        <Checkbox
+                           id={condition.value}
+                           checked={isChecked}
+                           onCheckedChange={handleChange}
+                           className="w-4 h-4 border-border rounded-sm border-2 data-[state=checked]:bg-primary-500 data-[state=checked]:border-primary-500 shrink-0">
+                           <CheckboxIndicator className="flex items-center justify-center">
+                              <CheckIcon className="w-3 h-3 text-white" />
+                           </CheckboxIndicator>
+                        </Checkbox>
+                        <Label
+                           htmlFor={condition.value}
+                           className="text-sm font-normal cursor-pointer select-none">
+                           {condition.label}
+                        </Label>
+                     </div>
+                  );
+               })}
+            </div>
+            <div className="flex flex-col gap-1.5">
+               <Label className="text-base font-medium pb-1.5">
+                  {tCommon("price")}
+               </Label>
+               <Slider
+                  value={state.priceRange}
+                  onValueChange={handlePriceRangeChange}
+                  min={0}
+                  max={maxPrice ?? state.priceRange[1]}
+                  step={maxPrice ? maxPrice / 100 : 1}
+                  className="w-full"
+               />
+               <div className="flex justify-between text-sm text-gray-600">
+                  <span>€{state.priceRange[0].toLocaleString()}</span>
+                  <span>€{state.priceRange[1].toLocaleString()}</span>
+               </div>
             </div>
             <div className="flex gap-2">
-               <Button onClick={clearFilters} variant="outline" disabled={isPending}>
-                  {isPending ? tSearchListingsPage("filters.clearing") : tSearchListingsPage("filters.clear")}
+               <Button onClick={clearFilters} variant="outline">
+                  {tSearchListingsPage("filters.clear")}
                </Button>
-               <Button onClick={handleURLChange} className="w-full max-w-26" disabled={isPending}>
-                  {isPending ? tSearchListingsPage("filters.applying") : tSearchListingsPage("filters.apply")}
+               <Button className="w-full max-w-26" onClick={handleApplyFilters}>
+                  {tSearchListingsPage("filters.apply")}
                </Button>
             </div>
          </CardContent>

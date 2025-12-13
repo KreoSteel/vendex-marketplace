@@ -3,7 +3,7 @@ import { getUser, withAuth } from "@/utils/auth";
 import prisma from "@/utils/prisma";
 import { getTranslations } from "next-intl/server";
 import { Result } from "@/types/result";
-import { TListing } from "@/utils/zod-schemas/listings";
+import { TListingRow } from "@/utils/zod-schemas/listings";
 
 export const toggleFavorite = withAuth(async (
    listingId: string
@@ -58,7 +58,7 @@ export const toggleFavorite = withAuth(async (
 
 export const getUserFavoriteListings = withAuth(async (
    userId: string
-): Promise<Result<TListing[]>> => {
+): Promise<Result<TListingRow[]>> => {
    const tFavorites = await getTranslations("favorites");
    const user = await getUser();
    if (!user || user.id !== userId) {
@@ -97,7 +97,7 @@ export const getUserFavoriteListings = withAuth(async (
       },
    });
 
-   return { success: true, data: result.map((fav) => fav.listing as TListing) };
+   return { success: true, data: result.map((fav) => fav.listing as TListingRow) };
 });
 
 export async function isListingFavorite(listingId: string) {

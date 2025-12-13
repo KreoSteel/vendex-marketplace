@@ -1,10 +1,23 @@
 import { updateListingAction } from "@/app/actions/listings";
-import { startTransition, useActionState, useEffect, useState } from "react";
+import {
+   startTransition,
+   useActionState,
+   useEffect,
+   useRef,
+   useState,
+} from "react";
 import { toast } from "sonner";
-import { TListing } from "@/utils/zod-schemas/listings";
+import { TEditListing } from "@/components/forms/EditListingForm";
 
-export const useImagePreview = (listing: TListing) => {
-   const [newImages, setNewImages] = useState<File[]>([]);
+type ListingWithImages = {
+   images?: (string | { url?: string })[];
+};
+
+export const useImagePreview = (listing: ListingWithImages) => {
+   const [newImages, setNewImages] = useState<
+      { file: File; url: string }[]
+   >([]);
+   const previewImagesRef = useRef<{ file: File; url: string }[]>([]);
    const [existingImages, setExistingImages] = useState<string[]>(() => {
       if (listing.images && Array.isArray(listing.images)) {
          return listing.images
@@ -16,9 +29,25 @@ export const useImagePreview = (listing: TListing) => {
       return [];
    });
 
+   useEffect(() => {
+      previewImagesRef.current = newImages;
+   }, [newImages]);
+
+   useEffect(() => {
+      return () => {
+         previewImagesRef.current.forEach((image) => {
+            URL.revokeObjectURL(image.url);
+         });
+      };
+   }, []);
+
    function handleAddImages(e: React.ChangeEvent<HTMLInputElement>) {
       const files = Array.from(e.target.files || []);
-      setNewImages((prev) => [...prev, ...files]);
+      const newEntries = files.map((file) => ({
+         file,
+         url: URL.createObjectURL(file),
+      }));
+      setNewImages((prev) => [...prev, ...newEntries]);
       e.target.value = "";
    }
 
@@ -28,13 +57,11 @@ export const useImagePreview = (listing: TListing) => {
 
    function handleRemoveNewImage(index: number) {
       setNewImages((prev) => {
-         const newFiles = prev.filter((_, i) => i !== index);
-         const fileToRemove = prev[index];
-         if (fileToRemove) {
-            const url = URL.createObjectURL(fileToRemove);
-            URL.revokeObjectURL(url);
+         const imageToRemove = prev[index];
+         if (imageToRemove) {
+            URL.revokeObjectURL(imageToRemove.url);
          }
-         return newFiles;
+         return prev.filter((_, i) => i !== index);
       });
    }
 
@@ -47,9 +74,15 @@ export const useImagePreview = (listing: TListing) => {
    };
 };
 
-export const useEditListing = (listing: TListing) => {
+export const useEditListing = (listing: TEditListing) => {
    const [state, formAction, isPending] = useActionState(updateListingAction, undefined);
-   const { existingImages, newImages } = useImagePreview(listing);
+   const {
+      existingImages,
+      newImages,
+      handleAddImages,
+      handleRemoveExistingImage,
+      handleRemoveNewImage,
+   } = useImagePreview(listing);
 
    useEffect(() => {
       if (state && "success" in state && state.success) {
@@ -66,7 +99,7 @@ export const useEditListing = (listing: TListing) => {
       const formData = new FormData(e.currentTarget);
 
       existingImages.forEach((url) => formData.append("existingImages", url));
-      newImages.forEach((file) => formData.append("images", file));
+      newImages.forEach(({ file }) => formData.append("images", file));
 
       startTransition(() => {
          formAction(formData);
@@ -76,6 +109,9 @@ export const useEditListing = (listing: TListing) => {
    return {
       existingImages,
       newImages,
+      handleAddImages,
+      handleRemoveExistingImage,
+      handleRemoveNewImage,
       handleSubmit,
       isPending,
    };

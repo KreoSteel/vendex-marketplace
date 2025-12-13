@@ -85,7 +85,7 @@ export const updateListingAction = withAuth(async (
    const files = formData.getAll("images") as File[];
    const existingImages: string[] = formData
       .getAll("existingImages")
-      .filter((item): item is string => typeof item === "string") as string[];
+      .filter((item): item is string => typeof item === "string" && item.trim() !== "") as string[];
 
    if (!currentUser) {
       return { success: false, error: "Unauthorized" };

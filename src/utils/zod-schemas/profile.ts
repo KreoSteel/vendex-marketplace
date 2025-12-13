@@ -8,15 +8,13 @@ export const updateUserProfileSchema = z.object({
 });
 
 export const userProfileSchema = z.object({
-    id: z.string(),
-    name: z.string(),
-    location: z.string(),
-    phone: z.string(),
-    avatarImg: z.url(),
-    isActive: z.boolean(),
+    id: z.string().min(1),
+    name: z.string().nullable(),
+    location: z.string().nullable(),
+    phone: z.string().nullable(),
+    avatarImg: z.string().nullable(),
     createdAt: z.date(),
-    updatedAt: z.date(),
-    email: z.email(),
 });
+
 export type TUpdateUserProfile = z.infer<typeof updateUserProfileSchema>;
 export type TUserProfile = z.infer<typeof userProfileSchema>;

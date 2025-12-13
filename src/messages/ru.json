@@ -312,7 +312,8 @@
          "failedToUpdateProfileImage": "Не удалось обновить фото профиля",
          "noFileProvided": "Файл не предоставлен",
          "fileSizeTooLarge": "Размер файла должен быть меньше 5MB",
-         "failedToUploadImage": "Не удалось загрузить фото"
+         "failedToUploadImage": "Не удалось загрузить фото",
+         "unauthorizedAccess": "Несанкционированный доступ"
       }
    },
    "reviews": {

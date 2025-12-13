@@ -23,6 +23,7 @@ import { User } from "@/utils/zod-schemas/auth";
 import SearchBar from "../ui/search";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { getTranslations } from "next-intl/server";
+import { cn } from "@/lib/utils";
 
 export default async function Header() {
    const user = await getUser();
@@ -80,14 +81,7 @@ export default async function Header() {
                         <DropdownMenuContent align="end">
                            <div className="flex items-center gap-2 px-2 py-1">
                               {user.avatarImg ? (
-                                 <Image
-                                    src={user.avatarImg}
-                                    alt={user.name ?? "User avatar"}
-                                    width={42}
-                                    height={42}
-                                    className="rounded-full object-cover"
-                                    sizes="42px"
-                                 />
+                                 <UserAvatar user={user} size={42} />
                               ) : (
                                  <div className="size-10 rounded-full bg-primary-100 flex items-center justify-center">
                                     <UserIcon className="size-5 text-primary-600" />
@@ -151,15 +145,18 @@ interface UserAvatarProps {
 
 function UserAvatar({ user, size = 42 }: UserAvatarProps) {
    return user.avatarImg ? (
-     <Image
-       src={user.avatarImg}
-       alt={user.name ?? "User"}
-       width={size}
-       height={size}
-     />
+      <Image
+         src={user.avatarImg}
+         alt={user.name ?? "User"}
+         width={size}
+         height={size}
+         className="rounded-full object-cover"
+         sizes={`${size}px`}
+      />
    ) : (
-     <div className={`size-${size / 4} rounded-full bg-primary-100`}>
-       <UserIcon className="size-5 text-primary-600" />
-     </div>
+      <div
+         className={cn("rounded-full bg-primary-100 flex items-center justify-center", `w-[${size}px] h-[${size}px]`)}>
+         <UserIcon className="size-5 text-primary-600" />
+      </div>
    );
- }
+}

@@ -19,6 +19,8 @@ export const revalidate = 120;
 
 export default async function ListingsPage({ searchParams }: ListingsPageProps) {    
     const params = await searchParams;
+    const minPrice = params.minPrice ? Number(params.minPrice) : null;
+    const maxPrice = params.maxPrice ? Number(params.maxPrice) : null;
     
     const listingParams: AllListingsParams = {
         currentPage: params.page ? parseInt(params.page, 10) : 1,
@@ -26,8 +28,8 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
         categorySlugs: params.category ? params.category.split(",") : null,
         search: params.search || null,
         conditions: params.condition ? params.condition.split(",") as ListingCondition[] : null,
-        minPrice: params.minPrice ? parseInt(params.minPrice, 10) : null,
-        maxPrice: params.maxPrice ? parseInt(params.maxPrice, 10) : null,
+        minPrice: minPrice !== null && Number.isFinite(minPrice) ? minPrice : null,
+        maxPrice: maxPrice !== null && Number.isFinite(maxPrice) ? maxPrice : null,
         sortBy: (params.sortBy === "price" ? "price" : "createdAt"),
         sortOrder: (params.sortOrder === "asc" ? "asc" : "desc"),
     };

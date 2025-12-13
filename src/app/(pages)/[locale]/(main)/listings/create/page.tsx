@@ -2,8 +2,6 @@ import CreateListingForm from "@/components/forms/CreateListingForm";
 import { Card, CardContent } from "@/components/ui/card";
 import { getTranslations } from "next-intl/server";
 
-export const dynamic = "force-static";
-
 export default async function CreateListingPage() {
    const tCreateListingPage = await getTranslations("createListingPage");
    

@@ -24,8 +24,7 @@ import {
 import Image from "next/image";
 import { TCategory } from "@/utils/zod-schemas/categories";
 import { useTranslations } from "next-intl";
-import { useEditListing, useImagePreview } from "@/hooks/use-edit-listing";
-import { TListing } from "@/utils/zod-schemas/listings";
+import { useEditListing } from "@/hooks/use-edit-listing";
 import { useQuery } from "@tanstack/react-query";
 import { categoriesOptions } from "@/lib/query-options/categories";
 
@@ -58,10 +57,15 @@ export default function EditListingForm({
    const tMedia = useTranslations("media");
    const tButtons = useTranslations("buttons");
    const { data: categories } = useQuery(categoriesOptions);
-   const { handleSubmit, existingImages, newImages, isPending } =
-      useEditListing(listing as TListing);
-   const { handleAddImages, handleRemoveExistingImage, handleRemoveNewImage } =
-      useImagePreview(listing as TListing);
+   const {
+      handleSubmit,
+      existingImages,
+      newImages,
+      handleAddImages,
+      handleRemoveExistingImage,
+      handleRemoveNewImage,
+      isPending,
+   } = useEditListing(listing);
 
    return (
       <Dialog>
@@ -148,7 +152,7 @@ export default function EditListingForm({
                   <div className="flex flex-wrap gap-2 mt-2">
                      {existingImages.map((imageUrl, index) => (
                         <div
-                           key={`existing-${index}`}
+                           key={imageUrl}
                            className="relative w-[120px] h-[120px]">
                            <Image
                               src={imageUrl}
@@ -167,30 +171,27 @@ export default function EditListingForm({
                            </Button>
                         </div>
                      ))}
-                     {newImages.map((image, index) => {
-                        const url = URL.createObjectURL(image);
-                        return (
-                           <div
-                              key={`new-${index}`}
-                              className="relative w-[120px] h-[120px]">
-                              <Image
-                                 src={url}
-                                 alt={image.name}
-                                 fill
-                                 sizes="120px"
-                                 className="rounded-md object-cover"
-                              />
-                              <Button
-                                 type="button"
-                                 variant="ghost"
-                                 size="icon"
-                                 className="absolute right-0 top-0 cursor-pointer"
-                                 onClick={() => handleRemoveNewImage(index)}>
-                                 <X className="w-4 h-4 text-red-500" />
-                              </Button>
-                           </div>
-                        );
-                     })}
+                     {newImages.map((image, index) => (
+                        <div
+                           key={`${image.file.name}-${image.file.size}-${image.file.lastModified}`}
+                           className="relative w-[120px] h-[120px]">
+                           <Image
+                              src={image.url}
+                              alt={image.file.name}
+                              fill
+                              sizes="120px"
+                              className="rounded-md object-cover"
+                           />
+                           <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="absolute right-0 top-0 cursor-pointer"
+                              onClick={() => handleRemoveNewImage(index)}>
+                              <X className="w-4 h-4 text-red-500" />
+                           </Button>
+                        </div>
+                     ))}
                   </div>
                </div>
 

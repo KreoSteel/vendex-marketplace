@@ -9,11 +9,16 @@ const supabaseAdmin = createClient(
 );
 
 export async function uploadListingImages(files: File[], userId: string): Promise<Result<string[]>> {
+   const MAX_IMAGES_PER_LISTING = 10;
    const MAX_FILE_SIZE = 5 * 1024 * 1024;
    const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/webp"];
    const urls: string[] = [];
 
    for (let i = 0; i < files.length; ++i) {
+      if (i >= MAX_IMAGES_PER_LISTING) {
+         return { success: false, error: `You can only upload up to ${MAX_IMAGES_PER_LISTING} images` };
+      }
+
       const file = files[i];
 
       if (file.size > MAX_FILE_SIZE) {

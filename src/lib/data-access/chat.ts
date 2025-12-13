@@ -38,11 +38,10 @@ export const getChatWithUser = withAuth(async (
    return { success: true, data: messages };
 });
 
-export const getConversationsWithUsers = withAuth(async (): Promise<TConversation[]> => {
-   const currentUser = await getUser();
-   if (!currentUser) {
-      return [];
-   }
+export const getConversationsWithUsers = withAuth(
+  async (): Promise<TConversation[]> => {
+    const currentUser = await getUser();
+    if (!currentUser) return [];
 
    const rawConversations = await prisma.$queryRaw<TConversation[]>`
       WITH ranked_messages AS (
@@ -90,7 +89,9 @@ export const getConversationsWithUsers = withAuth(async (): Promise<TConversatio
          ),
       };
    });
-});
+},
+  { unauthorizedReturn: [] as TConversation[] }
+);
 
 export const changeMessageReadStatus = withAuth(async (otherUserId: string) => {
    const currentUser = await getUser();

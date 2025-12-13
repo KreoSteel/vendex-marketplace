@@ -312,7 +312,8 @@
          "failedToUpdateProfileImage": "Impossibile aggiornare l'immagine del profilo",
          "noFileProvided": "Nessun file fornito",
          "fileSizeTooLarge": "La dimensione del file deve essere inferiore a 5MB",
-         "failedToUploadImage": "Impossibile caricare l'immagine"
+         "failedToUploadImage": "Impossibile caricare l'immagine",
+         "unauthorizedAccess": "Accesso non autorizzato"
       }
    },
    "reviews": {

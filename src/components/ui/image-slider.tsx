@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { Button } from "./button";
@@ -11,8 +11,15 @@ interface ImageSliderProps {
 
 export default function ImageSlider({ slides }: ImageSliderProps) {
    const [currentIndex, setCurrentIndex] = useState(0);
+   const validSlides = slides.filter((slide) => slide && slide.trim() !== "");
 
-   if (!slides || slides.length === 0) {
+   useEffect(() => {
+      if (currentIndex >= validSlides.length) {
+         setCurrentIndex(0);
+      }
+   }, [currentIndex, validSlides.length]);
+
+   if (!validSlides || validSlides.length === 0) {
       return (
          <div className="w-full h-full flex items-center justify-center bg-gray-100">
             <p className="text-gray-400">No images available</p>
@@ -22,12 +29,12 @@ export default function ImageSlider({ slides }: ImageSliderProps) {
 
    function goToPrevious() {
       const isFirstSlide = currentIndex === 0;
-      const newIndex = isFirstSlide ? slides.length - 1 : currentIndex - 1;
+      const newIndex = isFirstSlide ? validSlides.length - 1 : currentIndex - 1;
       setCurrentIndex(newIndex);
    }
 
    function goToNext() {
-      const isLastSlide = currentIndex === slides.length - 1;
+      const isLastSlide = currentIndex === validSlides.length - 1;
       const newIndex = isLastSlide ? 0 : currentIndex + 1;
       setCurrentIndex(newIndex);
    }
@@ -40,7 +47,7 @@ export default function ImageSlider({ slides }: ImageSliderProps) {
       <div className="relative w-full h-full group">
          <div className="relative w-full h-full">
             <Image
-               src={slides[currentIndex]}
+               src={validSlides[currentIndex]}
                alt={`Slide ${currentIndex + 1}`}
                fill
                className="object-cover"
@@ -49,7 +56,7 @@ export default function ImageSlider({ slides }: ImageSliderProps) {
             />
          </div>
 
-         {slides.length > 1 && (
+         {validSlides.length > 1 && (
             <div>
                <Button
                   variant="ghost"
@@ -71,7 +78,7 @@ export default function ImageSlider({ slides }: ImageSliderProps) {
 
                <div className="absolute bottom-4 left-1/2 -translate-x-1/2">
                   <div className="flex items-center gap-2">
-                     {slides.map((_, slideIndex) => (
+                     {validSlides.map((_, slideIndex) => (
                         <button
                            key={slideIndex}
                            onClick={() => goToSlide(slideIndex)}
@@ -90,7 +97,7 @@ export default function ImageSlider({ slides }: ImageSliderProps) {
          )}
 
          <div className="absolute top-4 right-4 bg-black/60 text-white text-sm px-3 py-1 rounded-full">
-            {currentIndex + 1} / {slides.length}
+            {currentIndex + 1} / {validSlides.length}
          </div>
       </div>
    );

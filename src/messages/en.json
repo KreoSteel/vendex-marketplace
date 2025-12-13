@@ -285,7 +285,7 @@
          "listingIdRequired": "Listing ID is required",
          "titleRequired": "Title is required",
          "descriptionTooLong": "Description must be less than 1000 characters",
-         "priceTooHigh": "Price must be less than 1000000",
+         "priceTooHigh": "Price must be less than 10000000",
          "categoryRequired": "Category is required",
          "locationRequired": "Location is required",
          "atLeastOneImage": "At least one image is required",
@@ -303,7 +303,8 @@
          "failedToUpdateProfileImage": "Failed to update profile image",
          "noFileProvided": "No file provided",
          "fileSizeTooLarge": "File size must be less than 5MB",
-         "failedToUploadImage": "Failed to upload image"
+         "failedToUploadImage": "Failed to upload image",
+         "unauthorizedAccess": "Unauthorized access"
       }
    },
    "reviews": {

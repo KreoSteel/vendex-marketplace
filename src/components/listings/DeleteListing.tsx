@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { TrashIcon } from "lucide-react";
 import { deleteListingAction } from "@/app/actions/listings";
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import {
    Dialog,
    DialogContent,

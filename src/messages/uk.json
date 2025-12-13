@@ -313,8 +313,9 @@
          "failedToUpdateProfileImage": "Не вдалося оновити фото профілю",
          "noFileProvided": "Файл не надано",
          "fileSizeTooLarge": "Розмір файлу має бути менше 5MB",
-         "failedToUploadImage": "Не вдалося завантажити фото"
-      }
+         "failedToUploadImage": "Не вдалося завантажити фото",
+         "unauthorizedAccess": "Несанкціонований доступ"
+      }  
    },
    "reviews": {
       "purchased": "Куплено",

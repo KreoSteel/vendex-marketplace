@@ -4,15 +4,15 @@ import { CalendarIcon, StarIcon, MapPinIcon, MessageCircleIcon } from "lucide-re
 import { Separator } from "@/components/ui/separator";
 import AvatarUpload from "./AvatarUpload";
 import EditProfileForm from "../forms/EditProfileForm";
-import type { User } from "@/utils/generated/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Button } from "../ui/button";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import DateFormatter from "../date-formatter";
+import type { TUserProfile } from "@/utils/zod-schemas/profile";
 
 interface ProfileCardProps {
-   user: User;
+   user: TUserProfile;
    isOwner: boolean;
    stats: {
       averageRating: number;
@@ -61,7 +61,7 @@ export default function ProfileCard({
                      <CalendarIcon className="size-4" />
                      <p>
                         {tCommon("joined")}: {" "}
-                        {user.createdAt ? DateFormatter({ date: user.createdAt }) : tCommon("unknownUser")}
+                        {user.createdAt ? DateFormatter({ date: user.createdAt }) : "N/A"}
                      </p>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-neutral-500">

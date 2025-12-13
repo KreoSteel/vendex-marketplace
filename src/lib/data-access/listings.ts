@@ -4,7 +4,7 @@ import { Prisma } from "@/utils/generated/client";
 import {
    TCreateListing,
    TCreateListingResult,
-   TListing,
+   TListingRow,
    TUpdateListing,
 } from "@/utils/zod-schemas/listings";
 import { getUser, withAuth } from "@/utils/auth";
@@ -63,6 +63,7 @@ export async function getAllListings({
       categorySlugs.forEach((slug) => {
          if (!/^[a-z0-9-]+$/.test(slug)) {
             Sentry.captureException(new Error("Invalid category slug"));
+            throw new Error("Invalid category slug");
          }
       });
    }
@@ -75,6 +76,7 @@ export async function getAllListings({
       conditions.forEach((condition) => {
          if (!Object.values(ListingCondition).includes(condition)) {
             Sentry.captureException(new Error("Invalid condition"));
+            throw new Error("Invalid condition");
          }
       });
    }
@@ -143,7 +145,7 @@ export async function getAllListings({
    ]);
 
    return {
-      listings: listings as TListing[],
+      listings: listings as TListingRow[],
       currentPage: page as number,
       itemsPerPage: items as number,
       totalPages: Math.ceil(totalCount / (items as number)),
@@ -152,21 +154,22 @@ export async function getAllListings({
 }
 
 export async function getMaxPrice(params: Filters) {
-   const DEFAULT_MAX_PRICE = 10000;
+   const DEFAULT_MAX_PRICE = 100;
+   const sanitizedSearch = params.search ? params.search.trim().slice(0, 100) : null;
    const where: Prisma.ListingWhereInput = {
       status: ListingStatus.ACTIVE,
       ...(params.categorySlugs &&
          params.categorySlugs.length > 0 && {
             category: { slug: { in: params.categorySlugs } },
          }),
-      ...(params.search && {
+      ...(sanitizedSearch && {
          OR: [
             {
-               title: { contains: params.search, mode: "insensitive" as const },
+               title: { contains: sanitizedSearch, mode: "insensitive" as const },
             },
             {
                description: {
-                  contains: params.search,
+                  contains: sanitizedSearch,
                   mode: "insensitive" as const,
                },
             },
@@ -185,7 +188,7 @@ export async function getMaxPrice(params: Filters) {
       },
    });
 
-   return result._max?.price ?? DEFAULT_MAX_PRICE;
+   return result._max.price ?? DEFAULT_MAX_PRICE;
 }
 
 export async function getRecentListings() {
@@ -334,7 +337,7 @@ export async function getUserActiveListings(userId: string) {
 
 export async function getUserSoldListings(
    userId: string
-): Promise<Result<TListing[]>> {
+): Promise<Result<TListingRow[]>> {
    const result = await prisma.listing.findMany({
       where: {
          userId,
@@ -350,7 +353,7 @@ export async function getUserSoldListings(
          location: true,
          condition: true,
          createdAt: true,
-         status: true,
+         updatedAt: true,
          images: {
             select: {
                url: true,
@@ -363,7 +366,7 @@ export async function getUserSoldListings(
       },
    });
 
-   return { success: true, data: result as TListing[] };
+   return { success: true, data: result as TListingRow[] };
 }
 
 export const markListingAsSold = withAuth(async (id: string): Promise<Result<string>> => {

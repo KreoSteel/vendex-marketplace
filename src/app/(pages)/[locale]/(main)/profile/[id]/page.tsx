@@ -5,8 +5,8 @@ import { getUserProfile } from "@/lib/data-access/profile";
 import { notFound } from "next/navigation";
 import { getUserListingsCount } from "@/lib/data-access/listings";
 import { getReviewsStats } from "@/lib/data-access/reviews";
-import { User } from "@/utils/zod-schemas/auth";
 import { ProfileProvider } from "@/context/profile-context";
+import type { TUserProfile } from "@/utils/zod-schemas/profile";
 
 export const dynamicParams = true;
 export const revalidate = 120;
@@ -39,7 +39,7 @@ export default async function UserProfilePage({
       <ProfileProvider userId={userId}>
          <div className="flex flex-col gap-4 max-w-3/4 mx-auto py-12 px-4">
             <ProfileCard
-               user={userProfile as User}
+               user={userProfile}
                isOwner={isItOwner}
                stats={{
                   activeListingsCount: counts.activeListings,
