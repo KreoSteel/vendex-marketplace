@@ -1,0 +1,127 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Primary Green Palette - Soft & Friendly */
+  --primary-50: #f0fdf4;
+  --primary-100: #dcfce7;
+  --primary-200: #bbf7d0;
+  --primary-300: #86efac;
+  --primary-400: #4ade80;
+  --primary-500: #22c55e;
+  --primary-600: #16a34a;
+  --primary-700: #15803d;
+  --primary-800: #166534;
+  --primary-900: #14532d;
+  --primary-950: #052e16;
+
+  /* Neutral Gray Palette - Soft & Low Contrast */
+  --neutral-50: #fafafa;
+  --neutral-100: #f5f5f5;
+  --neutral-200: #e5e5e5;
+  --neutral-300: #d4d4d4;
+  --neutral-400: #a3a3a3;
+  --neutral-500: #737373;
+  --neutral-600: #525252;
+  --neutral-700: #404040;
+  --neutral-800: #262626;
+  --neutral-900: #171717;
+  --neutral-950: #0a0a0a;
+
+  /* Custom Theme Variables */
+  --bg: #ffffff;
+  --bg-surface: #fafafa;
+  --bg-fill: #f5f5f5;
+  --text: #171717;
+  --border: #e5e5e5;
+  --icon: #737373;
+}
+
+@theme inline {
+  /* Primary Green Colors */
+  --color-primary-50: var(--primary-50);
+  --color-primary-100: var(--primary-100);
+  --color-primary-200: var(--primary-200);
+  --color-primary-300: var(--primary-300);
+  --color-primary-400: var(--primary-400);
+  --color-primary-500: var(--primary-500);
+  --color-primary-600: var(--primary-600);
+  --color-primary-700: var(--primary-700);
+  --color-primary-800: var(--primary-800);
+  --color-primary-900: var(--primary-900);
+  --color-primary-950: var(--primary-950);
+
+  /* Neutral Colors */
+  --color-neutral-50: var(--neutral-50);
+  --color-neutral-100: var(--neutral-100);
+  --color-neutral-200: var(--neutral-200);
+  --color-neutral-300: var(--neutral-300);
+  --color-neutral-400: var(--neutral-400);
+  --color-neutral-500: var(--neutral-500);
+  --color-neutral-600: var(--neutral-600);
+  --color-neutral-700: var(--neutral-700);
+  --color-neutral-800: var(--neutral-800);
+  --color-neutral-900: var(--neutral-900);
+  --color-neutral-950: var(--neutral-950);
+
+  /* Custom Theme Colors */
+  --color-bg: var(--bg);
+  --color-surface: var(--bg-surface);
+  --color-fill: var(--bg-fill);
+  --color-foreground: var(--text);
+  --color-border: var(--border);
+  --color-icon: var(--icon);
+}
+
+
+.dark {
+  /* Custom Theme Variables - Dark Mode */
+  --bg: #171717;
+  --bg-surface: #262626;
+  --bg-fill: #404040;
+  --text: #ffffff;
+  --border: rgba(255, 255, 255, 0.1);
+  --icon: #a3a3a3;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-bg text-foreground;
+  }
+}
+
+h1 {
+  @apply text-3xl font-bold;
+}
+h2 {
+  @apply text-xl font-semibold;
+}
+h3 {
+  @apply font-semibold;
+}
+h4 {
+  @apply text-sm leading-relaxed;
+}
+p {
+  @apply text-base;
+}
+
+@layer utilities {
+  .font-montserrat {
+    font-family: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  }
+  .font-poppins {
+    font-family: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  }
+  .font-inter {
+    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  }
+  .font-space-grotesk {
+    font-family: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  }
+}
