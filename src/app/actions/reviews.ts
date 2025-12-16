@@ -1,6 +1,6 @@
 "use server";
 import { createReview } from "@/lib/data-access/reviews";
-import { withAuth } from "@/utils/auth";
+import { withAuth } from "@/app/shared/api/auth/auth";
 import { createReviewSchema } from "@/utils/zod-schemas/reviews";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";

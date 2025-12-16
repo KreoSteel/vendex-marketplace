@@ -6,7 +6,7 @@ import {
    updateListing,
 } from "@/lib/data-access/listings";
 import { uploadListingImages } from "@/lib/storage/upload";
-import { getUser, withAuth } from "@/utils/auth";
+import { getUser, withAuth } from "@/app/shared/api/auth/auth";
 import {
    createListingSchema,
    TCreateListingResult,

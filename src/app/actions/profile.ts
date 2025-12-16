@@ -2,7 +2,7 @@
 
 import { updateUserProfile } from "@/lib/data-access/profile";
 import { uploadProfileImage } from "@/lib/storage/upload";
-import { getUser, withAuth } from "@/utils/auth";
+import { getUser, withAuth } from "@/app/shared/api/auth/auth";
 import { updateUserProfileSchema } from "@/utils/zod-schemas/profile";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";

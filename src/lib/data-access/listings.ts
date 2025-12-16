@@ -1,5 +1,5 @@
 "use server";
-import prisma from "@/utils/prisma";
+import prisma from "@/app/shared/api/prisma";
 import { Prisma } from "@/utils/generated/client";
 import {
    TCreateListing,
@@ -7,7 +7,7 @@ import {
    TListingRow,
    TUpdateListing,
 } from "@/utils/zod-schemas/listings";
-import { getUser, withAuth } from "@/utils/auth";
+import { getUser, withAuth } from "@/app/shared/api/auth/auth";
 import { ListingCondition, ListingStatus } from "@/utils/generated/enums";
 import { getTranslations } from "next-intl/server";
 import { TPaginationListings } from "@/utils/zod-schemas/listings";

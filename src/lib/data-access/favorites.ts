@@ -1,6 +1,6 @@
 "use server";
-import { getUser, withAuth } from "@/utils/auth";
-import prisma from "@/utils/prisma";
+import { getUser, withAuth } from "@/app/shared/api/auth/auth";
+import prisma from "@/app/shared/api/prisma";
 import { getTranslations } from "next-intl/server";
 import { Result } from "@/types/result";
 import { TListingRow } from "@/utils/zod-schemas/listings";

@@ -2,13 +2,13 @@
 import { ArrowLeftIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { notFound } from "next/navigation";
-import { useRouter } from "@/i18n/navigation";
+import { useRouter } from "@/pkg/i18n/navigation";
 import ImageSlider from "../ui/image-slider";
 import { useTranslations } from "next-intl";
 import { TListing } from "@/utils/zod-schemas/listings";
 import ListingInfo from "./ListingInfo";
 import ListingsActions from "./ListingsActions";
-import SellerCard from "../cards/SellerCard";
+import SellerCard from "../../app/entities/listings/ui/SellerCard";
 
 interface ListingDetailsClientPageProps {
    listing: TListing;

@@ -6,9 +6,9 @@ import AvatarUpload from "./AvatarUpload";
 import EditProfileForm from "../forms/EditProfileForm";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Button } from "../ui/button";
-import { Link } from "@/i18n/navigation";
+import { Link } from "@/pkg/i18n/navigation";
 import { useTranslations } from "next-intl";
-import DateFormatter from "../date-formatter";
+import DateFormatter from "../../app/shared/lib/date-formatter";
 import type { TUserProfile } from "@/utils/zod-schemas/profile";
 
 interface ProfileCardProps {

@@ -1,4 +1,4 @@
-import { clientEnv } from '@/utils/zod-schemas/env/client'
+import { clientEnv } from '@/config/envs/client'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 

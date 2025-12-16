@@ -2,7 +2,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { isListingFavoriteOptions } from "@/lib/query-options/favorites";
 import { toggleFavoriteAction } from "@/app/actions/favorites";
-import { authClient } from "@/utils/auth-client";
+import { authClient } from "@/app/shared/api/auth/auth-client";
 import * as Sentry from "@sentry/nextjs";
 import { toast } from "sonner";
 

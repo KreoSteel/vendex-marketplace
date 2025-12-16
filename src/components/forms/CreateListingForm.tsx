@@ -20,7 +20,7 @@ import {
 } from "../ui/select";
 import { Button } from "../ui/button";
 import { ListingCondition } from "@/utils/generated/enums";
-import { useRouter } from "@/i18n/navigation";
+import { useRouter } from "@/pkg/i18n/navigation";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";

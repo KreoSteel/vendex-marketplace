@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
-import { serverEnv } from "@/utils/zod-schemas/env/server";
-import { clientEnv } from "@/utils/zod-schemas/env/client";
+import { serverEnv } from "@/config/envs/server";
+import { clientEnv } from "@/config/envs/client";
 import { Result } from "@/types/result";
 
 const supabaseAdmin = createClient(

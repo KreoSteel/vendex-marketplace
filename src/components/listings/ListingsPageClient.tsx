@@ -5,7 +5,7 @@ import ListingCard from "../cards/ListingCard";
 import { TListingsCard } from "@/utils/zod-schemas/listings";
 import ListingsFilters from "./ListingsFilters";
 import ListingsPagination from "./ListingsPagination";
-import { authClient } from "@/utils/auth-client";
+import { authClient } from "@/app/shared/api/auth/auth-client";
 import { userFavoriteListingsOptions } from "@/lib/query-options/favorites";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";

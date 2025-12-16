@@ -1,7 +1,7 @@
 "use server";
 
 import { toggleFavorite } from "@/lib/data-access/favorites";
-import { withAuth } from "@/utils/auth";
+import { withAuth } from "@/app/shared/api/auth/auth";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import * as Sentry from "@sentry/nextjs";

@@ -1,6 +1,6 @@
 "use server";
-import { getUser, withAuth } from "@/utils/auth";
-import prisma from "@/utils/prisma";
+import { getUser, withAuth } from "@/app/shared/api/auth/auth";
+import prisma from "@/app/shared/api/prisma";
 import { revalidatePath } from "next/cache";
 import { TConversation, conversationRowSchema } from "@/utils/zod-schemas/chat";
 import { Result } from "@/types/result";

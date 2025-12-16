@@ -1,8 +1,8 @@
 "use client";
 
 import { useLocale } from "next-intl";
-import { usePathname, useRouter } from "@/i18n/navigation";
-import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { usePathname, useRouter } from "@/pkg/i18n/navigation";
+import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@/app/shared/ui/select";
 
 export const LocaleSwitcher = () => {
   const locale = useLocale();

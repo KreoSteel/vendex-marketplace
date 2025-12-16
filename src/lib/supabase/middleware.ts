@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
-import { clientEnv } from '@/utils/zod-schemas/env/client'
+import { clientEnv } from '@/config/envs/client'
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({

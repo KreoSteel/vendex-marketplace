@@ -9,7 +9,7 @@ import {
    PaginationNext,
    PaginationPrevious,
 } from "../ui/pagination";
-import { useRouter } from "@/i18n/navigation";
+import { useRouter } from "@/pkg/i18n/navigation";
 import { useSearchParams } from "next/navigation";
 
 export default function ListingsPagination({

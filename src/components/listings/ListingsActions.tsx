@@ -1,9 +1,9 @@
-import { Link } from "@/i18n/navigation";
+import { Link } from "@/pkg/i18n/navigation";
 import { Button } from "../ui/button";
 import { Card, CardHeader } from "../ui/card";
-import ToggleFavorite from "../favorites/ToggleFavorite";
+import ToggleFavorite from "../../app/features/favorites/ui/ToggleFavorite";
 import CreateReviewForm from "../forms/CreateReviewForm";
-import DeleteListing from "./DeleteListing";
+import DeleteListing from "../../app/features/listings/ui/DeleteListing";
 import EditListingForm, { TEditListing } from "../forms/EditListingForm";
 import MarkAsSold from "./mark-as-sold";
 import { Separator } from "../ui/separator";

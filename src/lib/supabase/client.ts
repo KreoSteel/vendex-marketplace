@@ -1,5 +1,5 @@
 import { createBrowserClient } from '@supabase/ssr'
-import { clientEnv } from '@/utils/zod-schemas/env/client'
+import { clientEnv } from '@/config/envs/client'
 
 export function createClient() {
   return createBrowserClient(

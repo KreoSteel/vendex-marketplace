@@ -4,7 +4,7 @@ import { filtersReducer, initialState } from "./use-filters-reducer";
 import { categoriesOptions } from "@/lib/query-options/categories";
 import { useQuery } from "@tanstack/react-query";
 import { ListingCondition } from "@/utils/generated/enums";
-import { useRouter } from "@/i18n/navigation";
+import { useRouter } from "@/pkg/i18n/navigation";
 
 
 export function useListingsFilters() {
