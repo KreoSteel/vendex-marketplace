@@ -5,8 +5,8 @@ import {
   type ChatMessage,
   useRealtimeChat,
 } from '@/hooks/use-realtime-chat'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Button } from '@/app/shared/ui/button'
+import { Input } from '@/app/shared/ui/input'
 import { Send } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
@@ -123,7 +123,7 @@ export const RealtimeChat = ({
           className="flex-1 rounded-full bg-muted/50 text-sm"
           type="text"
           value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewMessage(e.target.value)}
           placeholder={tChat("typeMessage")}
           disabled={!isConnected}
         />

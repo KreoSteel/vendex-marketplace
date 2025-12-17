@@ -1,5 +1,9 @@
-import { Euro, PencilIcon, X } from "lucide-react";
-import { Button } from "../ui/button";
+"use client";
+import { TEditListing } from "../types";
+import { useTranslations } from "next-intl";
+import { useQuery } from "@tanstack/react-query";
+import { categoriesOptions } from "@/app/entities/category/model/queries";
+import { useEditListing } from "../model/use-edit-listing-form";
 import {
    Dialog,
    DialogTrigger,
@@ -9,42 +13,22 @@ import {
    DialogDescription,
    DialogFooter,
    DialogClose,
-} from "../ui/dialog";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
-import { ListingCondition } from "@/utils/generated/enums";
+} from "@/app/shared/ui";
 import {
+   Button,
+   Label,
+   Input,
+   Textarea,
    Select,
    SelectTrigger,
+   SelectValue,
    SelectContent,
    SelectItem,
-   SelectValue,
-} from "../ui/select";
-import Image from "next/image";
-import { TCategory } from "@/utils/zod-schemas/categories";
-import { useTranslations } from "next-intl";
-import { useEditListing } from "@/hooks/use-edit-listing";
-import { useQuery } from "@tanstack/react-query";
-import { categoriesOptions } from "@/lib/query-options/categories";
-
-export type TEditListing = {
-   id: string;
-   title: string;
-   description: string | null;
-   price: number | null;
-   location: string | null;
-   condition: ListingCondition;
-   category: TCategory | null;
-   images?: (string | { url: string })[];
-};
-
-export const conditions = {
-   [ListingCondition.NEW]: "New - Brand new, never used",
-   [ListingCondition.LIKE_NEW]: "Like New - Barely used, excellent condition",
-   [ListingCondition.USED]: "Used - Used but in good condition",
-   [ListingCondition.FOR_PARTS]: "For Parts - Not working, needs repair",
-};
+} from "@/app/shared/ui";
+import { Euro, PencilIcon } from "lucide-react";
+import { ListingCondition } from "@/utils/generated/enums";
+import PreviewImages from "@/app/features/listings/ui/preview-images-component";
+import { cn } from "@/app/shared/utils/utils";
 
 export default function EditListingForm({
    listing,
@@ -58,17 +42,26 @@ export default function EditListingForm({
    const tButtons = useTranslations("buttons");
    const { data: categories } = useQuery(categoriesOptions);
    const {
+      isOpen,
+      setIsOpen,
       handleSubmit,
-      existingImages,
       newImages,
+      existingImages,
       handleAddImages,
-      handleRemoveExistingImage,
       handleRemoveNewImage,
+      handleRemoveExistingImage,
       isPending,
    } = useEditListing(listing);
-
+   const newImagesPreview = newImages.map((image) => ({
+      ...image,
+      type: "new" as const,
+   }));
+   const existingImagesPreview = existingImages.map((image) => ({
+      url: image,
+      type: "existing" as const,
+   }));
    return (
-      <Dialog>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
          <DialogTrigger asChild>
             <Button
                variant="outline"
@@ -105,26 +98,6 @@ export default function EditListingForm({
                </div>
 
                <div className="space-y-2">
-                  <Label htmlFor="price" className="text-sm font-medium">
-                     {tForms("labels.price")}{" "}
-                     <span className="text-red-500">*</span>
-                  </Label>
-                  <div className="relative">
-                     <Euro className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-neutral-500 pointer-events-none" />
-                     <Input
-                        id="price"
-                        name="price"
-                        type="number"
-                        min={0}
-                        step="0.01"
-                        className="pl-8"
-                        placeholder={tForms("placeholders.priceListingEdit")}
-                        defaultValue={listing.price?.toString() ?? ""}
-                     />
-                  </div>
-               </div>
-
-               <div className="space-y-2">
                   <Label htmlFor="description" className="text-sm font-medium">
                      {tForms("labels.description")}
                   </Label>
@@ -147,51 +120,69 @@ export default function EditListingForm({
                      multiple
                      accept="image/*"
                      onChange={handleAddImages}
-                     className="file:text-foreground file:bg-neutral-200 file:border-none file:px-3 file:py-1 file:rounded-md file:text-sm file:font-medium file:shadow-xs file:transition-[color,box-shadow] file:cursor-pointer disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                     className={cn(
+                        "file:text-foreground",
+                        "file:bg-neutral-200",
+                        "file:border-none",
+                        "file:px-3",
+                        "file:py-1",
+                        "file:rounded-md",
+                        "file:text-sm",
+                        "file:font-medium",
+                        "file:shadow-xs",
+                        "file:transition-[color,box-shadow]",
+                        "file:cursor-pointer",
+                        "disabled:pointer-events-none",
+                        "disabled:cursor-not-allowed",
+                        "disabled:opacity-50"
+                     )}
                   />
-                  <div className="flex flex-wrap gap-2 mt-2">
-                     {existingImages.map((imageUrl, index) => (
-                        <div
-                           key={imageUrl}
-                           className="relative w-[120px] h-[120px]">
-                           <Image
-                              src={imageUrl}
-                              alt={tMedia("existingImage")}
-                              fill
-                              sizes="120px"
-                              className="rounded-md object-cover"
-                           />
-                           <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon"
-                              className="absolute right-0 top-0 cursor-pointer"
-                              onClick={() => handleRemoveExistingImage(index)}>
-                              <X className="w-4 h-4 text-red-500" />
-                           </Button>
-                        </div>
-                     ))}
-                     {newImages.map((image, index) => (
-                        <div
-                           key={`${image.file.name}-${image.file.size}-${image.file.lastModified}`}
-                           className="relative w-[120px] h-[120px]">
-                           <Image
-                              src={image.url}
-                              alt={image.file.name}
-                              fill
-                              sizes="120px"
-                              className="rounded-md object-cover"
-                           />
-                           <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon"
-                              className="absolute right-0 top-0 cursor-pointer"
-                              onClick={() => handleRemoveNewImage(index)}>
-                              <X className="w-4 h-4 text-red-500" />
-                           </Button>
-                        </div>
-                     ))}
+
+                  {/* Existing images */}
+                  {existingImagesPreview.length > 0 && (
+                     <div className="flex flex-wrap gap-2 mt-2">
+                        <PreviewImages
+                           images={existingImagesPreview}
+                           handleRemove={handleRemoveExistingImage}
+                           alt={tMedia("existingImage")}
+                        />
+                     </div>
+                  )}
+
+                  {/* New images */}
+                  {newImagesPreview.length > 0 && (
+                     <PreviewImages
+                        images={newImagesPreview}
+                        handleRemove={handleRemoveNewImage}
+                        alt={newImages
+                           .map(
+                              (image) =>
+                                 image.file.name +
+                                 image.file.size +
+                                 image.file.lastModified
+                           )
+                           .join(", ")}
+                     />
+                  )}
+               </div>
+
+               <div className="space-y-2">
+                  <Label htmlFor="price" className="text-sm font-medium">
+                     {tForms("labels.price")}{" "}
+                     <span className="text-red-500">*</span>
+                  </Label>
+                  <div className="relative">
+                     <Euro className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-neutral-500 pointer-events-none" />
+                     <Input
+                        id="price"
+                        name="price"
+                        type="number"
+                        min={0}
+                        step="0.01"
+                        className="pl-8"
+                        placeholder={tForms("placeholders.priceListingEdit")}
+                        defaultValue={listing.price?.toString() ?? ""}
+                     />
                   </div>
                </div>
 
@@ -223,11 +214,9 @@ export default function EditListingForm({
                            />
                         </SelectTrigger>
                         <SelectContent>
-                           {Object.entries(conditions).map(([key]) => (
-                              <SelectItem
-                                 key={key}
-                                 value={key as ListingCondition}>
-                                 {tConditions("descriptions." + key)}
+                           {Object.values(ListingCondition).map((condition) => (
+                              <SelectItem key={condition} value={condition}>
+                                 {tConditions("descriptions." + condition)}
                               </SelectItem>
                            ))}
                         </SelectContent>

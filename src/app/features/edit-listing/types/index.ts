@@ -1,0 +1,1 @@
+export type { TEditListing } from "./edit-listing";

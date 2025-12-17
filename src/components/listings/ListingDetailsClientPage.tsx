@@ -1,9 +1,9 @@
 "use client";
 import { ArrowLeftIcon } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "@/app/shared/ui";
 import { notFound } from "next/navigation";
 import { useRouter } from "@/pkg/i18n/navigation";
-import ImageSlider from "../ui/image-slider";
+import ImageSlider from "@/app/shared/ui/image-slider";
 import { useTranslations } from "next-intl";
 import { TListing } from "@/utils/zod-schemas/listings";
 import ListingInfo from "./ListingInfo";

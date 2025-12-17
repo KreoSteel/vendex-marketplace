@@ -1,5 +1,5 @@
-import Chat from "@/app/features/chat-page/ui/Chat";
-import ChatHeader from "@/app/widgets/ChatWidgets/ChatHeader";
+import Chat from "@/app/features/chat/ui/Chat";
+import ChatHeader from "@/app/widgets/chat/ChatHeader";
 import { getUserProfile } from "@/lib/data-access/profile";
 import { notFound } from "next/navigation";
 

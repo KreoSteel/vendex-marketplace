@@ -1,5 +1,4 @@
-import { Skeleton } from "../ui/skeleton";
-import { Card, CardContent, CardHeader } from "../ui/card";
+import { Skeleton, Card, CardContent, CardHeader } from "@/app/shared/ui";
 
 export default function ReviewCardSkeleton() {
    return (

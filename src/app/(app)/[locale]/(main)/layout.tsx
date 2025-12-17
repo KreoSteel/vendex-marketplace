@@ -1,4 +1,4 @@
-import Header from "@/app/widgets/Header/Header";
+import Header from "@/app/widgets/header/Header";
 import { Toaster } from "@/app/shared/ui/sonner";
 export default async function MainLayout({ children }: { children: React.ReactNode }) {
     

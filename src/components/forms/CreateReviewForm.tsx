@@ -1,18 +1,7 @@
-import { Button } from "../ui/button";
-import {
-   Dialog,
-   DialogContent,
-   DialogHeader,
-   DialogTitle,
-   DialogTrigger,
-   DialogDescription,
-} from "../ui/dialog";
-import { Label } from "../ui/label";
-import { Textarea } from "../ui/textarea";
+import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription, Label, Input, Textarea } from "@/app/shared/ui";
 import { createReviewAction } from "@/app/actions/reviews";
 import { useActionState, useEffect, useTransition } from "react";
 import { StarIcon } from "lucide-react";
-import { Input } from "../ui/input";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 

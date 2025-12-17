@@ -1,14 +1,12 @@
 "use client";
-import { Card, CardContent } from "@/components/ui/card";
 import { CalendarIcon, StarIcon, MapPinIcon, MessageCircleIcon } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import { Button, Card, CardContent, Separator } from "@/app/shared/ui";
 import AvatarUpload from "./AvatarUpload";
 import EditProfileForm from "../forms/EditProfileForm";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { Button } from "../ui/button";
 import { Link } from "@/pkg/i18n/navigation";
 import { useTranslations } from "next-intl";
-import DateFormatter from "../../app/shared/lib/date-formatter";
+import DateFormatter from "@/app/shared/lib/date-formatter";
 import type { TUserProfile } from "@/utils/zod-schemas/profile";
 
 interface ProfileCardProps {

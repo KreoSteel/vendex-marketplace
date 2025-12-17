@@ -1,5 +1,5 @@
-import CreateListingForm from "@/components/forms/CreateListingForm";
-import { Card, CardContent } from "@/components/ui/card";
+import CreateListingForm from "@/app/features/create-listing/ui/create-listing-form";
+import { Card, CardContent } from "@/app/shared/ui";
 import { getTranslations } from "next-intl/server";
 
 export default async function CreateListingPage() {

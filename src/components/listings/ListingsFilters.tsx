@@ -1,15 +1,12 @@
 "use client";
-import { Label } from "../ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Label, Card, CardContent, CardHeader, CardTitle, Button, Slider } from "@/app/shared/ui";
 import { Checkbox, CheckboxIndicator } from "@radix-ui/react-checkbox";
 import { CheckIcon } from "lucide-react";
 import { ListingCondition } from "@/utils/generated/enums";
-import { Button } from "../ui/button";
 import { useTranslations } from "next-intl";
 import { useListingsFilters } from "@/hooks/useListingsFilters";
 import { initialState } from "@/hooks/use-filters-reducer";
 import { useRouter } from "@/pkg/i18n/navigation";
-import { Slider } from "../ui/slider";
 import { getMaxPriceForFiltersOptions } from "@/app/shared/utils/utils";
 import { useQuery } from "@tanstack/react-query";
 import { Filters } from "@/lib/data-access/listings";

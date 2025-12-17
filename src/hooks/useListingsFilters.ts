@@ -1,7 +1,7 @@
 "use client";
 import { useReducer } from "react";
 import { filtersReducer, initialState } from "./use-filters-reducer";
-import { categoriesOptions } from "@/lib/query-options/categories";
+import { categoriesOptions } from "@/app/entities/category/model/queries";
 import { useQuery } from "@tanstack/react-query";
 import { ListingCondition } from "@/utils/generated/enums";
 import { useRouter } from "@/pkg/i18n/navigation";

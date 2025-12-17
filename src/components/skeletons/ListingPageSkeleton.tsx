@@ -1,4 +1,4 @@
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "@/app/shared/ui";
 
 export default function ListingPageSkeleton() {
    return (

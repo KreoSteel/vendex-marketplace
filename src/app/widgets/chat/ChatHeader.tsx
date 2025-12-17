@@ -1,6 +1,6 @@
 "use client";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/app/shared/ui/avatar";
+import { Button } from "@/app/shared/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "@/pkg/i18n/navigation";
 import { useTranslations } from "next-intl";

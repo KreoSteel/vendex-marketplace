@@ -1,5 +1,5 @@
 "use client";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/shared/ui/tabs";
 import ActiveListingsTab from "../tabs/ActiveListingsTab";
 import SoldItemsTab from "../tabs/SoldItemsTab";
 import FavoritesListingsTab from "../tabs/FavoritesListingsTab";

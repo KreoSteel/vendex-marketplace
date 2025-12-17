@@ -1,10 +1,7 @@
-import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
-import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
-import { Separator } from "../ui/separator";
-import { Button } from "../ui/button";
+import { Card, CardHeader, CardTitle, CardContent, Avatar, AvatarImage, AvatarFallback, Separator, Button } from "@/app/shared/ui";
 import { StarIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import DateFormatter from "../../../shared/lib/date-formatter";
+import DateFormatter from "@/app/shared/lib/date-formatter";
 import { TListing } from "@/utils/zod-schemas/listings";
 import { useRouter } from "@/pkg/i18n/navigation";
 

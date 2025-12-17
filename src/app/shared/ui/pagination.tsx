@@ -6,7 +6,7 @@ import {
 } from "lucide-react"
 
 import { cn } from "@/app/shared/utils/utils"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/app/shared/ui"  
 import { useTranslations } from "next-intl"
 
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {

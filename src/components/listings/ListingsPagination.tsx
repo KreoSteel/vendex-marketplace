@@ -2,13 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import {
-   Pagination,
-   PaginationContent,
-   PaginationItem,
-   PaginationLink,
-   PaginationNext,
-   PaginationPrevious,
-} from "../ui/pagination";
+   Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious
+} from "@/app/shared/ui/pagination";
 import { useRouter } from "@/pkg/i18n/navigation";
 import { useSearchParams } from "next/navigation";
 

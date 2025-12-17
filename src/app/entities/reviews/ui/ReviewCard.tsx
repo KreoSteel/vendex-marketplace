@@ -1,6 +1,6 @@
 "use client";
-import { Card, CardContent, CardHeader } from "../ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Card, CardContent, CardHeader } from "@/app/shared/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/app/shared/ui/avatar";
 import { Star } from "lucide-react";
 import { format } from "date-fns";
 import { Link } from "@/pkg/i18n/navigation";

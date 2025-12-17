@@ -1,7 +1,7 @@
 "use client";
 import { AllListingsParams } from "@/lib/data-access/listings";
-import SearchBar from "../ui/search";
-import ListingCard from "../cards/ListingCard";
+import SearchBar from "@/app/shared/ui/search";
+import ListingCard from "@/app/entities/listings/ui/ListingCard";
 import { TListingsCard } from "@/utils/zod-schemas/listings";
 import ListingsFilters from "./ListingsFilters";
 import ListingsPagination from "./ListingsPagination";

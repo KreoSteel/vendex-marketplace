@@ -1,10 +1,10 @@
 "use client";
 import { useTransition } from "react";
-import { Button } from "../ui/button";
 import { CheckIcon } from "lucide-react";
 import { markListingAsSoldAction } from "@/app/actions/listings";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
+import { Button } from "@/app/shared/ui";
 
 export default function MarkAsSold({ listingId }: { listingId: string }) {
    const [isPending, startTransition] = useTransition();

@@ -1,7 +1,7 @@
-import Hero from "@/app/widgets/HomePage/Hero";
-import BrowseByCategory from "@/app/widgets/HomePage/BrowseByCategory";
-import RecentListings from "@/app/widgets/HomePage/RecentListings";
-import { getAllCategories } from "@/lib/data-access/category";
+import Hero from "@/app/widgets/home/hero";
+import BrowseByCategory from "@/app/widgets/home/browse-by-category";
+import RecentListings from "@/app/widgets/home/recent-listings";
+import { getAllCategories } from "@/app/entities/category/data-access/category";
 import { TCategory } from "@/utils/zod-schemas/categories";
 import { getRecentListings } from "@/lib/data-access/listings";
 import { TRecentListings } from "@/utils/zod-schemas/listings";

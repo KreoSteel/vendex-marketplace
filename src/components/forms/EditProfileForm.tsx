@@ -6,12 +6,12 @@ import {
    DialogFooter,
    DialogTitle,
    DialogTrigger,
-} from "../ui/dialog";
-import { Button } from "../ui/button";
+} from "@/app/shared/ui/dialog";
+import { Button } from "@/app/shared/ui/button";
 import { PencilIcon } from "lucide-react";
-import { DialogDescription, DialogHeader } from "../ui/dialog";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
+import { DialogDescription, DialogHeader } from "@/app/shared/ui/dialog";
+import { Label } from "@/app/shared/ui/label";
+import { Input } from "@/app/shared/ui/input";
 import { useActionState, useEffect } from "react";
 import { updateUserProfileAction } from "@/app/actions/profile";
 import { useTranslations } from "next-intl";

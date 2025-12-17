@@ -1,12 +1,11 @@
 import { Link } from "@/pkg/i18n/navigation";
-import { Button } from "../ui/button";
-import { Card, CardHeader } from "../ui/card";
-import ToggleFavorite from "../../app/features/favorites/ui/ToggleFavorite";
+import { Button } from "@/app/shared/ui";
+import { Card, CardHeader, Separator } from "@/app/shared/ui";
+import ToggleFavorite from "@/app/features/favorites/ui/ToggleFavorite";
 import CreateReviewForm from "../forms/CreateReviewForm";
-import DeleteListing from "../../app/features/listings/ui/DeleteListing";
-import EditListingForm, { TEditListing } from "../forms/EditListingForm";
+import DeleteListing from "@/app/features/listings/ui/DeleteListing";
+import { EditListingForm, type TEditListing } from "@/app/features/edit-listing";
 import MarkAsSold from "./mark-as-sold";
-import { Separator } from "../ui/separator";
 import { MapPinIcon, StarIcon } from "lucide-react";
 import { TListing } from "@/utils/zod-schemas/listings";
 import { useTranslations } from "next-intl";

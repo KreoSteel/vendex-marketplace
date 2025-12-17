@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useTransition } from "react";
-import { Input } from "../ui/input";
+import { Input } from "@/app/shared/ui/input";
 import { updateUserProfileImageAction } from "@/app/actions/profile";
 import { CameraIcon, Loader2 } from "lucide-react";
 import Image from "next/image";

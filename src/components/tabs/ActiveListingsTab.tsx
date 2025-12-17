@@ -1,5 +1,5 @@
 "use client";
-import ListingCard from "@/components/cards/ListingCard";
+import ListingCard from "@/app/entities/listings/ui/ListingCard";
 import { userActiveListingsOptions } from "@/lib/query-options/listings";
 import { TListingsCard } from "@/utils/zod-schemas/listings";
 import { useQuery } from "@tanstack/react-query";
