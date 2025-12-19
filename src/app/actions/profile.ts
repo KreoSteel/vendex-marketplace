@@ -1,9 +1,9 @@
 "use server";
 
-import { updateUserProfile } from "@/lib/data-access/profile";
+import { updateUserProfile } from "@/app/api/profile/data-access/profile";
 import { uploadProfileImage } from "@/lib/storage/upload";
 import { getUser, withAuth } from "@/app/shared/api/auth/auth";
-import { updateUserProfileSchema } from "@/utils/zod-schemas/profile";
+import { updateUserProfileSchema } from "@/app/features/edit-profile/types/edit-profile-types";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { Result } from "@/types/result";

@@ -65,7 +65,7 @@ export async function getUser(req?: NextRequest): Promise<User | null> {
    }
 }
 
-export function withAuth<T extends (...args: any[]) => Promise<any>>(
+export function withAuth<T extends (...args: unknown[]) => Promise<unknown>>(
   fn: T,
   options?: { unauthorizedReturn?: Awaited<ReturnType<T>> }
 ): T {

@@ -1,4 +1,4 @@
-import { TCategory } from "@/utils/zod-schemas/categories";
+import { TCategory } from "@/app/entities/category/model/schema";
 import { ListingCondition } from "@/utils/generated/enums";
 
 export type TEditListing = {
@@ -8,6 +8,6 @@ export type TEditListing = {
     price: number | null;
     location: string | null;
     condition: ListingCondition;
-    category: TCategory | null;
+    category?: TCategory | null;
     images?: (string | { url: string })[];
  };

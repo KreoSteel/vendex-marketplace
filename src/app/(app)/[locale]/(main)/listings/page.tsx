@@ -1,4 +1,4 @@
-import ListingsPageClient from "@/components/listings/ListingsPageClient";
+import ListingsPageClient from "@/app/pages/listings/listings-client-page";
 import { AllListingsParams } from "@/lib/data-access/listings";
 import { ListingCondition } from "@/utils/generated/enums";
 

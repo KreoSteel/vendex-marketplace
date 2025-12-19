@@ -13,5 +13,5 @@ export { Skeleton } from "./skeleton";
 export { Pagination } from "./pagination";
 export { Toaster } from "./sonner";
 export { Slider } from "./slider";
-export { default as ImageSlider } from "./image-slider";
+export { default as ImageSlider } from "../../pages/listing-details/ui/image-slider";
 export { default as SearchBar } from "./search";

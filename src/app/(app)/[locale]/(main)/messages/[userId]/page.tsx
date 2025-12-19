@@ -1,6 +1,6 @@
 import Chat from "@/app/features/chat/ui/Chat";
-import ChatHeader from "@/app/widgets/chat/ChatHeader";
-import { getUserProfile } from "@/lib/data-access/profile";
+import ChatHeader from "@/app/widgets/chat/ui/ChatHeader";
+import { getUserProfile } from "@/app/api/profile/data-access/profile";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";

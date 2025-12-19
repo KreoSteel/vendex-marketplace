@@ -1,0 +1,1 @@
+export { default as PaginationComponent } from "./ui/pagination-component";

@@ -11,7 +11,7 @@ import {
 } from "@/app/shared/ui/card";
 import { Input } from "@/app/shared/ui/input";  
 import { Label } from "@/app/shared/ui/label";
-import { RegisterAction } from "../api/register-action";
+import { RegisterAction } from "../../../api/auth/actions/register-action";
 import { useActionState, useEffect } from "react";
 import { Link } from "@/pkg/i18n/navigation";
 import { useTranslations } from "next-intl";

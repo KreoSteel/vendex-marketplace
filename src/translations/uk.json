@@ -1,0 +1,343 @@
+{
+   "common": {
+      "loading": "Завантаження...",
+      "error": "Помилка",
+      "errorTitle": "Щось пішло не так!",
+      "errorDescription": "Сталася несподівана помилка. Будь ласка, спробуйте ще раз.",
+      "tryAgain": "Спробувати ще раз",
+      "goHome": "На головну",
+      "noListingsFound": "Оголошень не знайдено",
+      "noResultsFound": "Результатів не знайдено",
+      "noReviewsFound": "Відгуків не знайдено",
+      "noLocationSet": "Локацію не вказано",
+      "noActiveListings": "Немає активних оголошень",
+      "noSoldItems": "Немає проданих товарів",
+      "noFavorites": "Немає обраного",
+      "noReviews": "Немає відгуків",
+      "noPriceRangeFound": "Діапазон цін не знайдено",
+      "loadingPriceRange": "Завантаження діапазону цін...",
+      "loadingResults": "Завантаження результатів...",
+      "price": "Ціна",
+      "joined": "Приєднався",
+      "rating": "Рейтинг:",
+      "viewProfile": "Переглянути профіль",
+      "contactSeller": "Зв’язатися з продавцем",
+      "writeReview": "Залишити відгук",
+      "locationNotSpecified": "Локацію не вказано"
+   },
+   "LocaleLayout": {
+      "title": "Vendex — Ваш надійний маркетплейс",
+      "description": "Купуйте та продавайте товари у своєму регіоні"
+   },
+   "header": {
+      "createListing": "Створити оголошення",
+      "signUp": "Реєстрація",
+      "signIn": "Вхід",
+      "noLocation": "Локацію не вказано",
+      "MyProfile": "Мій профіль",
+      "messages": "Повідомлення",
+      "favorites": "Обране",
+      "logout": "Вийти"
+   },
+   "auth": {
+      "login": {
+         "title": "Увійдіть у свій акаунт",
+         "description": "Введіть дані для входу",
+         "signUp": "Реєстрація",
+         "labelEmail": "Email",
+         "labelPassword": "Пароль",
+         "placeholderEmail": "john.doe@example.com",
+         "buttonLogin": "Увійти",
+         "placeholderPassword": "********",
+         "buttonLoginLoading": "Вхід..."
+      },
+      "register": {
+         "title": "Створіть акаунт",
+         "description": "Введіть дані для створення акаунту",
+         "signIn": "Вхід",
+         "labelName": "Ім’я",
+         "labelEmail": "Email",
+         "labelPassword": "Пароль",
+         "placeholderName": "John Doe",
+         "placeholderEmail": "m@example.com",
+         "placeholderPassword": "********",
+         "buttonRegister": "Створити акаунт",
+         "buttonRegisterLoading": "Створення акаунту..."
+      },
+      "errors": {
+         "failedToCreateAccount": "Не вдалося створити акаунт",
+         "failedToLogin": "Не вдалося увійти",
+         "listingNotFound": "Оголошення не знайдено",
+         "listingAlreadySold": "Це оголошення вже продано",
+         "notListingOwner": "Ви не є власником цього оголошення",
+         "unauthorized": "Не авторизовано",
+         "nameRequired": "Ім’я обов’язкове",
+         "invalidEmail": "Некоректний email",
+         "passwordMinLength": "Пароль має містити щонайменше 8 символів",
+         "emailPasswordRequired": "Email і пароль обов’язкові"
+      }
+   },
+   "home": {
+      "hero": {
+         "title": "Знайдіть усе, що потрібно, на Vendex",
+         "description": "Vendex — це платформа для купівлі та продажу товарів.",
+         "searchPlaceholder": "Пошук..."
+      },
+      "browseByCategory": {
+         "title": "Перегляд за категоріями"
+      },
+      "recentListings": {
+         "title": "Нещодавні оголошення"
+      }
+   },
+   "profilePage": {
+      "activeListings": "Активні оголошення",
+      "itemsSold": "Продані товари",
+      "totalReviews": "Всього відгуків",
+      "editProfile": "Редагувати профіль",
+      "sendMessage": "Надіслати повідомлення",
+      "soldItems": "Продані товари",
+      "favorites": "Обране",
+      "reviews": "Відгуки"
+   },
+   "searchListingsPage": {
+      "filters": {
+         "title": "Фільтри",
+         "categories": "Категорії",
+         "conditionTitle": "Стані",
+         "conditions": {
+            "new": "Нове",
+            "likeNew": "Як нове",
+            "used": "Б/в",
+            "forParts": "На запчастини"
+         },
+         "priceRange": "Діапазон цін",
+         "clear": "Очистити",
+         "apply": "Застосувати"
+      },
+      "results": "Результати:",
+      "loadingResults": "Завантаження результатів...",
+      "pagination": {
+         "previous": "Назад",
+         "next": "Далі"
+      }
+   },
+   "listingDetailsPage": {
+      "backToListings": "Назад до оголошень",
+      "description": "Опис",
+      "details": "Деталі",
+      "condition": "Стан",
+      "category": "Категорія",
+      "location": "Локація",
+      "posted": "Опубліковано",
+      "price": "Ціна",
+      "featured": "Рекомендоване",
+      "contactSeller": "Зв’язатися з продавцем",
+      "sellerInformation": "Інформація про продавця",
+      "memberSince": "На платформі з",
+      "activeListings": "Активні оголошення",
+      "itemsSold": "Продано товарів",
+      "overallRating": "Загальний рейтинг",
+      "noRating": "Немає рейтингу",
+      "viewProfile": "Переглянути профіль"
+   },
+   "chatPage": {
+      "viewProfile": "Переглянути профіль",
+      "unknownUser": "Невідомий користувач"
+   },
+   "messagesPage": {
+      "yourMessages": "Ваші повідомлення",
+      "selectConversation": "Виберіть розмову зі списку в боці для початку розмови"
+
+   },
+   "createListingPage": {
+      "title": "Створити нове оголошення",
+      "description": "Створіть нове оголошення для продажу ваших товарів",
+      "requiredFields": "Обов’язкові поля позначені *"
+   },
+   "createListingForm": {
+      "description": "Опис",
+      "price": "Ціна",
+      "category": "Категорія",
+      "location": "Локація",
+      "condition": "Стан",
+      "photos": "Фото",
+      "photosPlaceholder": "Завантажте до 10 фото",
+      "photosLimit": "Можна завантажити не більше 10 фото",
+      "photosError": "Помилка завантаження фото",
+      "photosSuccess": "Фото успішно завантажено",
+      "photosLoading": "Завантаження фото...",
+      "photosClear": "Очистити фото",
+      "photosApply": "Застосувати фото"
+   },
+   "createReviewForm": {
+      "title": "Написати відгук",
+      "description": "Опис",
+      "rating": "Рейтинг",
+      "submit": "Надіслати відгук"
+   },
+   "buttons": {
+      "cancel": "Скасувати",
+      "delete": "Видалити",
+      "deleting": "Видалення...",
+      "save": "Зберегти зміни",
+      "saveChanges": "Зберегти зміни",
+      "saving": "Збереження...",
+      "createListing": "Створити оголошення",
+      "creatingListing": "Створення оголошення...",
+      "editListing": "Редагувати оголошення",
+      "deleteListing": "Видалити оголошення",
+      "markAsSold": "Позначити як продане",
+      "markingAsSold": "Позначення як продане...",
+      "submitReview": "Надіслати відгук",
+      "submitting": "Відправка...",
+      "writeReview": "Написати відгук"
+   },
+   "forms": {
+      "labels": {
+         "title": "Заголовок",
+         "name": "Ім’я",
+         "email": "Email",
+         "password": "Пароль",
+         "description": "Опис",
+         "price": "Ціна",
+         "category": "Категорія",
+         "location": "Локація",
+         "condition": "Стан",
+         "photos": "Фото",
+         "rating": "Рейтинг",
+         "comment": "Коментар"
+      },
+      "placeholders": {
+         "titleListing": "наприклад: 'iPhone 16 Pro Max, Honda Accord 2025'",
+         "titleListingEdit": "наприклад: MacBook Pro 14'' M2, 16GB RAM",
+         "descriptionDetail": "Опишіть товар детально...",
+         "descriptionSpecs": "Коротко опишіть стан, характеристики та важливі деталі.",
+         "priceListing": "наприклад: 1000",
+         "priceListingEdit": "наприклад: 1299.00",
+         "locationCity": "Місто, Країна",
+         "locationExample": "наприклад: 'New York, NY'",
+         "nameExample": "наприклад: 'John Doe'",
+         "ratingExample": "наприклад: 5",
+         "commentReview": "Розкажіть про ваш досвід із продавцем...",
+         "selectCategory": "Виберіть категорію",
+         "selectCondition": "Виберіть стан",
+         "selectLocale": "Виберіть мову"
+      },
+      "optional": "(необов’язково)"
+   },
+   "dialogs": {
+      "editProfile": {
+         "title": "Редагувати профіль",
+         "description": "Редагуйте інформацію свого профілю."
+      },
+      "editListing": {
+         "title": "Редагувати оголошення",
+         "description": "Оновіть ключову інформацію про ваше оголошення.",
+         "changesVisible": "Зміни будуть видимі покупцям після збереження."
+      },
+      "deleteListing": {
+         "title": "Видалити оголошення",
+         "description": "Ви впевнені, що хочете видалити це оголошення?",
+         "cannotUndo": "Цю дію неможливо скасувати."
+      },
+      "createReview": {
+         "title": "Оцініть продавця",
+         "description": "Поділіться своїм досвідом з цим продавцем, ви можете залишити лише один відгук на оголошення."
+      }
+   },
+   "conditions": {
+      "labels": {
+         "NEW": "Нове",
+         "LIKE_NEW": "Як нове",
+         "USED": "Б/в",
+         "FOR_PARTS": "На запчастини"
+      },
+      "descriptions": {
+         "NEW": "Нове — жодного разу не використовувалося",
+         "LIKE_NEW": "Як нове — мінімальне використання, чудовий стан",
+         "USED": "Б/в — використовувалося, але в хорошому стані",
+         "FOR_PARTS": "На запчастини — не працює, потребує ремонту"
+      }
+   },
+   "chat": {
+      "messages": "Повідомлення",
+      "unknownUser": "Невідомий користувач",
+      "noMessagesYet": "Ще немає повідомлень",
+      "startConversation": "Почніть розмову!",
+      "typeMessage": "Введіть повідомлення...",
+      "viewProfile": "Переглянути профіль"
+   },
+   "media": {
+      "user": "Користувач",
+      "existingImage": "Поточне зображення",
+      "photosLabel": "Фото (до 10)",
+      "photosAddOrReplace": "Фото (додати або замінити, до 10)"
+   },
+   "system": {
+      "noDescriptionProvided": "Опис відсутній",
+      "invalidPrice": "Некоректна ціна"
+   },
+   "listings": {
+      "success": {
+         "listingEditedSuccessfully": "Оголошення успішно оновлено",
+         "listingDeletedSuccessfully": "Оголошення успішно видалено",
+         "listingMarkedAsSoldSuccessfully": "Оголошення позначено як продане"
+      },
+      "errors": {
+         "failedToCreateListing": "Не вдалося створити оголошення",
+         "failedToUpdateListing": "Не вдалося оновити оголошення",
+         "failedToDeleteListing": "Не вдалося видалити оголошення",
+         "failedToMarkAsSold": "Не вдалося позначити як продане",
+         "listingNotFound": "Оголошення не знайдено",
+         "listingAlreadySold": "Оголошення вже продано",
+         "notListingOwner": "Ви не є власником цього оголошення",
+         "listingIdRequired": "Потрібен ID оголошення",
+         "titleRequired": "Заголовок обов’язковий",
+         "descriptionTooLong": "Опис має бути менше 1000 символів",
+         "priceTooHigh": "Ціна має бути менше 1 000 000",
+         "categoryRequired": "Категорія обов’язкова",
+         "locationRequired": "Локація обов’язкова",
+         "atLeastOneImage": "Потрібне хоча б одне зображення",
+         "maxTenImages": "Можна завантажити максимум 10 зображень",
+         "updateProfileError": "Ви можете оновлювати лише свій профіль"
+      }
+   },
+   "profile": {
+      "success": {
+         "profileUpdatedSuccessfully": "Профіль успішно оновлено",
+         "profileImageUpdatedSuccessfully": "Фото профілю успішно оновлено"
+      },
+      "errors": {
+         "failedToUpdateProfile": "Не вдалося оновити профіль",
+         "failedToUpdateProfileImage": "Не вдалося оновити фото профілю",
+         "noFileProvided": "Файл не надано",
+         "fileSizeTooLarge": "Розмір файлу має бути менше 5MB",
+         "failedToUploadImage": "Не вдалося завантажити фото",
+         "unauthorizedAccess": "Несанкціонований доступ"
+      }  
+   },
+   "reviews": {
+      "purchased": "Куплено",
+      "noWrittenReview": "Немає написаного відгуку",
+      "success": {
+         "reviewCreatedSuccessfully": "Відгук успішно створено"
+      },
+      "errors": {
+         "failedToCreateReview": "Не вдалося створити відгук",
+         "cannotReviewYourself": "Ви не можете залишити відгук самому собі",
+         "alreadyReviewedListing": "Ви вже залишили відгук на це оголошення"
+      }
+   },
+   "favorites": {
+      "success": {
+         "addedToFavorites": "Додано до обраного",
+         "removedFromFavorites": "Видалено з обраного"
+      },
+      "errors": {
+         "unauthorizedAccess": "Несанкціонований доступ до обраного",
+         "failedToToggleFavorite": "Не вдалося змінити обране",
+         "unknownError": "Невідома помилка"
+      }
+   }
+}

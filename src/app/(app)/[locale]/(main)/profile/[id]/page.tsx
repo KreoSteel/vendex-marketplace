@@ -1,12 +1,11 @@
-import ProfileCard from "@/components/profile/ProfileCard";
+import ProfileCard from "@/app/widgets/profile/ui/ProfileCard";
 import ListingTabs from "@/components/profile/ListingTabs";
 import { getUser } from "@/app/shared/api/auth/auth";
-import { getUserProfile } from "@/lib/data-access/profile";
+import { getUserProfile } from "@/app/api/profile/data-access/profile";
 import { notFound } from "next/navigation";
 import { getUserListingsCount } from "@/lib/data-access/listings";
 import { getReviewsStats } from "@/lib/data-access/reviews";
 import { ProfileProvider } from "@/context/profile-context";
-import type { TUserProfile } from "@/utils/zod-schemas/profile";
 
 export const dynamicParams = true;
 export const revalidate = 120;

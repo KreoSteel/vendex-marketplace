@@ -1,0 +1,342 @@
+{
+   "common": {
+      "loading": "Загрузка...",
+      "error": "Ошибка",
+      "errorTitle": "Что-то пошло не так!",
+      "errorDescription": "Произошла непредвиденная ошибка. Пожалуйста, попробуйте снова.",
+      "tryAgain": "Попробовать снова",
+      "goHome": "На главную",
+      "noListingsFound": "Объявления не найдены",
+      "noResultsFound": "Результаты не найдены",
+      "noReviewsFound": "Отзывы не найдены",
+      "noLocationSet": "Локация не указана",
+      "noActiveListings": "Нет активных объявлений",
+      "noSoldItems": "Нет проданных товаров",
+      "noFavorites": "Нет избранных",
+      "noReviews": "Нет отзывов",
+      "noPriceRangeFound": "Диапазон цен не найден",
+      "loadingPriceRange": "Загрузка диапазона цен...",
+      "loadingResults": "Загрузка результатов...",
+      "price": "Цена",
+      "joined": "Присоединился",
+      "rating": "Рейтинг:",
+      "viewProfile": "Просмотреть профиль",
+      "contactSeller": "Связаться с продавцом",
+      "writeReview": "Оставить отзыв",
+      "locationNotSpecified": "Локация не указана"
+   },
+   "LocaleLayout": {
+      "title": "Vendex - Ваш надежный маркетплейс",
+      "description": "Покупайте и продавайте товары в своём регионе"
+   },
+   "header": {
+      "createListing": "Создать объявление",
+      "signUp": "Регистрация",
+      "signIn": "Вход",
+      "noLocation": "Локация не указана",
+      "MyProfile": "Мой профиль",
+      "messages": "Сообщения",
+      "favorites": "Избранное",
+      "logout": "Выход"
+   },
+   "auth": {
+      "login": {
+         "title": "Вход в аккаунт",
+         "description": "Введите свои данные для входа",
+         "signUp": "Регистрация",
+         "labelEmail": "Email",
+         "labelPassword": "Пароль",
+         "placeholderEmail": "john.doe@example.com",
+         "buttonLogin": "Войти",
+         "placeholderPassword": "********",
+         "buttonLoginLoading": "Вход..."
+      },
+      "register": {
+         "title": "Создать аккаунт",
+         "description": "Введите данные для создания аккаунта",
+         "signIn": "Вход",
+         "labelName": "Имя",
+         "labelEmail": "Email",
+         "labelPassword": "Пароль",
+         "placeholderName": "John Doe",
+         "placeholderEmail": "m@example.com",
+         "placeholderPassword": "********",
+         "buttonRegister": "Создать аккаунт",
+         "buttonRegisterLoading": "Создание аккаунта..."
+      },
+      "errors": {
+         "failedToCreateAccount": "Не удалось создать аккаунт",
+         "failedToLogin": "Не удалось войти",
+         "listingNotFound": "Объявление не найдено",
+         "listingAlreadySold": "Это объявление уже продано",
+         "notListingOwner": "Вы не владелец этого объявления",
+         "unauthorized": "Неавторизовано",
+         "nameRequired": "Имя обязательно",
+         "invalidEmail": "Некорректный email",
+         "passwordMinLength": "Пароль должен быть не менее 8 символов",
+         "emailPasswordRequired": "Email и пароль обязательны"
+      }
+   },
+   "home": {
+      "hero": {
+         "title": "Найдите всё, что нужно, на Vendex",
+         "description": "Vendex — платформа для покупки и продажи товаров.",
+         "searchPlaceholder": "Поиск..."
+      },
+      "browseByCategory": {
+         "title": "Категории"
+      },
+      "recentListings": {
+         "title": "Недавние объявления"
+      }
+   },
+   "profilePage": {
+      "activeListings": "Активные объявления",
+      "itemsSold": "Продано товаров",
+      "totalReviews": "Всего отзывов",
+      "editProfile": "Редактировать профиль",
+      "sendMessage": "Отправить сообщение",
+      "soldItems": "Проданные товары",
+      "favorites": "Избранное",
+      "reviews": "Отзывы"
+   },
+   "searchListingsPage": {
+      "filters": {
+         "title": "Фильтры",
+         "categories": "Категории",
+         "conditionTitle": "Состояния",
+         "conditions": {
+            "new": "Новое",
+            "likeNew": "Как новое",
+            "used": "Б/у",
+            "forParts": "На запчасти"
+         },
+         "priceRange": "Диапазон цен",
+         "clear": "Сбросить",
+         "apply": "Применить"
+      },
+      "results": "Результаты:",
+      "loadingResults": "Загрузка результатов...",
+      "pagination": {
+         "previous": "Назад",
+         "next": "Вперёд"
+      }
+   },
+   "listingDetailsPage": {
+      "backToListings": "Назад к объявлениям",
+      "description": "Описание",
+      "details": "Детали",
+      "condition": "Состояния",
+      "category": "Категория",
+      "location": "Локация",
+      "posted": "Опубликовано",
+      "price": "Цена",
+      "featured": "Рекомендовано",
+      "contactSeller": "Связаться с продавцом",
+      "sellerInformation": "Информация о продавце",
+      "memberSince": "На платформе с",
+      "activeListings": "Активные объявления",
+      "itemsSold": "Продано товаров",
+      "overallRating": "Общий рейтинг",
+      "noRating": "Нет рейтинга",
+      "viewProfile": "Просмотреть профиль"
+   },
+   "chatPage": {
+      "viewProfile": "Просмотреть профиль",
+      "unknownUser": "Неизвестный пользователь"
+   },
+   "messagesPage": {
+      "yourMessages": "Ваши сообщения",
+      "selectConversation": "Выберите разговор из списка в боковой панели для начала общения"
+   },
+   "createListingForm": {
+      "description": "Описание",
+      "price": "Цена",
+      "category": "Категория",
+      "location": "Локация",
+      "condition": "Состояние",
+      "photos": "Фото",
+      "photosPlaceholder": "Загрузите до 10 фото",
+      "photosLimit": "Можно загрузить максимум 10 фото",
+      "photosError": "Ошибка загрузки фото",
+      "photosSuccess": "Фото успешно загружены",
+      "photosLoading": "Загрузка фото...",
+      "photosClear": "Очистить фото",
+      "photosApply": "Применить фото"
+   },
+   "createListingPage": {
+      "title": "Создать новое объявление",
+      "description": "Создайте новое объявление для продажи ваших товаров",
+      "requiredFields": "Обязательные поля отмечены *"
+   },
+   "createReviewForm": {
+      "title": "Оставить отзыв",
+      "description": "Описание",
+      "rating": "Рейтинг",
+      "submit": "Отправить отзыв"
+   },
+   "buttons": {
+      "cancel": "Отмена",
+      "delete": "Удалить",
+      "deleting": "Удаление...",
+      "save": "Сохранить изменения",
+      "saveChanges": "Сохранить изменения",
+      "saving": "Сохранение...",
+      "createListing": "Создать объявление",
+      "creatingListing": "Создание объявления...",
+      "editListing": "Редактировать объявление",
+      "deleteListing": "Удалить объявление",
+      "markAsSold": "Отметить как продано",
+      "markingAsSold": "Отмечается как продано...",
+      "submitReview": "Отправить отзыв",
+      "submitting": "Отправка...",
+      "writeReview": "Написать отзыв"
+   },
+   "forms": {
+      "labels": {
+         "title": "Заголовок",
+         "name": "Имя",
+         "email": "Email",
+         "password": "Пароль",
+         "description": "Описание",
+         "price": "Цена",
+         "category": "Категория",
+         "location": "Локация",
+         "condition": "Состояние",
+         "photos": "Фото",
+         "rating": "Рейтинг",
+         "comment": "Комментарий"
+      },
+      "placeholders": {
+         "titleListing": "например: 'iPhone 16 Pro Max, Honda Accord 2025'",
+         "titleListingEdit": "например: MacBook Pro 14'' M2, 16GB RAM",
+         "descriptionDetail": "Опишите товар подробно...",
+         "descriptionSpecs": "Кратко опишите состояние, характеристики и важные детали.",
+         "priceListing": "например: 1000",
+         "priceListingEdit": "например: 1299.00",
+         "locationCity": "Город, Страна",
+         "locationExample": "например: 'New York, NY'",
+         "nameExample": "например: 'John Doe'",
+         "ratingExample": "например: 5",
+         "commentReview": "Расскажите о своём опыте с продавцом...",
+         "selectCategory": "Выберите категорию",
+         "selectCondition": "Выберите состояние",
+         "selectLocale": "Выберите язык"
+      },
+      "optional": "(необязательно)"
+   },
+   "dialogs": {
+      "editProfile": {
+         "title": "Редактировать профиль",
+         "description": "Измените информацию своего профиля."
+      },
+      "editListing": {
+         "title": "Редактировать объявление",
+         "description": "Обновите ключевую информацию о вашем объявлении.",
+         "changesVisible": "Изменения будут видны покупателям после сохранения."
+      },
+      "deleteListing": {
+         "title": "Удалить объявление",
+         "description": "Вы уверены, что хотите удалить это объявление?",
+         "cannotUndo": "Это действие необратимо."
+      },
+      "createReview": {
+         "title": "Оцените продавца",
+         "description": "Поделитесь своим опытом с этим продавцом, вы можете оставить только один отзыв на объявление."
+      }
+   },
+   "conditions": {
+      "labels": {
+         "NEW": "Новое",
+         "LIKE_NEW": "Как новое",
+         "USED": "Б/у",
+         "FOR_PARTS": "На запчасти"
+      },
+      "descriptions": {
+         "NEW": "Новое — никогда не использовалось",
+         "LIKE_NEW": "Как новое — минимальное использование, отличное состояние",
+         "USED": "Б/у — использовалось, но в хорошем состоянии",
+         "FOR_PARTS": "На запчасти — не работает, требует ремонта"
+      }
+   },
+   "chat": {
+      "messages": "Сообщения",
+      "unknownUser": "Неизвестный пользователь",
+      "noMessagesYet": "Пока нет сообщений",
+      "startConversation": "Начните общение!",
+      "typeMessage": "Введите сообщение...",
+      "viewProfile": "Просмотреть профиль"
+   },
+   "media": {
+      "user": "Пользователь",
+      "existingImage": "Текущее изображение",
+      "photosLabel": "Фото (до 10)",
+      "photosAddOrReplace": "Фото (добавить или заменить, до 10)"
+   },
+   "system": {
+      "noDescriptionProvided": "Описание отсутствует",
+      "invalidPrice": "Некорректная цена"
+   },
+   "listings": {
+      "success": {
+         "listingEditedSuccessfully": "Объявление успешно обновлено",
+         "listingDeletedSuccessfully": "Объявление успешно удалено",
+         "listingMarkedAsSoldSuccessfully": "Объявление отмечено как проданное"
+      },
+      "errors": {
+         "failedToCreateListing": "Не удалось создать объявление",
+         "failedToUpdateListing": "Не удалось обновить объявление",
+         "failedToDeleteListing": "Не удалось удалить объявление",
+         "failedToMarkAsSold": "Не удалось отметить как проданное",
+         "listingNotFound": "Объявление не найдено",
+         "listingAlreadySold": "Это объявление уже продано",
+         "notListingOwner": "Вы не владелец этого объявления",
+         "listingIdRequired": "Требуется ID объявления",
+         "titleRequired": "Заголовок обязателен",
+         "descriptionTooLong": "Описание должно быть меньше 1000 символов",
+         "priceTooHigh": "Цена должна быть меньше 1 000 000",
+         "categoryRequired": "Категория обязательна",
+         "locationRequired": "Локация обязательна",
+         "atLeastOneImage": "Требуется хотя бы одно изображение",
+         "maxTenImages": "Можно загрузить максимум 10 изображений",
+         "updateProfileError": "Вы можете обновлять только свой профиль"
+      }
+   },
+   "profile": {
+      "success": {
+         "profileUpdatedSuccessfully": "Профиль успешно обновлён",
+         "profileImageUpdatedSuccessfully": "Фото профиля обновлено успешно"
+      },
+      "errors": {
+         "failedToUpdateProfile": "Не удалось обновить профиль",
+         "failedToUpdateProfileImage": "Не удалось обновить фото профиля",
+         "noFileProvided": "Файл не предоставлен",
+         "fileSizeTooLarge": "Размер файла должен быть меньше 5MB",
+         "failedToUploadImage": "Не удалось загрузить фото",
+         "unauthorizedAccess": "Несанкционированный доступ"
+      }
+   },
+   "reviews": {
+      "purchased": "Куплено",
+      "noWrittenReview": "Нет написанного отзыва",
+      "success": {
+         "reviewCreatedSuccessfully": "Отзыв успешно создан"
+      },
+      "errors": {
+         "failedToCreateReview": "Не удалось создать отзыв",
+         "cannotReviewYourself": "Нельзя оставить отзыв самому себе",
+         "alreadyReviewedListing": "Вы уже оставили отзыв на это объявление"
+      }
+   },
+   "favorites": {
+      "success": {
+         "addedToFavorites": "Добавлено в избранное",
+         "removedFromFavorites": "Удалено из избранного"
+      },
+      "errors": {
+         "unauthorizedAccess": "Несанкционированный доступ к избранному",
+         "failedToToggleFavorite": "Не удалось изменить избранное",
+         "unknownError": "Неизвестная ошибка"
+      }
+   }
+}

@@ -1,7 +1,7 @@
 import { Package, User as UserIcon, Plus, MessageCircle, Heart, LogOut, LogIn } from "lucide-react";
 import { Link } from "@/pkg/i18n/navigation";
 import { Button, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/app/shared/ui";
-import { signOutAction } from "@/app/features/auth/api/log-out-action";
+import { signOutAction } from "@/app/api/auth/actions/log-out-action";
 import Image from "next/image";
 import { getUser } from "@/app/shared/api/auth/auth";
 import { User } from "@/utils/zod-schemas/auth";

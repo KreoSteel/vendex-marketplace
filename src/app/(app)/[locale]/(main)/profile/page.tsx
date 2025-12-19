@@ -1,7 +1,7 @@
-import ProfileCard from "@/components/profile/ProfileCard";
+import ProfileCard from "@/app/widgets/profile/ui/ProfileCard";
 import ListingTabs from "@/components/profile/ListingTabs";
 import { getUser } from "@/app/shared/api/auth/auth";
-import { getUserProfile } from "@/lib/data-access/profile";
+import { getUserProfile } from "@/app/api/profile/data-access/profile";
 import { redirect } from "@/pkg/i18n/navigation";
 import { notFound } from "next/navigation";
 import { getLocale } from "next-intl/server";
