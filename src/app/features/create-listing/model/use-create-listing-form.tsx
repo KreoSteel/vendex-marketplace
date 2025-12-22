@@ -1,8 +1,8 @@
 import { startTransition, useActionState, useEffect } from "react";
 import { useRouter } from "@/pkg/i18n/navigation";
 import { toast } from "sonner";
-import { createListingAction } from "@/app/actions/listings";
-import { useImagePreview } from "@/app/entities/listings/model/use-image-preview";
+import { createListingAction } from "@/app/features/create-listing/api/create-listing-action";
+import { useImagePreview } from "@/app/entities/listings";
 
 export const useCreateListing = () => {
     const [state, formAction, isPending] = useActionState(createListingAction, undefined);

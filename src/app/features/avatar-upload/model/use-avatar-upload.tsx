@@ -1,9 +1,9 @@
-import { updateUserProfileImageAction } from "@/app/actions/profile";
+import { updateAvatarAction } from "@/app/features/avatar-upload/api/update-avatar-action";
 import { useRouter } from "@/pkg/i18n/navigation";
 import { useRef, useTransition } from "react";
 import { toast } from "sonner";
 
-export default function useAvatarUpload({}) {
+export default function useAvatarUpload() {
    const [isPending, startTransition] = useTransition();
    const fileInputRef = useRef<HTMLInputElement>(null);
    const router = useRouter();
@@ -22,7 +22,7 @@ export default function useAvatarUpload({}) {
          const formData = new FormData();
          formData.append("avatarImg", file);
 
-         const result = await updateUserProfileImageAction(undefined, formData);
+         const result = await updateAvatarAction(undefined, formData);
          if (result.success) {
             router.refresh();
          } else if (result.error) {

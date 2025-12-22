@@ -13,8 +13,8 @@ import {
 } from "@/app/shared/ui";
 import { StarIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useCreateReview } from "../model";
-import { CreateReviewFormProps } from "../types";
+import { useCreateReview } from "../model/use-create-review";
+import { CreateReviewFormProps } from "../model/props";
 
 export default function CreateReviewForm({
    listingId,

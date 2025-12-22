@@ -5,7 +5,7 @@ import {
   MoreHorizontalIcon,
 } from "lucide-react"
 
-import { cn } from "@/app/shared/utils/utils"
+import { cn } from "@/app/shared/utils"
 import { Button, buttonVariants } from "@/app/shared/ui"  
 import { useTranslations } from "next-intl"
 

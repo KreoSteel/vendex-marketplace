@@ -1,6 +1,6 @@
 import { CalendarIcon, MapPinIcon } from "lucide-react";
 import { Card, CardHeader, Separator } from "@/app/shared/ui";
-import { TListing } from "@/utils/zod-schemas/listings";
+import { TListing } from "@/app/entities/listings";
 import { useTranslations } from "next-intl";
 
 export default function ListingInfo({ listing }: { listing: TListing }) {

@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/app/shared/ui/card";
 import { Separator } from "@/app/shared/ui/separator";
 import { Skeleton } from "@/app/shared/ui/skeleton";
-import ListingPageSkeleton from "@/app/pages/listings/ui/listing-page-skeleton";
+import { ListingPageSkeleton } from "@/app/pages/listings";
 
 export default function ProfileLoading() {
    return (

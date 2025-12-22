@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { Link } from "@/pkg/i18n/navigation";
 import { Label } from "@/app/shared/ui/label";
 import { Input } from "@/app/shared/ui/input";
-import { LoginAction } from "../../../api/auth/actions/login-action";
+import { LoginAction } from "../api/login-action";
 
 
 

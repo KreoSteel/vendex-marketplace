@@ -1,13 +1,11 @@
-import ProfileCard from "@/app/widgets/profile/ui/ProfileCard";
-import ListingTabs from "@/components/profile/ListingTabs";
+import { ProfileCard, ListingTabs, ProfileProvider } from "@/app/widgets/profile";
 import { getUser } from "@/app/shared/api/auth/auth";
-import { getUserProfile } from "@/app/api/profile/data-access/profile";
+import { getUserProfile } from "@/app/entities/user";
 import { redirect } from "@/pkg/i18n/navigation";
 import { notFound } from "next/navigation";
 import { getLocale } from "next-intl/server";
-import { getUserListingsCount } from "@/lib/data-access/listings";
-import { getReviewsStats } from "@/lib/data-access/reviews";
-import { ProfileProvider } from "@/context/profile-context";
+import { getUserListingsCount } from "@/app/entities/listings";
+import { getReviewsStats } from "@/app/entities/reviews";
 
 export const revalidate = 120;
 

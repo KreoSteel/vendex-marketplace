@@ -1,8 +1,7 @@
 "use client";
-import ListingCard from "@/app/entities/listings/ui/ListingCard";
-import { userFavoriteListingsOptions } from "@/lib/query-options/favorites";
+import { ListingCard, TListingsCard } from "@/app/entities/listings";
+import { userFavoriteListingsOptions } from "@/app/pages/listings";
 import { useQuery } from "@tanstack/react-query";
-import { TListingsCard } from "@/utils/zod-schemas/listings";
 import { useTranslations } from "next-intl";
 import ListingPageSkeleton from "../../../../pages/listings/ui/listing-page-skeleton";
 

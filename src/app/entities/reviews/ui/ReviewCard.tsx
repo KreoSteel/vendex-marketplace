@@ -4,9 +4,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/app/shared/ui/avatar";
 import { Star } from "lucide-react";
 import { format } from "date-fns";
 import { Link } from "@/pkg/i18n/navigation";
-import { TPublicReview } from "@/utils/zod-schemas/reviews";
+import { TPublicReview } from "@/app/entities/reviews";
 import { useTranslations } from "next-intl";
-import { cn } from "@/app/shared/utils/utils";
+import { cn } from "@/app/shared/utils";
 
 interface ReviewCardProps {
     review: TPublicReview;

@@ -2,13 +2,13 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { Link } from "@/pkg/i18n/navigation";
-import { cn } from "@/app/shared/utils/utils";
+import { cn } from "@/app/shared/utils";
 import { usePathname } from "@/pkg/i18n/navigation";
 import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { changeMessageReadStatusOptions } from "@/lib/mutation-options/messages";
-import { TConversation } from "@/utils/zod-schemas/chat";
-import { conversationsWithUserOptions } from "@/lib/query-options/messages";
+import { changeMessageReadStatusOptions } from "../api/mutation";
+import { TConversation } from "@/app/entities/messages-(chat)";
+import { conversationsWithUserOptions } from "../api/query";
 
 export default function ChatSidebar({
    conversations,
@@ -33,7 +33,7 @@ export default function ChatSidebar({
       if (!liveConversations) return;
 
       const activeConversations = liveConversations.find(
-         (conversation) => pathname === `/messages/${conversation.otherUser.id}`
+         (conversation: TConversation) => pathname === `/messages/${conversation.otherUser.id}`
       );
 
       if (
@@ -52,7 +52,7 @@ export default function ChatSidebar({
             <h2 className="text-xl font-bold">{tChat("messages")}</h2>
          </div>
          <div className="flex-1 overflow-y-auto">
-            {liveConversations?.map((conversation) => {
+            {liveConversations?.map((conversation: TConversation) => {
                const { otherUser, lastMessage, lastMessageAt, read } =
                   conversation;
                const isActive = pathname === `/messages/${otherUser.id}`;

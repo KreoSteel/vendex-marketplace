@@ -1,6 +1,5 @@
 
-import ChatSidebar from "@/app/widgets/chat/ui/ChatSidebar";
-import { getConversationsWithUsers } from "@/lib/data-access/chat";
+import { ChatSidebar, getConversationsWithUsers } from "@/app/widgets/chat";
 
 export default async function ChatLayout({
    children,

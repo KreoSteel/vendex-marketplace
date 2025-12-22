@@ -1,7 +1,7 @@
 "use client";
 import { Input } from "./input";
 import { SearchIcon } from "lucide-react";
-import { cn } from "@/app/shared/utils/utils";
+import { cn } from "@/app/shared/utils";
 import { useRouter } from "@/pkg/i18n/navigation";
 import { useTranslations } from "next-intl";
 

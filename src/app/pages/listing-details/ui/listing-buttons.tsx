@@ -1,16 +1,16 @@
 import { Link } from "@/pkg/i18n/navigation";
 import { Button } from "@/app/shared/ui";
 import { Card, CardHeader, Separator } from "@/app/shared/ui";
-import ToggleFavorite from "@/app/features/favorites/ui/ToggleFavorite";
+import { ToggleFavorite } from "@/app/features/toggle-favorite";
 import { CreateReviewForm } from "@/app/features/create-review";
-import DeleteListing from "@/app/features/listings/ui/DeleteListing";
+import { DeleteListingComponent } from "@/app/features/delete-listing";
 import {
    EditListingForm,
    type TEditListing,
-} from "@/app/features/edit-listing";
-import MarkAsSold from "@/app/features/mark-as-sold/ui/mark-as-sold";
+} from "@/app/features/update-listing";
+import { MarkAsSold } from "@/app/features/mark-as-sold";
 import { MapPinIcon, StarIcon } from "lucide-react";
-import { TListing } from "@/utils/zod-schemas/listings";
+import { TListing } from "@/app/entities/listings";
 import { useTranslations } from "next-intl";
 import { notFound } from "next/navigation";
 
@@ -71,7 +71,7 @@ export default function ListingButtons({
                         key={listing.updatedAt.toString()}
                         listing={listing as TEditListing}
                      />
-                     <DeleteListing listingId={listing.id} />
+                     <DeleteListingComponent listingId={listing.id} />
                   </>
                )}
 

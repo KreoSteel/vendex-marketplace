@@ -4,7 +4,7 @@ import { Button } from "@/app/shared/ui";
 import { notFound } from "next/navigation";
 import { useRouter } from "@/pkg/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { TListing } from "@/utils/zod-schemas/listings";
+import { TListing } from "@/app/entities/listings";
 import { ListingInfo, ListingButtons, SellerCard, ImageSlider } from "./ui";
 
 interface ListingDetailsClientPageProps {

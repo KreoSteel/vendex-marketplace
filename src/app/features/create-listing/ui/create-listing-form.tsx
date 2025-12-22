@@ -1,12 +1,12 @@
 "use client";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
-import { categoriesOptions } from "@/app/entities/category/model/queries";
+import { categoriesOptions } from "@/app/entities/category";
 import { Label, Input, Textarea, Select, SelectTrigger, SelectValue, SelectContent, SelectItem, Button } from "@/app/shared/ui";
 import { Euro } from "lucide-react";
-import { ListingCondition } from "@/utils/generated/enums";
-import { useCreateListing } from "../model/use-create-listing-form";
-import PreviewImages from "@/app/features/listings/ui/preview-images-component";
+import { ListingCondition } from "@/app/shared/lib/generated/enums";
+import { useCreateListing } from "@/app/features/create-listing";
+import { PreviewImages } from "@/app/entities/listings";
 
 export default function CreateListingForm() {
     const tForms = useTranslations("forms");

@@ -2,7 +2,7 @@ import { Card, CardHeader, CardTitle, CardContent, Avatar, AvatarImage, AvatarFa
 import { StarIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import DateFormatter from "@/app/shared/lib/date-formatter";
-import { TListing } from "@/utils/zod-schemas/listings";
+import { TListing } from "@/app/entities/listings";
 import { useRouter } from "@/pkg/i18n/navigation";
 
 interface SellerCardProps {

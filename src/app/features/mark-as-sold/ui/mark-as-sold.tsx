@@ -1,7 +1,7 @@
 "use client";
 import { useTransition } from "react";
 import { CheckIcon } from "lucide-react";
-import { markListingAsSoldAction } from "@/app/actions/listings";
+import { markListingAsSoldAction } from "@/app/features/mark-as-sold/api/mark-as-sold-action";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Button } from "@/app/shared/ui";

@@ -1,10 +1,9 @@
 "use client";
-import ListingCard from "@/app/entities/listings/ui/ListingCard";
-import { userActiveListingsOptions } from "@/lib/query-options/listings";
-import { TListingsCard } from "@/utils/zod-schemas/listings";
+import { ListingCard, TListingsCard } from "@/app/entities/listings";
+import { userActiveListingsOptions } from "@/app/widgets/profile";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import ListingPageSkeleton from "@/app/pages/listings/ui/listing-page-skeleton";
+import { ListingPageSkeleton } from "@/app/pages/listings";
 
 interface ActiveListingsTabProps {
    userId: string;

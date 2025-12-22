@@ -1,9 +1,9 @@
 "use client";
 import { Card, CardHeader, CardTitle } from "@/app/shared/ui/card";
-import { getIconForCategory } from "@/app/shared/utils/utils";
+import { getIconForCategory } from "@/app/shared/utils";
 import { Link } from "@/pkg/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { TCategory } from "@/app/entities/category/model/schema";
+import { TCategory } from "@/app/entities/category";
 
 export default function BrowseByCategory({categories}: {categories: TCategory[]}) {
    const t = useTranslations("home.browseByCategory");

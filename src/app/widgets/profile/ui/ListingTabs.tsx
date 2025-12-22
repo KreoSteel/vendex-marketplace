@@ -5,7 +5,7 @@ import SoldItemsTab from "./tabs/SoldItemsTab";
 import FavoritesListingsTab from "./tabs/FavoritesListingsTab";
 import UserReviewsTab from "./tabs/UserReviewsTab";
 import { useTranslations } from "next-intl";
-import { useProfileContext } from "@/context/profile-context";
+import { useProfileContext } from "@/app/widgets/profile";
 
 interface ListingTabsProps {
    stats: {

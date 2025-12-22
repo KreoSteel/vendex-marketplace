@@ -1,7 +1,7 @@
 "use client";
-import { TListingsCard } from "@/utils/zod-schemas/listings";
+import { TListingsCard } from "@/app/entities/listings";
 import Image from "next/image";
-import ToggleFavorite from "@/app/features/favorites/ui/ToggleFavorite";
+import { ToggleFavorite } from "@/app/features/toggle-favorite";
 import { Link } from "@/pkg/i18n/navigation";
 import DateFormatter from "@/app/shared/lib/date-formatter";
 
@@ -11,7 +11,7 @@ interface ListingCardProps {
    isFavorite?: boolean;
 }
 
-export default function ListingCard({
+function ListingCardComponent({
    listing,
    preload = false,
    isFavorite,
@@ -67,3 +67,5 @@ export default function ListingCard({
       </Link>
    );
 }
+
+export default ListingCardComponent;

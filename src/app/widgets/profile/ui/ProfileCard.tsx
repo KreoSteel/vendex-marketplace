@@ -1,9 +1,9 @@
 "use client";
 import { CalendarIcon, StarIcon, MapPinIcon, MessageCircleIcon } from "lucide-react";
 import { Button, Card, CardContent, Separator, Avatar, AvatarFallback, AvatarImage } from "@/app/shared/ui";
-import { TUserProfile } from "@/app/features/edit-profile/types/edit-profile-types";
-import AvatarUpload from "@/app/features/avatar-upload/ui/avatar-upload";
-import EditProfileForm from "@/app/features/edit-profile/ui/edit-profile-form";
+import { TUserProfile } from "@/app/features/update-profile";
+import { AvatarUpload } from "@/app/features/avatar-upload";
+import { EditProfileForm } from "@/app/features/update-profile";
 import DateFormatter from "@/app/shared/lib/date-formatter";
 import { useTranslations } from "next-intl";
 import { Link } from "@/pkg/i18n/navigation";

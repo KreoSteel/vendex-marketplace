@@ -1,13 +1,13 @@
 "use client";
 
-import { RealtimeChat } from "../../../../hooks/realtime-chat";
+import { RealtimeChat } from "../../realtime-chat/ui/realtime-chat";
 import { useMemo, useCallback } from "react";
-import { ChatMessage } from "@/hooks/use-realtime-chat";
+import { ChatMessage } from "../../realtime-chat/model/types";
 import { useTranslations } from "next-intl";
-import { chatWithUserOptions } from "@/lib/query-options/messages";
+import { chatWithUserOptions } from "../api/query";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { sendMessageOptions } from "@/lib/mutation-options/messages";
-import { Message } from "@/utils/generated/client";
+import { sendMessageOptions } from "../api/mutation";
+import { Message } from "@/app/shared/lib/generated/client";
 
 interface ChatProps {
    userId: string;

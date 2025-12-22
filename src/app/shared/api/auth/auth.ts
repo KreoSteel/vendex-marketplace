@@ -6,7 +6,7 @@ import { NextRequest } from "next/server";
 import { headers } from "next/headers";
 import { redirect } from "@/pkg/i18n/navigation";
 import { Result } from "@/types/result";
-import { User } from "../../../../utils/zod-schemas/auth";
+import { User } from "@/app/entities/user";
 import * as Sentry from "@sentry/nextjs";
 import { getLocale } from "next-intl/server";
 
@@ -65,7 +65,7 @@ export async function getUser(req?: NextRequest): Promise<User | null> {
    }
 }
 
-export function withAuth<T extends (...args: unknown[]) => Promise<unknown>>(
+export function withAuth<T extends (...args: any[]) => Promise<any>>(
   fn: T,
   options?: { unauthorizedReturn?: Awaited<ReturnType<T>> }
 ): T {

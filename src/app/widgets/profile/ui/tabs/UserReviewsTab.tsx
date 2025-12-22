@@ -1,9 +1,8 @@
 "use client";
-import ReviewCard from "@/app/entities/reviews/ui/ReviewCard";
+import { ReviewCard, ReviewCardSkeleton } from "@/app/entities/reviews";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
-import { getUserReviewsOptions } from "@/lib/query-options/reviews";
-import ReviewCardSkeleton from "@/app/entities/reviews/ui/ReviewCardSkeleton";
+import { getUserReviewsOptions } from "@/app/widgets/profile";
 
 interface UserReviewsTabProps {
    userId: string;

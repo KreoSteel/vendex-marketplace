@@ -10,9 +10,7 @@ export default function AvatarUpload({
    currentAvatarUrl: string | null;
 }) {
    const { fileInputRef, handleFileChange, isPending, handleClientClick } =
-      useAvatarUpload({
-         currentAvatarUrl,
-      });
+      useAvatarUpload();
    return (
       <div className="relative">
          <button

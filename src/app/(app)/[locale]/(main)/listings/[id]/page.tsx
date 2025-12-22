@@ -1,10 +1,10 @@
-import ListingDetailsClientPage from "@/components/listings/ListingDetailsClientPage";
+import { ListingDetailsClientPage } from "@/app/pages/listing-details";
 import {
    getListingById,
    getUserListingsCount,
-} from "@/lib/data-access/listings";
-import { TListing } from "@/utils/zod-schemas/listings";
-import { getReviewsStats } from "@/lib/data-access/reviews";
+   TListing,
+} from "@/app/entities/listings";
+import { getReviewsStats } from "@/app/entities/reviews";
 import { notFound } from "next/navigation";
 import { getUser } from "@/app/shared/api/auth/auth";
 

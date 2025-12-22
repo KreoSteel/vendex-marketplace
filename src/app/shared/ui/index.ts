@@ -11,7 +11,7 @@ export { Avatar, AvatarImage, AvatarFallback } from "./avatar";
 export { Separator } from "./separator";
 export { Skeleton } from "./skeleton";
 export { Pagination } from "./pagination";
+export { default as PaginationComponent } from "./pagination-component";
 export { Toaster } from "./sonner";
 export { Slider } from "./slider";
-export { default as ImageSlider } from "../../pages/listing-details/ui/image-slider";
 export { default as SearchBar } from "./search";

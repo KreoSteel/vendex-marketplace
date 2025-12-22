@@ -1,6 +1,5 @@
 "use client";
-import { TListing, TRecentListings } from "@/utils/zod-schemas/listings";
-import ListingCard from "@/app/entities/listings/ui/ListingCard";
+import { TListing, TRecentListings, ListingCard } from "@/app/entities/listings";
 import { useTranslations } from "next-intl";
 
 interface RecentListingsProps {

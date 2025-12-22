@@ -3,7 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { Button } from "../../../shared/ui/button";
-import { cn } from "@/app/shared/utils/utils";
+import { cn } from "@/app/shared/utils";
 
 interface ImageSliderProps {
    slides: string[];

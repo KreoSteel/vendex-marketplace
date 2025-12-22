@@ -1,6 +1,6 @@
-import ListingsPageClient from "@/app/pages/listings/listings-client-page";
-import { AllListingsParams } from "@/lib/data-access/listings";
-import { ListingCondition } from "@/utils/generated/enums";
+import { ListingsClientPage } from "@/app/pages/listings";
+import { AllListingsParams } from "@/app/entities/listings";
+import { ListingCondition } from "@/app/shared/lib/generated/enums";
 
 interface ListingsPageProps {
     searchParams: Promise<{
@@ -35,6 +35,6 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
     };
 
     return (
-        <ListingsPageClient searchParams={listingParams} />
+        <ListingsClientPage searchParams={listingParams} />
     );
 }

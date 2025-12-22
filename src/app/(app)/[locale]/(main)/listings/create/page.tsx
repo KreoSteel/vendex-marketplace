@@ -1,4 +1,4 @@
-import CreateListingForm from "@/app/features/create-listing/ui/create-listing-form";
+import { CreateListingForm } from "@/app/features/create-listing";
 import { Card, CardContent } from "@/app/shared/ui";
 import { getTranslations } from "next-intl/server";
 

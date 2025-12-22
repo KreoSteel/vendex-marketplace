@@ -1,10 +1,6 @@
-import Hero from "@/app/widgets/home/ui/hero";
-import BrowseByCategory from "@/app/widgets/home/ui/browse-by-category";
-import RecentListings from "@/app/widgets/home/ui/recent-listings";
-import { getAllCategories } from "@/app/api/category/data-access/category";
-import { TCategory } from "@/app/entities/category/model/schema";
-import { getRecentListings } from "@/lib/data-access/listings";
-import { TRecentListings } from "@/utils/zod-schemas/listings";
+import { Hero, BrowseByCategory, RecentListings } from "@/app/widgets/home";
+import { getAllCategories, TCategory } from "@/app/entities/category";
+import { getRecentListings, TRecentListings } from "@/app/entities/listings";
 
 export const revalidate = 60;
 

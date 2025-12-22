@@ -1,7 +1,7 @@
 "use client";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { getQueryClient } from "@/lib/queryClient";
+import { getQueryClient } from "@/app/shared/lib/queryClient";
 
 interface IQueryProviderProps {
    children: React.ReactNode;
