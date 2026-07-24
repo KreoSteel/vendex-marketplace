@@ -259,7 +259,7 @@ export type ListingGroupByOutputType = {
   _max: ListingMaxAggregateOutputType | null
 }
 
-type GetListingGroupByPayload<T extends ListingGroupByArgs> = Prisma.PrismaPromise<
+export type GetListingGroupByPayload<T extends ListingGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ListingGroupByOutputType, T['by']> &
       {
@@ -2273,6 +2273,11 @@ export type ListingFindManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Skip the first `n` Listings.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Listings.
+   */
   distinct?: Prisma.ListingScalarFieldEnum | Prisma.ListingScalarFieldEnum[]
 }
 
