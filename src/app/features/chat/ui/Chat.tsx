@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import { chatWithUserOptions } from "../api/query";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { sendMessageOptions } from "../api/mutation";
-import { Message } from "@/app/shared/lib/generated/client";
+import { Message } from "@/utils/generated/client";
 
 interface ChatProps {
    userId: string;

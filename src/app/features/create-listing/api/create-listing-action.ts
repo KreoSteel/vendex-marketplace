@@ -6,8 +6,8 @@ import { Result } from "@/types/result";
 import { createListing } from "./create-listing";
 import { TCreateListingResult, createListingSchema } from "@/app/entities/listings";
 import { uploadListingImages } from "@/app/shared/api/storage/upload";
-import { ListingCondition } from "@/app/shared/lib/generated/enums";
 import * as Sentry from "@sentry/nextjs";
+import { ListingCondition } from "@/utils/generated/enums";
 
 export const createListingAction = withAuth(
    async (

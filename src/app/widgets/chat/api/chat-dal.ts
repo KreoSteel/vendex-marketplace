@@ -1,4 +1,5 @@
-"use client";
+"use server";
+
 import { withAuth } from "@/app/shared/api/auth/auth";
 import { getUser } from "@/app/shared/api/auth/auth";
 import { TConversation } from "@/app/entities/messages-(chat)";

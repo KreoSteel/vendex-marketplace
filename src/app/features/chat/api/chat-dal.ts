@@ -1,9 +1,11 @@
+"use server";
+
 import { withAuth } from "@/app/shared/api/auth/auth";
 import { getUser } from "@/app/shared/api/auth/auth";
 import { Result } from "@/types/result";
-import { Message } from "@/app/shared/lib/generated/client";
 import prisma from "@/app/shared/api/prisma";
 import { revalidatePath } from "next/cache";
+import { Message } from "@/utils/generated/client";
 
 export const getChatWithUser = withAuth(
    async (otherUserId: string): Promise<Result<Message[]>> => {

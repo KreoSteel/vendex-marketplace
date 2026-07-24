@@ -1,5 +1,5 @@
 import { TCategory } from "@/app/entities/category";
-import { ListingCondition } from "@/app/shared/lib/generated/enums";
+import { ListingCondition } from "@/utils/generated/enums";
 
 export type TEditListing = {
     id: string;

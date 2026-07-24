@@ -1,3 +1,5 @@
+"use client";
+
 import { startTransition, useActionState, useEffect } from "react";
 import { useRouter } from "@/pkg/i18n/navigation";
 import { toast } from "sonner";

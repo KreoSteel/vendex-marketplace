@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/app/shared/ui/button";
 import { TrashIcon } from "lucide-react";
 import { deleteListingAction } from "../api/delete-listing-action";

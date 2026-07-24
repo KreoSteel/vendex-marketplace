@@ -1,6 +1,6 @@
 import { ListingsClientPage } from "@/app/pages/listings";
 import { AllListingsParams } from "@/app/entities/listings";
-import { ListingCondition } from "@/app/shared/lib/generated/enums";
+import { ListingCondition } from "@/utils/generated/enums";
 
 interface ListingsPageProps {
     searchParams: Promise<{

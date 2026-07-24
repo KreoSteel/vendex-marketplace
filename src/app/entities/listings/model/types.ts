@@ -1,4 +1,4 @@
-import { ListingCondition } from "@/app/shared/lib/generated/enums";
+import { ListingCondition } from "@/utils/generated/enums";
 
 export type AllListingsParams = {
     currentPage?: string | number;

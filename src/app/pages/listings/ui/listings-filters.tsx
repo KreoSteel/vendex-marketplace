@@ -2,7 +2,6 @@
 import { Label, Card, CardContent, CardHeader, CardTitle, Button, Slider } from "@/app/shared/ui";
 import { Checkbox, CheckboxIndicator } from "@radix-ui/react-checkbox";
 import { CheckIcon } from "lucide-react";
-import { ListingCondition } from "@/app/shared/lib/generated/enums";
 import { useTranslations } from "next-intl";
 import { useListingsFilters } from "@/app/pages/listings/model/use-listings-filters";
 import { initialState } from "@/app/pages/listings/model/use-filters-reducer";
@@ -12,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Filters } from "@/app/entities/listings";
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import { ListingCondition } from "@/utils/generated/enums";
 
 export default function ListingsFilters() {
    const {

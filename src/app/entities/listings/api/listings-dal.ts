@@ -1,14 +1,14 @@
 "use server";
 import prisma from "@/app/shared/api/prisma";
-import { Prisma } from "@/app/shared/lib/generated/client";
 import {
    TListingRow,
 } from "@/app/entities/listings/model/schema";
-import { ListingCondition, ListingStatus } from "@/app/shared/lib/generated/enums";
 import { TPaginationListings } from "@/app/entities/listings/model/schema";
 import { Result } from "@/types/result";
 import * as Sentry from "@sentry/nextjs";
 import { AllListingsParams } from "../model/types";
+import { Prisma } from "@/utils/generated/client";
+import { ListingCondition, ListingStatus } from "@/utils/generated/enums";
 
 export type Filters = {
    search?: string | null;

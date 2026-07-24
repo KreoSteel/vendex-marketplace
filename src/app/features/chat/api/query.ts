@@ -1,7 +1,7 @@
 import { getChatWithUser } from "../api/chat-dal";
 import { queryOptions } from "@tanstack/react-query";
 import { Result } from "@/types/result";
-import { Message } from "@/app/shared/lib/generated/client";
+import { Message } from "@/utils/generated/client";
 
 export const chatWithUserOptions = (otherUserId: string) =>
     queryOptions<Result<Message[]>>({

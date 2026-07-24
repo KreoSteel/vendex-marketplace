@@ -26,9 +26,9 @@ import {
    SelectItem,
 } from "@/app/shared/ui";
 import { Euro, PencilIcon } from "lucide-react";
-import { ListingCondition } from "@/app/shared/lib/generated/enums";
 import { PreviewImages } from "@/app/entities/listings";
 import { cn } from "@/app/shared/utils";
+import { ListingCondition } from "@/utils/generated/enums";
 
 export default function EditListingForm({
    listing,

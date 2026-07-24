@@ -3,7 +3,7 @@
 import { updateUserProfile } from "@/app/entities/user";
 import { uploadProfileImage } from "@/app/shared/api/storage/upload";
 import { getUser, withAuth } from "@/app/shared/api/auth/auth";
-import { updateUserProfileSchema } from "@/app/features/update-profile";
+import { updateUserProfileSchema } from "@/app/features/update-profile/model/types";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { Result } from "@/types/result";

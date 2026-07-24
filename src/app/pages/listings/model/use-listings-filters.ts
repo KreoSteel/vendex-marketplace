@@ -3,8 +3,8 @@ import { useReducer } from "react";
 import { filtersReducer, initialState } from "./use-filters-reducer";
 import { categoriesOptions } from "@/app/entities/category";
 import { useQuery } from "@tanstack/react-query";
-import { ListingCondition } from "@/app/shared/lib/generated/enums";
 import { useRouter } from "@/pkg/i18n/navigation";
+import { ListingCondition } from "@/utils/generated/enums";
 
 
 export function useListingsFilters() {

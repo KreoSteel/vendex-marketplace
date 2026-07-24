@@ -5,10 +5,10 @@ import { getTranslations } from "next-intl/server";
 import { Result } from "@/types/result";
 import { updateListing } from "./update-listing";
 import { uploadListingImages } from "@/app/shared/api/storage/upload";
-import { ListingCondition } from "@/app/shared/lib/generated/enums";
 import { updateListingSchema } from "@/app/entities/listings";
 import * as Sentry from "@sentry/nextjs";
 import { revalidatePath } from "next/cache";
+import { ListingCondition } from "@/utils/generated/enums";
 
 export const updateListingAction = withAuth(
    async (

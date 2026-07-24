@@ -1,3 +1,5 @@
+"use client";
+
 import { toast } from "sonner";
 import { updateListingAction } from "@/app/features/update-listing/api/update-listing-action";
 import { useEffect, useState, useTransition } from "react";

@@ -1,3 +1,5 @@
+"use client";
+
 import { Dialog, DialogTrigger, Button, DialogContent, DialogHeader, Label, DialogTitle, DialogDescription, Input, DialogFooter, DialogClose } from "@/app/shared/ui";
 import { useTranslations } from "next-intl";
 import { useActionState, useEffect } from "react";

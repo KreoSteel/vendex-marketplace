@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { ListingCondition, ListingStatus } from "../../../shared/lib/generated/enums";
 import { categorySchema } from "@/app/entities/category";
+import { ListingCondition, ListingStatus } from "@/utils/generated/enums";
 
 export const createListingSchema = z.object({
    title: z.string().min(1, { message: "Title is required" }),
