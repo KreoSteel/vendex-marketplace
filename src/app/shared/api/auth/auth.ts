@@ -14,6 +14,12 @@ export const auth = betterAuth({
    database: prismaAdapter(prisma, {
       provider: "postgresql",
    }),
+   baseURL: {
+      allowedHosts: [
+         "localhost:3000"
+      ],
+      protocol: "http"
+   },
    emailAndPassword: {
       enabled: true,
    },
@@ -29,7 +35,7 @@ export async function requireAuth(options?: { redirect?: boolean }): Promise<Res
       }
       return { success: false, error: "Unauthorized" };
    }
-   return { success: true, data: user} ;
+   return { success: true, data: user };
 }
 
 export async function getUser(req?: NextRequest): Promise<User | null> {
@@ -66,25 +72,25 @@ export async function getUser(req?: NextRequest): Promise<User | null> {
 }
 
 export function withAuth<T extends (...args: any[]) => Promise<any>>(
-  fn: T,
-  options?: { unauthorizedReturn?: Awaited<ReturnType<T>> }
+   fn: T,
+   options?: { unauthorizedReturn?: Awaited<ReturnType<T>> }
 ): T {
-  return (async (...args: Parameters<T>) => {
-    // If the caller provides an unauthorizedReturn (like []), do NOT redirect.
-    const authResult = await requireAuth({
-      redirect: options?.unauthorizedReturn === undefined ? undefined : false,
-    });
+   return (async (...args: Parameters<T>) => {
+      // If the caller provides an unauthorizedReturn (like []), do NOT redirect.
+      const authResult = await requireAuth({
+         redirect: options?.unauthorizedReturn === undefined ? undefined : false,
+      });
 
-    if (!authResult.success) {
-      // If caller wants a non-Result return (like []), return it explicitly.
-      if (options?.unauthorizedReturn !== undefined) {
-        return options.unauthorizedReturn;
+      if (!authResult.success) {
+         // If caller wants a non-Result return (like []), return it explicitly.
+         if (options?.unauthorizedReturn !== undefined) {
+            return options.unauthorizedReturn;
+         }
+
+         // Otherwise return a generic Result failure (NOT Result<User>)
+         return { success: false, error: authResult.error } as Awaited<ReturnType<T>>;
       }
 
-      // Otherwise return a generic Result failure (NOT Result<User>)
-      return { success: false, error: authResult.error } as Awaited<ReturnType<T>>;
-    }
-
-    return fn(...args);
-  }) as T;
+      return fn(...args);
+   }) as T;
 }
