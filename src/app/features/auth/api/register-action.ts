@@ -5,6 +5,7 @@ import { registerSchema } from "../model/auth-schema";
 import { auth } from "@/app/shared/api/auth/auth";
 import { ZodError } from "zod";
 import { redirect } from "@/pkg/i18n/navigation";
+import { headers } from "next/headers";
 
 export async function RegisterAction(
     _prevState: Result<void> | undefined,
@@ -29,6 +30,7 @@ export async function RegisterAction(
              email: parsed.data.email,
              password: parsed.data.password,
           },
+          headers: await headers(),
        });
     } catch (error) {
        if (error instanceof ZodError) {
