@@ -1,8 +1,8 @@
 import "dotenv/config";
-import { PrismaClient } from "@/app/shared/lib/generated/client";
-import { ListingCondition, ListingStatus } from "@/app/shared/lib/generated/enums";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "@/utils/generated/client";
+import { ListingCondition, ListingStatus } from "@/utils/generated/enums";
 
 const connectionString = process.env.DIRECT_URL || process.env.DATABASE_URL;
 
