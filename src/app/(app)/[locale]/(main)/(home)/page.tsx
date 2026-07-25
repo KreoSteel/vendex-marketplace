@@ -9,7 +9,7 @@ export default async function Home() {
    const listings = (await getRecentListings()) as TRecentListings[];
    
    return (
-      <div className="flex flex-col space-y-32 py-16">
+      <div className="flex flex-col space-y-24 py-16">
          <Hero />
          <BrowseByCategory categories={categories} />
          <RecentListings listings={listings} favoriteIds={new Set()} />

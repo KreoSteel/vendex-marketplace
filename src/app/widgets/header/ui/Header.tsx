@@ -140,7 +140,7 @@ function UserAvatar({ user, size = 42 }: UserAvatarProps) {
       />
    ) : (
       <div
-         className={cn("rounded-full bg-primary-100 flex items-center justify-center", `w-[${size}px] h-[${size}px]`)}>
+         className={cn("rounded-full bg-primary-100 p-2 flex items-center justify-center", `w-[${size}px] h-[${size}px]`)}>
          <UserIcon className="size-5 text-primary-600" />
       </div>
    );
