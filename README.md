@@ -35,8 +35,6 @@ Vendex is a peer-to-peer marketplace where users can list items for sale, browse
 - [Available Scripts](#available-scripts)
 - [Internationalization](#internationalization)
 - [Error Monitoring](#error-monitoring)
-- [Known Issues](#known-issues)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Features
