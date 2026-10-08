@@ -40,11 +40,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-pnpm-lock.yaml
 pnpm-workspace.yaml
 
 VENDEX_IMPLEMENTATION_PLAN.md
-/app/generated/prisma
+**/generated/
 
 .cursor
 seed*
