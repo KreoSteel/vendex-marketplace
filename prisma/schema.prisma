@@ -46,6 +46,8 @@ model User {
   sessions         Session[]
   accounts         Account[]
 
+  image String?
+
   @@index([isActive])
   @@map("users")
 }
@@ -84,14 +86,18 @@ model Listing {
   messages    Message[]
   reviews     Review[]
 
+  // For active listings sorted by date
+  // For category filtering with price sorting
+  // For location-based searches
+  // For featured listings
   @@index([categoryId])
   @@index([userId])
   @@index([status])
   @@index([createdAt])
-  @@index([status, createdAt]) // For active listings sorted by date
-  @@index([categoryId, status, price]) // For category filtering with price sorting
-  @@index([status, location]) // For location-based searches
-  @@index([featured, status, createdAt]) // For featured listings
+  @@index([status, createdAt])
+  @@index([categoryId, status, price])
+  @@index([status, location])
+  @@index([featured, status, createdAt])
   @@map("listings")
 }
 
@@ -103,7 +109,8 @@ model ListingImage {
   createdAt DateTime @default(now())
   listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
 
-  @@unique([listingId, order]) // Ensure unique ordering per listing
+  // Ensure unique ordering per listing
+  @@unique([listingId, order])
   @@index([listingId])
   @@map("listing_images")
 }
@@ -179,6 +186,7 @@ model Session {
 
   @@unique([token])
   @@map("session")
+  @@index([userId])
 }
 
 model Account {
@@ -198,6 +206,7 @@ model Account {
   updatedAt             DateTime  @updatedAt
 
   @@map("account")
+  @@index([userId])
 }
 
 model Verification {
@@ -209,4 +218,5 @@ model Verification {
   updatedAt  DateTime @default(now()) @updatedAt
 
   @@map("verification")
+  @@index([identifier])
 }
