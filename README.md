@@ -165,9 +165,6 @@ BETTER_AUTH_SECRET=generate-a-long-random-string
 NEXT_PUBLIC_SUPABASE_URL=https://<project>.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
-
-# App
-NEXT_PUBLIC_API_URL="http://localhost:3000"
 ```
 
 Environment variables are validated at startup with Zod (`src/config/envs/server.ts` and `client.ts`) — the app will fail fast with a clear error if a required variable is missing.
