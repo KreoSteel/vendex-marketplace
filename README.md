@@ -1,6 +1,6 @@
 <div align="center">
 
-# Vendex Marketplace
+# [Vendex Marketplace](https://vendex.kreosteel.dev)
 
 **A full-stack marketplace app for buying and selling items, with real-time chat and support for 4 languages.**
 
@@ -17,7 +17,7 @@
 
 ## About
 
-Vendex is a peer-to-peer marketplace where users can list items for sale, browse by category, message sellers directly, leave reviews, and favorite listings. It supports four locales out of the box (English, Italian, Russian, Ukrainian) and ships with real-time chat, image uploads, search and filtering.
+[Vendex](https://vendex.kreosteel.dev) is a peer-to-peer marketplace where users can list items for sale, browse by category, message sellers directly, leave reviews, and favorite listings. It supports four locales out of the box (English, Italian, Russian, Ukrainian) and ships with real-time chat, image uploads, search and filtering.
 
 ## Table of Contents
 
